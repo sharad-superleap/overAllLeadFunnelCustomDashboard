@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lead Funnel · AESL Sales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FAF8F4;
+    --bg-grid: #F2EEE6;
+    --surface: #FFFFFF;
+    --surface-soft: #F7F4ED;
+    --border: #E8E2D6;
+    --border-strong: #D6CFBE;
+    --ink: #1A1815;
+    --ink-soft: #5C5852;
+    --ink-muted: #8B857A;
+    --red: #C73E3A;
+    --red-soft: #FCEDEC;
+    --amber: #C77B0E;
+    --amber-soft: #FCF3E2;
+    --green: #15803D;
+    --green-soft: #E8F5EC;
+    --blue: #1E3A8A;
+    --blue-soft: #E6EAF5;
+    --violet: #6D28D9;
+    --violet-soft: #EFE9FB;
+    --shadow-sm: 0 1px 2px rgba(26,24,21,0.04), 0 1px 1px rgba(26,24,21,0.03);
+    --shadow-md: 0 1px 3px rgba(26,24,21,0.06), 0 8px 24px -8px rgba(26,24,21,0.08);
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Hanken Grotesk', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    background-image:
+      radial-gradient(circle at 1px 1px, var(--bg-grid) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 244, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+    background: var(--ink);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #FAF8F4;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 14px;
+    transform: translateY(4px);
+  }
+  .brand-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .brand-title em {
+    font-style: italic;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+  .topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .pill-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--green-soft);
+    color: var(--green);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .pill-live::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(21,128,61,0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(21,128,61,0); }
+    100% { box-shadow: 0 0 0 0 rgba(21,128,61,0); }
+  }
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C73E3A, #6D28D9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== MAIN CONTAINER ===== */
+  main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 36px 32px 80px;
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 16px;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .section-head h2 em {
+    font-style: italic;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .section-meta {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-family: var(--mono);
+  }
+
+  /* ===== TODAY'S PRIORITY CARDS ===== */
+  .priority-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 52px;
+  }
+  .kpi-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 22px 20px;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .kpi-card .accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--border-strong);
+  }
+  .kpi-card.urgent .accent-bar { background: var(--red); }
+  .kpi-card.today .accent-bar { background: var(--amber); }
+  .kpi-card.warning .accent-bar { background: var(--amber); }
+  .kpi-card.info .accent-bar { background: var(--blue); }
+
+  .kpi-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .kpi-label .label-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+  .badge.red { background: var(--red-soft); color: var(--red); }
+  .badge.amber { background: var(--amber-soft); color: var(--amber); }
+  .badge.blue { background: var(--blue-soft); color: var(--blue); }
+  .badge.green { background: var(--green-soft); color: var(--green); }
+  .badge.violet { background: var(--violet-soft); color: var(--violet); }
+
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .kpi-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+  .delta {
+    font-family: var(--mono);
+    font-weight: 500;
+  }
+  .delta.up { color: var(--red); }
+  .delta.down { color: var(--green); }
+  .delta.neutral { color: var(--ink-muted); }
+
+  /* ===== SCHOLARSHIP FUNNELS ===== */
+  .funnel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 52px;
+  }
+  .funnel-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .funnel-head {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .funnel-head h3 {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .funnel-head h3 span {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    margin-left: 8px;
+    letter-spacing: 0;
+  }
+  .funnel-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--surface-soft);
+    color: var(--ink-soft);
+    border: 1px solid var(--border);
+  }
+
+  .funnel-body {
+    padding: 8px;
+  }
+  /* Source breakdown row */
+  .source-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--surface-soft);
+    border-radius: 10px;
+    margin: 8px;
+    padding: 14px;
+  }
+  .source-cell {
+    border-right: 1px dashed var(--border-strong);
+    padding: 0 14px;
+    text-align: center;
+  }
+  .source-cell:first-child { padding-left: 4px; }
+  .source-cell:last-child { border-right: none; padding-right: 4px; }
+  .source-cell.total { background: rgba(26,24,21,0.04); border-radius: 6px; padding: 6px 14px; border-right: none; }
+  .source-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .source-value {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .source-cell.total .source-value { color: var(--ink); font-size: 22px; }
+
+  /* Action cells row */
+  .action-row {
+    display: grid;
+    padding: 4px 8px 8px;
+  }
+  .iacst-actions { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .anthe-actions { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+  .action-cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+  .action-cell:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-soft);
+  }
+  .action-cell.urgent { border-color: rgba(199,62,58,0.3); background: var(--red-soft); }
+  .action-cell.urgent:hover { background: #FAE2DF; }
+  .action-cell.today { border-color: rgba(199,123,14,0.3); background: var(--amber-soft); }
+  .action-cell.today:hover { background: #F8EBD1; }
+  .action-cell.success { border-color: rgba(21,128,61,0.3); background: var(--green-soft); }
+  .action-cell.highlight { border-color: rgba(109,40,217,0.3); background: var(--violet-soft); }
+
+  .action-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+    line-height: 1.25;
+    min-height: 28px;
+    display: flex;
+    align-items: flex-start;
+  }
+  .action-cell.urgent .action-label,
+  .action-cell.today .action-label,
+  .action-cell.highlight .action-label,
+  .action-cell.success .action-label { color: var(--ink); }
+  .action-value {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .action-cell.urgent .action-value { color: var(--red); }
+  .action-cell.today .action-value { color: var(--amber); }
+  .action-cell.success .action-value { color: var(--green); }
+  .action-cell.highlight .action-value { color: var(--violet); }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .filter-bar .filter-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding-right: 8px;
+    border-right: 1px solid var(--border);
+  }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--surface-soft);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    white-space: nowrap;
+  }
+  .chip:hover { background: #EDE9DF; }
+  .chip.active {
+    background: var(--ink);
+    color: #FAF8F4;
+    border-color: var(--ink);
+  }
+  .chip .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    background: rgba(26,24,21,0.06);
+    padding: 1px 6px;
+    border-radius: 999px;
+  }
+  .chip.active .count {
+    color: var(--ink);
+    background: rgba(250,248,244,0.9);
+  }
+  .more-filters {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .more-filters:hover { border-color: var(--ink-soft); color: var(--ink); }
+
+  /* ===== FUNNEL TABLE ===== */
+  .funnel-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .table-head {
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .toggle-group {
+    display: inline-flex;
+    background: var(--surface-soft);
+    border-radius: 8px;
+    padding: 3px;
+    border: 1px solid var(--border);
+  }
+  .toggle-btn {
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .toggle-btn.active {
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+  }
+
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--surface-soft);
+  }
+  thead th {
+    text-align: right;
+    padding: 12px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  thead th:first-child { text-align: left; padding-left: 24px; }
+  thead th:last-child { padding-right: 24px; }
+  thead th.danger { color: var(--red); }
+  thead th.warn { color: var(--amber); }
+  thead th.good { color: var(--green); }
+
+  tbody td {
+    text-align: right;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td:first-child {
+    text-align: left;
+    padding-left: 24px;
+    font-family: var(--sans);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  tbody td:last-child { padding-right: 24px; }
+  tbody tr { transition: background 0.12s ease; cursor: pointer; }
+  tbody tr:hover { background: var(--surface-soft); }
+
+  td.value-danger { color: var(--red); font-weight: 600; }
+  td.value-warn { color: var(--amber); font-weight: 600; }
+  td.value-good { color: var(--green); font-weight: 600; }
+  td.value-zero { color: var(--ink-muted); }
+
+  /* Branch row meta */
+  .row-meta {
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-weight: 400;
+    font-family: var(--sans);
+    margin-top: 2px;
+  }
+
+  /* Totals row */
+  tbody tr.totals {
+    background: linear-gradient(180deg, transparent, var(--surface-soft));
+    border-top: 1px solid var(--border-strong);
+  }
+  tbody tr.totals td {
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: none;
+  }
+  tbody tr.totals:hover { background: var(--surface-soft); }
+
+  /* Mini bar */
+  .bar-cell {
+    position: relative;
+  }
+  .bar-cell .bar {
+    position: absolute;
+    bottom: 6px;
+    left: 16px;
+    right: 16px;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .bar-cell .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  /* ===== UTILITY ===== */
+  .divider-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 24px;
+  }
+  .divider-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .priority-grid { grid-template-columns: repeat(2, 1fr); }
+    .funnel-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    main { padding: 24px 16px 60px; }
+    .priority-grid { grid-template-columns: 1fr; }
+    .iacst-actions, .anthe-actions { grid-template-columns: 1fr 1fr; }
+    .source-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .source-cell { border-right: none; padding: 8px; }
+    .topbar-inner { padding: 12px 16px; }
+  }
+
+  /* Entry animation */
+  .stagger > * {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: rise 0.5s ease forwards;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.2s; }
+  @keyframes rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">A</span>
+      <span class="brand-title">Lead Funnel <em>· Custom</em></span>
+    </div>
+    <div class="topbar-meta">
+      <span class="pill-live">Live · Synced 2m ago</span>
+      <span class="tabular">Mon, 01 Jun 2026 · 09:42</span>
+      <div class="user-chip">
+        <span class="avatar">RK</span>
+        <span style="font-weight:500; color: var(--ink);">Rohan K.</span>
+        <span style="color: var(--ink-muted); font-size: 12px;">· Delhi RSGH</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== SECTION 1: TODAY'S PRIORITY ===== -->
+  <div class="section-head">
+    <div>
+      <span class="section-eyebrow">Section 01 · What needs you today</span>
+      <h2>Today's Priority <em>queue</em></h2>
+    </div>
+    <span class="section-meta">AY26 · Term 2627</span>
+  </div>
+
+  <div class="priority-grid stagger">
+    <div class="kpi-card urgent">
+      <span class="accent-bar"></span>
+      <div class="kpi-label">
+        <span class="label-text">Untouched Leads</span>
+        <span class="badge red">Act now</span>
+      </div>
+      <div class="kpi-value tabular">2,847</div>
+      <div class="kpi-foot">
+        <span>AY26 · Never contacted</span>
+        <span class="delta up">▲ 312 vs yest.</span>
+      </div>
+    </div>
+
+    <div class="kpi-card today">
+      <span class="accent-bar"></span>
+      <div class="kpi-label">
+        <span class="label-text">Follow up Today</span>
+        <span class="badge amber">Due</span>
+      </div>
+      <div class="kpi-value tabular">1,256</div>
+      <div class="kpi-foot">
+        <span>Scheduled for 01 Jun</span>
+        <span class="delta neutral">— 1,189 yest.</span>
+      </div>
+    </div>
+
+    <div class="kpi-card urgent">
+      <span class="accent-bar"></span>
+      <div class="kpi-label">
+        <span class="label-text">Missed Follow ups</span>
+        <span class="badge red">Overdue</span>
+      </div>
+      <div class="kpi-value tabular">4,392</div>
+      <div class="kpi-foot">
+        <span>AY26 · Past due</span>
+        <span class="delta up">▲ 184 vs yest.</span>
+      </div>
+    </div>
+
+    <div class="kpi-card info">
+      <span class="accent-bar"></span>
+      <div class="kpi-label">
+        <span class="label-text">Call Back Bot · Pending</span>
+        <span class="badge blue">15d</span>
+      </div>
+      <div class="kpi-value tabular">873</div>
+      <div class="kpi-foot">
+        <span>Bot routed, not yet called</span>
+        <span class="delta down">▼ 47 vs yest.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 2: SCHOLARSHIP FUNNELS ===== -->
+  <div class="section-head">
+    <div>
+      <span class="section-eyebrow">Section 02 · Scholarship pipelines</span>
+      <h2>Test takers <em>by exam</em></h2>
+    </div>
+    <span class="section-meta">iACST + ANTHE · Term 2627</span>
+  </div>
+
+  <div class="funnel-grid">
+
+    <!-- iACST CARD -->
+    <div class="funnel-card">
+      <div class="funnel-head">
+        <h3>iACST Test Takers <span>· Term 2627</span></h3>
+        <span class="funnel-tag">Live</span>
+      </div>
+      <div class="funnel-body">
+        <!-- Source breakdown -->
+        <div class="source-row">
+          <div class="source-cell">
+            <div class="source-label">Digital · API</div>
+            <div class="source-value tabular">8,432</div>
+          </div>
+          <div class="source-cell">
+            <div class="source-label">Self · Form</div>
+            <div class="source-value tabular">3,127</div>
+          </div>
+          <div class="source-cell">
+            <div class="source-label">Bulk · Upload</div>
+            <div class="source-value tabular">12,895</div>
+          </div>
+          <div class="source-cell">
+            <div class="source-label">All taken</div>
+            <div class="source-value tabular">24,454</div>
+          </div>
+        </div>
+        <!-- Action cells -->
+        <div class="action-row iacst-actions">
+          <div class="action-cell urgent">
+            <div class="action-label">Untouched</div>
+            <div class="action-value tabular">2,156</div>
+          </div>
+          <div class="action-cell today">
+            <div class="action-label">Follow up today</div>
+            <div class="action-value tabular">487</div>
+          </div>
+          <div class="action-cell success">
+            <div class="action-label">Taken today</div>
+            <div class="action-value tabular">1,243</div>
+          </div>
+          <div class="action-cell highlight">
+            <div class="action-label">Scheduled today<br>· not taken</div>
+            <div class="action-value tabular">312</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANTHE CARD -->
+    <div class="funnel-card">
+      <div class="funnel-head">
+        <h3>ANTHE Test Takers <span>· Term 2627</span></h3>
+        <span class="funnel-tag">Live</span>
+      </div>
+      <div class="funnel-body">
+        <div class="source-row">
+          <div class="source-cell">
+            <div class="source-label">Digital · API</div>
+            <div class="source-value tabular">15,673</div>
+          </div>
+          <div class="source-cell">
+            <div class="source-label">Self · Form</div>
+            <div class="source-value tabular">4,521</div>
+          </div>
+          <div class="source-cell">
+            <div class="source-label">Bulk · Upload</div>
+            <div class="source-value tabular">28,902</div>
+          </div>
+          <div class="source-cell">
+            <div class="source-label">All</div>
+            <div class="source-value tabular">49,096</div>
+          </div>
+        </div>
+        <div class="action-row anthe-actions">
+          <div class="action-cell highlight">
+            <div class="action-label">Scored 60%+ · Hot</div>
+            <div class="action-value tabular">8,734</div>
+          </div>
+          <div class="action-cell urgent">
+            <div class="action-label">Untouched</div>
+            <div class="action-value tabular">5,123</div>
+          </div>
+          <div class="action-cell today">
+            <div class="action-label">Follow up today</div>
+            <div class="action-value tabular">1,098</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:52px"></div>
+
+  <!-- ===== SECTION 3: LEAD STAGE FUNNEL ===== -->
+  <div class="section-head">
+    <div>
+      <span class="section-eyebrow">Section 03 · Lead stage funnel</span>
+      <h2>Where every lead <em>is right now</em></h2>
+    </div>
+    <span class="section-meta">Tap a row to drill into team / individual leads</span>
+  </div>
+
+  <!-- Filter chip bar -->
+  <div class="filter-bar">
+    <span class="filter-label">Cohort</span>
+    <div class="filter-group">
+      <span class="chip active">AY26 All Leads <span class="count">86,412</span></span>
+      <span class="chip">iACST Registered <span class="count">31,204</span></span>
+      <span class="chip">iACST Test Takers <span class="count">24,454</span></span>
+      <span class="chip">ANTHE Test Takers <span class="count">49,096</span></span>
+      <span class="chip">Call Back · 15d <span class="count">3,127</span></span>
+      <span class="chip">All Leads (New+Old) <span class="count">2.4M</span></span>
+    </div>
+    <button class="more-filters">
+      + 14 more filters · Class, School, Source, Campaign, Course, Scholarship %, Team, RSGH, TL…
+    </button>
+  </div>
+
+  <!-- Main funnel table -->
+  <div class="funnel-table-wrap">
+    <div class="table-head">
+      <div class="table-title">Lead status by <span id="grouping-label" style="font-style: italic; font-family: var(--serif); color: var(--ink-soft);">user branch</span></div>
+      <div class="toggle-group" role="tablist">
+        <button class="toggle-btn active" onclick="setGrouping(this, 'user branch')">By Branch</button>
+        <button class="toggle-btn" onclick="setGrouping(this, 'user')">By User</button>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Branch</th>
+            <th class="danger">Missed F/U</th>
+            <th class="warn">F/U Today</th>
+            <th>Total Leads</th>
+            <th class="danger">Untouched</th>
+            <th>Not Connected</th>
+            <th>Call Back</th>
+            <th class="good">Qualified</th>
+            <th>Junk / NI</th>
+            <th class="good">Admissions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Delhi · Rohini
+              <div class="row-meta">RSGH: A. Sharma · 24 users</div>
+            </td>
+            <td class="value-danger tabular">612</td>
+            <td class="value-warn tabular">187</td>
+            <td class="tabular">8,940</td>
+            <td class="value-danger tabular">324</td>
+            <td class="tabular">1,217</td>
+            <td class="tabular">894</td>
+            <td class="value-good tabular">1,453</td>
+            <td class="tabular">2,108</td>
+            <td class="value-good tabular">147</td>
+          </tr>
+          <tr>
+            <td>
+              Mumbai · Andheri
+              <div class="row-meta">RSGH: P. Mehta · 19 users</div>
+            </td>
+            <td class="value-danger tabular">487</td>
+            <td class="value-warn tabular">142</td>
+            <td class="tabular">7,213</td>
+            <td class="value-danger tabular">298</td>
+            <td class="tabular">982</td>
+            <td class="tabular">671</td>
+            <td class="value-good tabular">1,127</td>
+            <td class="tabular">1,743</td>
+            <td class="value-good tabular">132</td>
+          </tr>
+          <tr>
+            <td>
+              Bangalore · Indiranagar
+              <div class="row-meta">RSGH: S. Iyer · 22 users</div>
+            </td>
+            <td class="value-danger tabular">534</td>
+            <td class="value-warn tabular">203</td>
+            <td class="tabular">9,127</td>
+            <td class="value-danger tabular">412</td>
+            <td class="tabular">1,098</td>
+            <td class="tabular">823</td>
+            <td class="value-good tabular">1,612</td>
+            <td class="tabular">2,289</td>
+            <td class="value-good tabular">168</td>
+          </tr>
+          <tr>
+            <td>
+              Hyderabad · Kukatpally
+              <div class="row-meta">RSGH: V. Reddy · 17 users</div>
+            </td>
+            <td class="value-danger tabular">389</td>
+            <td class="value-warn tabular">128</td>
+            <td class="tabular">6,432</td>
+            <td class="value-danger tabular">241</td>
+            <td class="tabular">823</td>
+            <td class="tabular">567</td>
+            <td class="value-good tabular">1,034</td>
+            <td class="tabular">1,508</td>
+            <td class="value-good tabular">119</td>
+          </tr>
+          <tr>
+            <td>
+              Kolkata · Salt Lake
+              <div class="row-meta">RSGH: M. Banerjee · 14 users</div>
+            </td>
+            <td class="value-danger tabular">298</td>
+            <td class="value-warn tabular">94</td>
+            <td class="tabular">5,127</td>
+            <td class="value-danger tabular">187</td>
+            <td class="tabular">678</td>
+            <td class="tabular">412</td>
+            <td class="value-good tabular">812</td>
+            <td class="tabular">1,234</td>
+            <td class="value-good tabular">87</td>
+          </tr>
+          <tr>
+            <td>
+              Chennai · T. Nagar
+              <div class="row-meta">RSGH: K. Krishnan · 16 users</div>
+            </td>
+            <td class="value-danger tabular">412</td>
+            <td class="value-warn tabular">156</td>
+            <td class="tabular">6,891</td>
+            <td class="value-danger tabular">267</td>
+            <td class="tabular">912</td>
+            <td class="tabular">594</td>
+            <td class="value-good tabular">1,148</td>
+            <td class="tabular">1,672</td>
+            <td class="value-good tabular">109</td>
+          </tr>
+          <tr>
+            <td>
+              Pune · Kothrud
+              <div class="row-meta">RSGH: R. Deshpande · 12 users</div>
+            </td>
+            <td class="value-danger tabular">271</td>
+            <td class="value-warn tabular">98</td>
+            <td class="tabular">4,823</td>
+            <td class="value-danger tabular">189</td>
+            <td class="tabular">612</td>
+            <td class="tabular">389</td>
+            <td class="value-good tabular">781</td>
+            <td class="tabular">1,143</td>
+            <td class="value-good tabular">76</td>
+          </tr>
+          <tr>
+            <td>
+              Jaipur · Vaishali
+              <div class="row-meta">RSGH: D. Singh · 11 users</div>
+            </td>
+            <td class="value-danger tabular">187</td>
+            <td class="value-warn tabular">72</td>
+            <td class="tabular">3,512</td>
+            <td class="value-danger tabular">142</td>
+            <td class="tabular">478</td>
+            <td class="tabular">287</td>
+            <td class="value-good tabular">562</td>
+            <td class="tabular">823</td>
+            <td class="value-good tabular">58</td>
+          </tr>
+          <tr>
+            <td>
+              Lucknow · Hazratganj
+              <div class="row-meta">RSGH: A. Tiwari · 9 users</div>
+            </td>
+            <td class="value-danger tabular">142</td>
+            <td class="value-warn tabular">56</td>
+            <td class="tabular">2,847</td>
+            <td class="value-danger tabular">118</td>
+            <td class="tabular">389</td>
+            <td class="tabular">231</td>
+            <td class="value-good tabular">456</td>
+            <td class="tabular">672</td>
+            <td class="value-good tabular">42</td>
+          </tr>
+          <tr class="totals">
+            <td>All branches · Total</td>
+            <td class="value-danger tabular">3,332</td>
+            <td class="value-warn tabular">1,136</td>
+            <td class="tabular">54,912</td>
+            <td class="value-danger tabular">2,178</td>
+            <td class="tabular">7,189</td>
+            <td class="tabular">4,868</td>
+            <td class="value-good tabular">8,985</td>
+            <td class="tabular">13,192</td>
+            <td class="value-good tabular">938</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p style="margin-top: 18px; font-size: 12px; color: var(--ink-muted); text-align: center; font-style: italic; font-family: var(--serif);">
+    Numbers refresh every 5 minutes · Click any row to drill into individual leads · Export available via top-right menu
+  </p>
+
+</main>
+
+<script>
+  function setGrouping(btn, label) {
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('grouping-label').textContent = label;
+  }
+
+  // Make chips toggleable
+  document.querySelectorAll('.filter-bar .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-bar .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
