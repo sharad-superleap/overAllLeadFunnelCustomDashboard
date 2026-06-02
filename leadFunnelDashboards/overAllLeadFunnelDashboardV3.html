@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overall Lead Funnel Dashboard</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --green: #00A86B;
+            --green-dark: #007A4D;
+            --green-light: #E6F7F1;
+            --green-mid: #CCF0E2;
+            --white: #FFFFFF;
+            --bg: #F4F6F8;
+            --border: #E2E8F0;
+            --text: #1A202C;
+            --muted: #718096;
+            --card-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--white);
+            border-bottom: 2px solid var(--green);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-badge {
+            background: var(--green);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .header h1 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .last-run {
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--bg);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .controls-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .controls-bar .note {
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--green-light);
+            border: 1px solid var(--green-mid);
+            border-radius: 4px;
+            padding: 5px 12px;
+        }
+
+        .controls-bar .note strong {
+            color: var(--green-dark);
+        }
+
+        .btn-run {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 9px 24px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+
+        .btn-run:hover:not(:disabled) {
+            background: var(--green-dark);
+            box-shadow: 0 2px 8px rgba(0, 168, 107, 0.3);
+        }
+
+        .btn-run:disabled {
+            background: #94D5BC;
+            cursor: not-allowed;
+        }
+
+        .btn-run .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+
+        .btn-run.loading .spinner {
+            display: block;
+        }
+
+        .btn-run.loading .btn-label {
+            opacity: 0.7;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .main {
+            padding: 24px 28px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 1100px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 22px 16px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.15s;
+        }
+
+        .metric-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--green);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .card-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .card-icon.green {
+            background: var(--green-light);
+        }
+
+        .card-icon.blue {
+            background: #EBF4FF;
+        }
+
+        .card-icon.orange {
+            background: #FFF7E6;
+        }
+
+        .card-icon.purple {
+            background: #F3EFFE;
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .card-sublabel {
+            font-size: 10px;
+            color: #A0AEC0;
+            margin-bottom: 12px;
+        }
+
+        .card-value {
+            font-size: 38px;
+            font-weight: 800;
+            color: #CBD5E0;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-value.loaded {
+            color: var(--green-dark);
+        }
+
+        .card-footer {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--muted);
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .tag {
+            background: var(--green-light);
+            color: var(--green-dark);
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #F0F4F8 25%, #E2E8F0 50%, #F0F4F8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .skel-val {
+            height: 38px;
+            width: 90px;
+        }
+
+        .skel-txt {
+            height: 11px;
+            width: 150px;
+        }
+
+        .error-banner {
+            background: #FFF5F5;
+            border: 1px solid #FEB2B2;
+            color: #C53030;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .dashboard-note {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .dashboard-note strong {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="header-left">
+            <span class="logo-badge">SL</span>
+            <h1>Overall Lead Funnel Dashboard</h1>
+        </div>
+        <div class="header-right">
+            <span class="last-run" id="lastRun">Not yet run</span>
+        </div>
+    </div>
+
+    <div class="controls-bar">
+        <button class="btn-run" id="btnRun" onclick="runDashboard()">
+            <div class="spinner"></div>
+            <span class="btn-label">Apply &amp; Run</span>
+        </button>
+        <span class="note">
+            <strong>📅 Date window:</strong>&nbsp; leads <code>created_at</code> between <strong>1 May 2026</strong> and
+            <strong>2 May 2026</strong> (IST)
+        </span>
+    </div>
+
+    <div id="errorBox" class="error-banner" style="display:none; margin: 16px 28px 0;"></div>
+
+    <div class="main">
+        <div class="section-title">Section 1 — Lead Activity Overview</div>
+
+        <div class="cards-grid">
+
+            <!-- Card 1 -->
+            <div class="metric-card">
+                <div class="card-icon green">📋</div>
+                <div class="card-label">Untouched Leads AY26</div>
+                <div class="card-sublabel">Stage = Untouched Lead + AY26 product</div>
+                <div class="card-value" id="val-untouched">—</div>
+                <div class="card-footer" id="footer-untouched">AY26 term (26xx) or product created in last 90 days</div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="metric-card">
+                <div class="card-icon blue">📅</div>
+                <div class="card-label">Follow Up Today</div>
+                <div class="card-sublabel">Next follow-up date = today (IST)</div>
+                <div class="card-value" id="val-followup">—</div>
+                <div class="card-footer" id="footer-followup">Excl. Admission Done · Not-Interested · Not-Eligible</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="metric-card">
+                <div class="card-icon orange">⚠️</div>
+                <div class="card-label">Missed Follow Ups AY26</div>
+                <div class="card-sublabel">Next follow-up date &lt; today (IST)</div>
+                <div class="card-value" id="val-missed">—</div>
+                <div class="card-footer" id="footer-missed">AY26 product + overdue · excl. closed stages</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="metric-card">
+                <div class="card-icon purple">🔁</div>
+                <div class="card-label">Call Back Bot</div>
+                <div class="card-sublabel">Last 15 days + not called back</div>
+                <div class="card-value" id="val-callback">—</div>
+                <div class="card-footer" id="footer-callback">Call-back date in last 15 days · last conversation blank
+                    or before call-back date</div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="metric-card">
+                <div class="card-icon" style="background:#FEE2E2;">🏢</div>
+                <div class="card-label">Visit Scheduled Today — Not Done</div>
+                <div class="card-sublabel">Branch visit scheduled today, not completed</div>
+                <div class="card-value" id="val-visit">—</div>
+                <div class="card-footer" id="footer-visit">branch_visit_scheduled_for_date_time = today ·
+                    branch_visit_done_date blank or before today</div>
+            </div>
+
+        </div>
+
+        <!-- Section 2 — iACST Test Takers -->
+        <div class="section-title">Section 2 — iACST Test Takers (Term 2627)</div>
+
+        <div class="cards-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 16px;">
+
+            <!-- iACST Digital -->
+            <div class="metric-card">
+                <div class="card-icon blue">🌐</div>
+                <div class="card-label">iACST Test Taker (Digital)</div>
+                <div class="card-sublabel">Origin = API</div>
+                <div class="card-value" id="val-iacst-digital">—</div>
+                <div class="card-footer" id="footer-iacst-digital">iACST 2627 · result not empty · superleap_origin =
+                    API</div>
+            </div>
+
+            <!-- iACST Self -->
+            <div class="metric-card">
+                <div class="card-icon green">📝</div>
+                <div class="card-label">iACST Test Taker (Self)</div>
+                <div class="card-sublabel">Origin = Forms</div>
+                <div class="card-value" id="val-iacst-self">—</div>
+                <div class="card-footer" id="footer-iacst-self">iACST 2627 · result not empty · superleap_origin = Forms
+                </div>
+            </div>
+
+            <!-- iACST Bulk -->
+            <div class="metric-card">
+                <div class="card-icon orange">📦</div>
+                <div class="card-label">iACST Test Taker (Bulk)</div>
+                <div class="card-sublabel">Origin = Upload</div>
+                <div class="card-value" id="val-iacst-bulk">—</div>
+                <div class="card-footer" id="footer-iacst-bulk">iACST 2627 · result not empty · superleap_origin =
+                    Upload</div>
+            </div>
+
+            <!-- iACST All -->
+            <div class="metric-card">
+                <div class="card-icon purple">🎯</div>
+                <div class="card-label">iACST Test Taker (All)</div>
+                <div class="card-sublabel">All origins combined</div>
+                <div class="card-value" id="val-iacst-all">—</div>
+                <div class="card-footer" id="footer-iacst-all">iACST 2627 · result not empty · all sources</div>
+            </div>
+
+        </div>
+
+        <div class="cards-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 28px;">
+
+            <!-- iACST Untouched -->
+            <div class="metric-card">
+                <div class="card-icon green">📋</div>
+                <div class="card-label">iACST Test Taker (Untouched)</div>
+                <div class="card-sublabel">Lead stage = Untouched Lead</div>
+                <div class="card-value" id="val-iacst-untouched">—</div>
+                <div class="card-footer" id="footer-iacst-untouched">iACST 2627 · result not empty · stage: Untouched
+                    Lead</div>
+            </div>
+
+            <!-- iACST Follow Up Due -->
+            <div class="metric-card">
+                <div class="card-icon blue">📅</div>
+                <div class="card-label">iACST Test Taker (Follow Up Due)</div>
+                <div class="card-sublabel">Next follow-up = today (IST date)</div>
+                <div class="card-value" id="val-iacst-followup">—</div>
+                <div class="card-footer" id="footer-iacst-followup">iACST 2627 · result not empty · excl. closed stages
+                </div>
+            </div>
+
+            <!-- iACST Taken Today -->
+            <div class="metric-card">
+                <div class="card-icon orange">✅</div>
+                <div class="card-label">iACST Test Taker (Taken Today)</div>
+                <div class="card-sublabel">Result created today (IST date)</div>
+                <div class="card-value" id="val-iacst-taken">—</div>
+                <div class="card-footer" id="footer-iacst-taken">iACST 2627 · result not empty · result.created_at =
+                    today</div>
+            </div>
+
+            <!-- iACST Scheduled Today Not Taken -->
+            <div class="metric-card">
+                <div class="card-icon purple">🕐</div>
+                <div class="card-label">iACST Scheduled Today Not Taken</div>
+                <div class="card-sublabel">Exam today · result empty</div>
+                <div class="card-value" id="val-iacst-scheduled">—</div>
+                <div class="card-footer" id="footer-iacst-scheduled">iACST 2627 · result empty · AESL_Date_of_Exam__c =
+                    today</div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-note">
+            <strong>Notes:</strong>
+            All date comparisons use <strong>IST (UTC+5:30)</strong>. &nbsp;·&nbsp;
+            "Today" = current calendar date in IST (00:00:00 → 23:59:59). &nbsp;·&nbsp;
+            AY26 = associated product term starts with <code>26</code> (2627 / 2628 / 2629 / 2630) <em>or</em> product
+            created in last 90 days. &nbsp;·&nbsp;
+            Filters and full Section 2 coming in next iteration.
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://aakash.superleap.com';
+        const CLIENT_ID = 'superleapweb';
+        const CLIENT_SECRET = 'UEAlm1PWab8VXB5b';
+        const IST_MS = 5.5 * 60 * 60 * 1000;
+
+        function getToken() {
+            return new URLSearchParams(window.location.search).get('token') ||
+                new URLSearchParams(window.location.search).get('auth') || '';
+        }
+
+        // ── IST epoch helpers ──
+        function nowIST() { return new Date(Date.now() + IST_MS); }
+
+        function todayISTStartEpoch() {
+            const d = nowIST();
+            return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0, 0) - IST_MS;
+        }
+        function todayISTEndEpoch() {
+            const d = nowIST();
+            return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 23, 59, 59, 999) - IST_MS;
+        }
+        function daysAgoISTStartEpoch(n) { return todayISTStartEpoch() - n * 86400000; }
+        function ninetyDaysAgoEpoch() { return Date.now() - 90 * 86400000; }
+
+        // ── Fixed date window: 1 May 2026 00:00:00 IST → 2 May 2026 23:59:59 IST ──
+        // 1 May 2026 00:00:00 IST  = 30 Apr 2026 18:30:00 UTC  → epoch
+        const DATE_FROM = Date.UTC(2026, 3, 30, 18, 30, 0, 0);   // month is 0-indexed: 3 = April
+        // 2 May 2026 23:59:59 IST  = 2 May 2026 18:29:59 UTC   → epoch
+        const DATE_TO = Date.UTC(2026, 4, 2, 18, 29, 59, 999); // 4 = May
+
+        // ── API ──
+        async function executeQuery(query, slug) {
+            const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                method: 'POST',
+                headers: {
+                    'accept': '*/*',
+                    'authorization': `Bearer ${getToken()}`,
+                    'client-id': CLIENT_ID,
+                    'client-secret': CLIENT_SECRET,
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({ query, slug })
+            });
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+            const data = await resp.json();
+            if (!data.success) throw new Error(data.message || 'API returned success=false');
+            return data.data?.records || [];
+        }
+
+        async function safeQuery(queryFn, slug, retries = 3) {
+            for (let i = 0; i < retries; i++) {
+                try { return await executeQuery(queryFn(), slug); }
+                catch (e) {
+                    if (i === retries - 1) throw e;
+                    await new Promise(r => setTimeout(r, 400 * (i + 1)));
+                }
+            }
+        }
+
+        async function runPool(tasks, concurrency = 2) {
+            const results = new Array(tasks.length);
+            let idx = 0;
+            async function next() {
+                const i = idx++;
+                if (i >= tasks.length) return;
+                results[i] = await tasks[i]();
+                await next();
+            }
+            await Promise.all(Array.from({ length: Math.min(concurrency, tasks.length) }, () => next()));
+            return results;
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  QUERIES
+        // ═══════════════════════════════════════════════════
+        /*
+                // Q1 — Untouched Leads AY26
+                function buildQ_Untouched() {
+                    return `SELECT COUNT(DISTINCT id) as "count"
+        FROM leads_object
+        WHERE (
+          created_at >= ${DATE_FROM}
+          AND created_at <= ${DATE_TO}
+          AND stage = 'Untouched Lead'
+          AND (
+            EXISTS (
+              SELECT 1 FROM product_object
+              WHERE associated_lead = leads_object.id
+                AND AESL_Level__c.name LIKE '26%'
+            )
+            OR EXISTS (
+              SELECT 1 FROM product_object
+              WHERE associated_lead = leads_object.id
+                AND created_at >= ${ninetyDaysAgoEpoch()}
+            )
+          )
+        )`;
+                }
+        
+                // Q2 — Follow Up Today
+                function buildQ_FollowUpToday() {
+                    return `SELECT COUNT(DISTINCT id) as "count"
+        FROM leads_object
+        WHERE (
+          created_at >= ${DATE_FROM}
+          AND created_at <= ${DATE_TO}
+          AND AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+          AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+          AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+        )`;
+                }
+        
+                // Q3 — Missed Follow Ups AY26
+                function buildQ_MissedFollowUp() {
+                    return `SELECT COUNT(DISTINCT id) as "count"
+        FROM leads_object
+        WHERE (
+          created_at >= ${DATE_FROM}
+          AND created_at <= ${DATE_TO}
+          AND AESL_Next_Follow_up_date__c IS NOT NULL
+          AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
+          AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+          AND (
+            EXISTS (
+              SELECT 1 FROM product_object
+              WHERE associated_lead = leads_object.id
+                AND AESL_Level__c.name LIKE '26%'
+            )
+            OR EXISTS (
+              SELECT 1 FROM product_object
+              WHERE associated_lead = leads_object.id
+                AND created_at >= ${ninetyDaysAgoEpoch()}
+            )
+          )
+        )`;
+                }
+        
+                // Q4 — Call Back Bot (last 15 days, not called back)
+                function buildQ_CallBackBot() {
+                    return `SELECT COUNT(DISTINCT id) as "count"
+        FROM leads_object
+        WHERE (
+          created_at >= ${DATE_FROM}
+          AND created_at <= ${DATE_TO}
+          AND call_back_date >= ${daysAgoISTStartEpoch(15)}
+          AND call_back_date <= ${todayISTEndEpoch()}
+          AND (
+            last_conversation_date_time IS NULL
+            OR last_conversation_date_time < call_back_date
+          )
+        )`;
+                }
+        
+                // Q5 — Visit Scheduled Today Not Done
+                // branch_visit_scheduled_for_date_time is today (IST date)
+                // AND (branch_visit_done_date IS NULL OR branch_visit_done_date < today start IST)
+                function buildQ_VisitScheduledTodayNotDone() {
+                    return `SELECT COUNT(DISTINCT id) as "count"
+        FROM leads_object
+        WHERE (
+          created_at >= ${DATE_FROM}
+          AND created_at <= ${DATE_TO}
+          AND branch_visit_scheduled_for_date_time >= ${todayISTStartEpoch()}
+          AND branch_visit_scheduled_for_date_time <= ${todayISTEndEpoch()}
+          AND (
+            branch_visit_done_date IS NULL
+            OR branch_visit_done_date < ${todayISTStartEpoch()}
+          )
+        )`;
+                }
+        */
+
+        function buildQ_Section1_All() {
+            return `SELECT
+  COUNT(DISTINCT CASE WHEN (
+    stage = 'Untouched Lead'
+    AND (
+      EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND AESL_Level__c.name LIKE '26%')
+      OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${ninetyDaysAgoEpoch()})
+    )
+  ) THEN id END) as "untouched",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "followup",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c IS NOT NULL
+    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+    AND (
+      EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND AESL_Level__c.name LIKE '26%')
+      OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${ninetyDaysAgoEpoch()})
+    )
+  ) THEN id END) as "missed",
+  COUNT(DISTINCT CASE WHEN (
+    call_back_date >= ${daysAgoISTStartEpoch(15)}
+    AND call_back_date <= ${todayISTEndEpoch()}
+    AND (last_conversation_date_time IS NULL OR last_conversation_date_time < call_back_date)
+  ) THEN id END) as "callback",
+  COUNT(DISTINCT CASE WHEN (
+    branch_visit_scheduled_for_date_time >= ${todayISTStartEpoch()}
+    AND branch_visit_scheduled_for_date_time <= ${todayISTEndEpoch()}
+    AND (branch_visit_done_date IS NULL OR branch_visit_done_date < ${todayISTStartEpoch()})
+  ) THEN id END) as "visit"
+FROM leads_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+)`;
+        }
+        // ═══════════════════════════════════════════════════
+        //  QUERIES — Section 2: iACST Test Takers
+        //  One query covers Digital/Self/Bulk/All/Untouched/FollowUpDue/TakenToday
+        //  via CASE WHEN on scholarship_object (slug: scholarship_object).
+        //  A second query covers Scheduled Today Not Taken (different base filter).
+        // ═══════════════════════════════════════════════════
+
+        // Base conditions shared across 7 of the 8 columns
+        // Unique leads with iACST 2627 scholarship + result not empty
+        function buildQ_iACST_Main() {
+            return `SELECT
+  COUNT(DISTINCT CASE WHEN superleap_origin = 'API'
+    THEN associated_lead END) as "digital",
+  COUNT(DISTINCT CASE WHEN superleap_origin = 'Forms'
+    THEN associated_lead END) as "self",
+  COUNT(DISTINCT CASE WHEN superleap_origin = 'Upload'
+    THEN associated_lead END) as "bulk",
+  COUNT(DISTINCT associated_lead) as "all",
+  COUNT(DISTINCT CASE WHEN associated_lead.stage = 'Untouched Lead'
+    THEN associated_lead END) as "untouched",
+  COUNT(DISTINCT CASE WHEN (
+      associated_lead.AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+      AND associated_lead.AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+      AND associated_lead.stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+    ) THEN associated_lead END) as "followup_due",
+  COUNT(DISTINCT CASE WHEN (
+      associated_result.created_at >= ${todayISTStartEpoch()}
+      AND associated_result.created_at <= ${todayISTEndEpoch()}
+    ) THEN associated_lead END) as "taken_today"
+FROM scholarship_object
+WHERE (
+  AESL_Lead_Type__c = 'iACST'
+  AND AESL_Level__c.name = '2627'
+  AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+)`;
+        }
+
+        // Q — iACST Scheduled Today Not Taken
+        // Different base: result empty + exam date = today
+        function buildQ_iACST_ScheduledNotTaken() {
+            return `SELECT COUNT(DISTINCT associated_lead) as "count"
+FROM scholarship_object
+WHERE (
+  AESL_Lead_Type__c = 'iACST'
+  AND AESL_Level__c.name = '2627'
+  AND associated_result.AESL_Eligible_Scholarship__c IS NULL
+  AND AESL_Date_of_Exam__c >= ${todayISTStartEpoch()}
+  AND AESL_Date_of_Exam__c <= ${todayISTEndEpoch()}
+)`;
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  UI
+        // ═══════════════════════════════════════════════════
+
+        function setLoading(id) {
+            document.getElementById(`val-${id}`).innerHTML = `<div class="skeleton skel-val"></div>`;
+            document.getElementById(`footer-${id}`).innerHTML = `<div class="skeleton skel-txt"></div>`;
+        }
+
+        function setCount(id, count, footerHTML) {
+            const el = document.getElementById(`val-${id}`);
+            el.className = 'card-value loaded';
+            el.textContent = Number(count).toLocaleString('en-IN');
+            document.getElementById(`footer-${id}`).innerHTML = footerHTML;
+        }
+
+        function setErr(id, msg) {
+            const el = document.getElementById(`val-${id}`);
+            el.className = 'card-value';
+            el.innerHTML = `<span style="color:#E53E3E;font-size:14px;font-weight:600;">Error</span>`;
+            document.getElementById(`footer-${id}`).innerHTML =
+                `<span style="color:#E53E3E;font-size:10px;">${msg}</span>`;
+        }
+
+        function extractCount(records) {
+            if (!records?.length) return 0;
+            const r = records[0];
+            for (const k of Object.keys(r)) {
+                if (k.toLowerCase() === 'count') return Number(r[k]) || 0;
+            }
+            return Number(Object.values(r)[0]) || 0;
+        }
+
+        async function runDashboard() {
+            const btn = document.getElementById('btnRun');
+            const errBox = document.getElementById('errorBox');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btn.querySelector('.btn-label').textContent = 'Running…';
+            errBox.style.display = 'none';
+
+            [
+                'untouched', 'followup', 'missed', 'callback', 'visit',
+                'iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all',
+                'iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'
+            ].forEach(setLoading);
+
+            const slug = 'leads_object';
+            const scholSlug = 'scholarship_object';
+            const todayStr = nowIST().toISOString().slice(0, 10);
+            let errored = false;
+
+            const tasks = [
+                // async () => {
+                //     try {
+                //         const r = await safeQuery(buildQ_Untouched, slug);
+                //         setCount('untouched', extractCount(r),
+                //             `<span class="tag">AY26</span> Stage: Untouched Lead`);
+                //     } catch (e) { setErr('untouched', e.message); errored = true; }
+                // },
+                // async () => {
+                //     try {
+                //         const r = await safeQuery(buildQ_FollowUpToday, slug);
+                //         setCount('followup', extractCount(r),
+                //             `<span class="tag">TODAY</span> ${todayStr} (IST)`);
+                //     } catch (e) { setErr('followup', e.message); errored = true; }
+                // },
+                // async () => {
+                //     try {
+                //         const r = await safeQuery(buildQ_MissedFollowUp, slug);
+                //         setCount('missed', extractCount(r),
+                //             `<span class="tag">AY26</span> Overdue, excl. closed stages`);
+                //     } catch (e) { setErr('missed', e.message); errored = true; }
+                // },
+                // async () => {
+                //     try {
+                //         const r = await safeQuery(buildQ_CallBackBot, slug);
+                //         setCount('callback', extractCount(r),
+                //             `<span class="tag">15d</span> Call-back pending (not called back)`);
+                //     } catch (e) { setErr('callback', e.message); errored = true; }
+                // },
+                // async () => {
+                //     try {
+                //         const r = await safeQuery(buildQ_VisitScheduledTodayNotDone, slug);
+                //         setCount('visit', extractCount(r),
+                //             `<span class="tag">TODAY</span> Scheduled today · visit not completed`);
+                //     } catch (e) { setErr('visit', e.message); errored = true; }
+                // },
+                async () => {
+                    try {
+                        const r = await safeQuery(buildQ_Section1_All, 'leads_object');
+                        const row = r?.[0] || {};
+                        const get = (k) => Number(row[k]) || 0;
+                        const todayStr = nowIST().toISOString().slice(0, 10);
+                        setCount('untouched', get('untouched'), `<span class="tag">AY26</span> Stage: Untouched Lead`);
+                        setCount('followup', get('followup'), `<span class="tag">TODAY</span> ${todayStr} (IST)`);
+                        setCount('missed', get('missed'), `<span class="tag">AY26</span> Overdue, excl. closed stages`);
+                        setCount('callback', get('callback'), `<span class="tag">15d</span> Call-back pending (not called back)`);
+                        setCount('visit', get('visit'), `<span class="tag">TODAY</span> Scheduled today · visit not completed`);
+                    } catch (e) {
+                        ['untouched', 'followup', 'missed', 'callback', 'visit'].forEach(id => setErr(id, e.message));
+                        errored = true;
+                    }
+                },
+                // Section 2 — both iACST queries run together; main query populates 7 cards
+                async () => {
+                    try {
+                        const r = await safeQuery(buildQ_iACST_Main, scholSlug);
+                        const row = r?.[0] || {};
+                        const get = (k) => Number(row[k]) || 0;
+                        setCount('iacst-digital', get('digital'), `<span class="tag">API</span> Digital leads`);
+                        setCount('iacst-self', get('self'), `<span class="tag">Forms</span> Self-registered`);
+                        setCount('iacst-bulk', get('bulk'), `<span class="tag">Upload</span> Bulk upload`);
+                        setCount('iacst-all', get('all'), `<span class="tag">ALL</span> All origins combined`);
+                        setCount('iacst-untouched', get('untouched'), `<span class="tag">Stage</span> Untouched Lead`);
+                        setCount('iacst-followup', get('followup_due'), `<span class="tag">TODAY</span> ${todayStr} (IST) · excl. closed stages`);
+                        setCount('iacst-taken', get('taken_today'), `<span class="tag">TODAY</span> Result.created_at = ${todayStr}`);
+                    } catch (e) {
+                        ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all',
+                            'iacst-untouched', 'iacst-followup', 'iacst-taken']
+                            .forEach(id => setErr(id, e.message));
+                        errored = true;
+                    }
+                },
+                async () => {
+                    try {
+                        const r = await safeQuery(buildQ_iACST_ScheduledNotTaken, scholSlug);
+                        setCount('iacst-scheduled', extractCount(r),
+                            `<span class="tag">TODAY</span> Exam today · result not yet submitted`);
+                    } catch (e) { setErr('iacst-scheduled', e.message); errored = true; }
+                },
+            ];
+
+            await runPool(tasks, 2);
+
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.querySelector('.btn-label').textContent = 'Apply & Run';
+
+            if (errored) {
+                errBox.innerHTML = '⚠️ One or more queries returned an error. Verify your <strong>?token=</strong> in the URL and check browser console for details.';
+                errBox.style.display = 'flex';
+            } else {
+                document.getElementById('lastRun').textContent =
+                    'Last run: ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+            }
+        }
+    </script>
+
+</body>
+
+</html>
