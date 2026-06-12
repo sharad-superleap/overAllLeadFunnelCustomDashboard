@@ -1,0 +1,3850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overall Lead Funnel Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,400&amp;family=Sora:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --cream: #F5F2EC;
+            --cream-dark: #EDE9E0;
+            --white: #FFFFFF;
+            --border: #E4DFD5;
+            --border-mid: #D5CFC4;
+            --text: #1C1917;
+            --muted: #78716C;
+            --faint: #A8A29E;
+            --green: #00A86B;
+            --green-dark: #007A4D;
+            --green-bg: #F0FBF6;
+            --red: #DC2626;
+            --red-bg: #FEF2F2;
+            --amber: #D97706;
+            --amber-bg: #FFFBEB;
+            --blue: #2563EB;
+            --blue-bg: #EFF6FF;
+            --purple: #7C3AED;
+            --purple-bg: #F5F3FF;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .header h1 em {
+            font-style: italic;
+            color: var(--green);
+        }
+
+        .header-meta {
+            font-size: 11px;
+            color: var(--faint);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .last-run {
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--cream);
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        /* ── CONTROLS ── */
+        .controls-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .date-pill {
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--cream);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 5px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .date-pill strong {
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+
+        .btn-run {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 22px;
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, box-shadow 0.15s;
+        }
+
+        .btn-run:hover:not(:disabled) {
+            background: var(--green-dark);
+            box-shadow: 0 2px 8px rgba(0, 168, 107, 0.25);
+        }
+
+        .btn-run:disabled {
+            background: #86EFBD;
+            cursor: not-allowed;
+        }
+
+        .btn-run .spinner {
+            width: 13px;
+            height: 13px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+
+        .btn-run.loading .spinner {
+            display: block;
+        }
+
+        .btn-run.loading .btn-label {
+            opacity: 0.75;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── ERROR ── */
+        .error-banner {
+            background: var(--red-bg);
+            border: 1px solid #FECACA;
+            color: var(--red);
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 16px 32px 0;
+        }
+
+        /* ── MAIN ── */
+        .main {
+            padding: 28px 32px 40px;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-bottom: 4px;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: 26px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+        }
+
+        .section-title em {
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .section-badge {
+            font-size: 11px;
+            color: var(--faint);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .section-badge span {
+            margin: 0 4px;
+        }
+
+        /* ── SECTION 1 CARDS ── */
+        .s1-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin-bottom: 40px;
+        }
+
+
+        .s1-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 22px 18px;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.15s, transform 0.15s;
+        }
+
+        .s1-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+            transform: translateY(-1px);
+        }
+
+        .s1-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .s1-card.accent-red::before {
+            background: var(--red);
+        }
+
+        .s1-card.accent-amber::before {
+            background: var(--amber);
+        }
+
+        .s1-card.accent-orange::before {
+            background: #EA580C;
+        }
+
+        .s1-card.accent-blue::before {
+            background: var(--blue);
+        }
+
+        .s1-card.accent-green::before {
+            background: var(--green);
+        }
+
+        .s1-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .s1-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            line-height: 1.4;
+            max-width: 150px;
+        }
+
+        .s1-badge {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .badge-red {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .badge-amber {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        .badge-blue {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
+
+        .badge-green {
+            background: var(--green-bg);
+            color: var(--green-dark);
+        }
+
+        .badge-purple {
+            background: var(--purple-bg);
+            color: var(--purple);
+        }
+
+        .s1-value {
+            font-family: 'Fraunces', serif;
+            font-size: 40px;
+            font-weight: 400;
+            color: var(--text);
+            line-height: 1;
+            letter-spacing: -1px;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .s1-value.placeholder {
+            color: var(--border);
+            font-size: 36px;
+        }
+
+        .s1-footer {
+            font-size: 11px;
+            color: var(--faint);
+            padding-top: 10px;
+            border-top: 1px solid var(--cream-dark);
+            min-height: 26px;
+        }
+
+        /* ── SECTION 2 — PANEL LAYOUT ── */
+        .s2-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 960px) {
+            .s2-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .exam-panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 14px;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .panel-title {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title .hl-iacst {
+            background: #DBEAFE;
+            color: #1D4ED8;
+            padding: 1px 8px;
+            border-radius: 4px;
+        }
+
+        .panel-title .hl-anthe {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 1px 8px;
+            border-radius: 4px;
+        }
+
+        .panel-term {
+            font-size: 11px;
+            color: var(--faint);
+            font-weight: 500;
+        }
+
+        .live-dot {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--green-dark);
+            background: var(--green-bg);
+            border: 1px solid #BBF7D0;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .live-dot::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* Top stats row (Digital/Self/Bulk/All) */
+        .panel-stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .panel-stat {
+            padding: 16px 16px 14px;
+            border-right: 1px solid var(--cream-dark);
+            text-align: center;
+            background: transparent;
+        }
+
+        .panel-stat:last-child {
+            border-right: none;
+        }
+
+        .panel-stat-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--faint);
+            margin-bottom: 6px;
+        }
+
+        .panel-stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 26px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            line-height: 1;
+        }
+
+        .panel-stat-value.placeholder {
+            color: var(--border);
+            font-size: 20px;
+        }
+
+        /* Bottom sub-cards row */
+        .panel-sub-row {
+            display: grid;
+            padding: 14px;
+            gap: 10px;
+            background: transparent;
+        }
+
+        .panel-sub-row.cols-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .panel-sub-row.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .sub-card {
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px 14px;
+            position: relative;
+        }
+
+        .sub-card.pink {
+            background: #FFF1F2;
+        }
+
+        .sub-card.peach {
+            background: #FFF7ED;
+        }
+
+        .sub-card.mint {
+            background: #F0FDF4;
+        }
+
+        .sub-card.lavender {
+            background: #F5F3FF;
+        }
+
+        .sub-card.sky {
+            background: #EFF6FF;
+        }
+
+        .sub-card.sand {
+            background: transparent;
+            border: 1px solid var(--border);
+        }
+
+        .sub-card-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            text-align: center;
+        }
+
+        .sub-card-value {
+            font-family: 'Fraunces', serif;
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            line-height: 1;
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .sub-card.pink .sub-card-value {
+            color: #E11D48;
+        }
+
+        .sub-card.peach .sub-card-value {
+            color: #EA580C;
+        }
+
+        .sub-card.mint .sub-card-value {
+            color: #16A34A;
+        }
+
+        .sub-card.lavender .sub-card-value {
+            color: var(--purple);
+        }
+
+        .sub-card.sky .sub-card-value {
+            color: var(--blue);
+        }
+
+        .sub-card.sand .sub-card-value {
+            color: var(--text);
+        }
+
+        .sub-card-value.placeholder {
+            color: var(--border);
+            font-size: 24px;
+        }
+
+        /* ANTHE score buckets */
+        .anthe-sub-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 14px;
+            gap: 10px;
+        }
+
+
+        /* ══════════════════════════════════════
+       SECTION 3 — LEAD STAGE TABLE
+    ══════════════════════════════════════ */
+        .s3-wrap {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        /* Cohort pills */
+        .cohort-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--cream-dark);
+            flex-wrap: wrap;
+        }
+
+        .cohort-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+
+        .cohort-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--cream);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.12s;
+            white-space: nowrap;
+        }
+
+        .cohort-pill:hover {
+            border-color: var(--green);
+            color: var(--green-dark);
+        }
+
+        .cohort-pill.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .cohort-pill .pill-count {
+            font-size: 11px;
+            opacity: 0.75;
+        }
+
+        .cohort-pill.active .pill-count {
+            opacity: 0.85;
+        }
+
+        /* Table inner header */
+        .table-inner-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px 14px;
+            border-bottom: 1px solid var(--cream-dark);
+        }
+
+        .table-inner-title {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--text);
+        }
+
+        .table-inner-title em {
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .table-inner-hint {
+            font-size: 11px;
+            color: var(--faint);
+        }
+
+        /* Toggle By Branch / By User */
+        .view-toggle {
+            display: flex;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .view-toggle button {
+            padding: 6px 16px;
+            font-family: 'Sora', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: background 0.12s, color 0.12s;
+        }
+
+        .view-toggle button.active {
+            background: var(--text);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* The table */
+        .s3-table-wrap {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 520px;
+        }
+
+        .s3-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .s3-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: var(--cream);
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            color: var(--faint);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .s3-table thead th.num {
+            text-align: right;
+        }
+
+        .s3-table thead th.col-missed {
+            color: #EA580C;
+        }
+
+        .s3-table thead th.col-fu {
+            color: var(--amber);
+        }
+
+        .s3-table thead th.col-unt {
+            color: var(--red);
+        }
+
+        .s3-table thead th.col-qual {
+            color: var(--green-dark);
+        }
+
+        .s3-table thead th.col-adm {
+            color: var(--green-dark);
+        }
+
+        .s3-table tbody tr {
+            border-bottom: 1px solid var(--cream-dark);
+            transition: background 0.1s;
+        }
+
+        .s3-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .s3-table tbody tr:hover {
+            background: #FAF9F7;
+        }
+
+        .s3-table tbody tr.total-row {
+            background: var(--cream);
+            font-weight: 700;
+            position: sticky;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .s3-table tbody tr.total-row:hover {
+            background: var(--cream-dark);
+        }
+
+        .s3-table td {
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+
+        .s3-table td.num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .td-branch-name {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .td-branch-sub {
+            font-size: 11px;
+            color: var(--faint);
+            margin-top: 2px;
+        }
+
+        .td-missed {
+            color: #EA580C;
+            font-weight: 600;
+        }
+
+        .td-fu {
+            color: var(--amber);
+            font-weight: 600;
+        }
+
+        .td-unt {
+            color: var(--red);
+            font-weight: 600;
+        }
+
+        .td-qual {
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+
+        .td-adm {
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+
+        .td-muted {
+            color: var(--muted);
+        }
+
+        .s3-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            color: var(--faint);
+            font-size: 13px;
+            gap: 10px;
+        }
+
+        .s3-loading .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--green);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .s3-empty {
+            text-align: center;
+            padding: 48px;
+            color: var(--faint);
+            font-size: 13px;
+        }
+
+        /* ── SKELETON ── */
+        .skeleton {
+            background: linear-gradient(90deg, var(--cream) 25%, var(--cream-dark) 50%, var(--cream) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .skel-lg {
+            height: 44px;
+            width: 90px;
+        }
+
+        .skel-md {
+            height: 28px;
+            width: 70px;
+        }
+
+        .skel-sm {
+            height: 30px;
+            width: 60px;
+        }
+
+        .skel-txt {
+            height: 11px;
+            width: 130px;
+        }
+
+        /* ── FOOTER NOTE ── */
+        .dash-note {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 20px;
+            font-size: 11.5px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .dash-note strong {
+            color: var(--text);
+        }
+
+        .s3-filter-bar {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--cream-dark);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .s3-filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .s3-filter-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--faint);
+            white-space: nowrap;
+        }
+
+        /* The pill button itself */
+        .s3-pill-dropdown {
+            position: relative;
+        }
+
+        .s3-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--cream);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.12s;
+            white-space: nowrap;
+        }
+
+        .s3-pill-btn:hover {
+            border-color: var(--green);
+            color: var(--green-dark);
+        }
+
+        .s3-pill-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .s3-pill-btn.active:hover {
+            background: #2C2825;
+            border-color: #2C2825;
+        }
+
+        .s3-pill-chevron {
+            font-size: 10px;
+            opacity: 0.6;
+            transition: transform 0.15s;
+        }
+
+        .s3-pill-btn.open .s3-pill-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown menu */
+        .s3-pill-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+            z-index: 200;
+            min-width: 150px;
+            /* overflow: hidden; */
+            padding: 4px;
+            max-height: 240px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .s3-pill-menu.open {
+            display: block;
+        }
+
+        .s3-pill-option {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted);
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.1s, color 0.1s;
+            white-space: nowrap;
+        }
+
+        .s3-pill-option:hover {
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        .s3-pill-option.active {
+            background: var(--green-bg);
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+
+        .pill-clear-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: none;
+            background: var(--border);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            margin-left: -4px;
+            /* tucks it close to the pill */
+            transition: background 0.12s, color 0.12s;
+            flex-shrink: 0;
+        }
+
+        .pill-clear-btn:hover {
+            background: var(--red);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-left">
+            <div class="header-meta">Overall Lead Funnel</div>
+            <h1>Dashboard <em>overview</em></h1>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <span class="last-run" id="lastRun">Not yet run</span>
+        </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls-bar">
+        <button class="btn-run" id="btnRun" onclick="runDashboard()">
+            <div class="spinner"></div>
+            <span class="btn-label">Apply &amp; Run</span>
+        </button>
+        <div class="date-pill">
+            📅 <strong>From:</strong>
+            <input type="date" id="ctrl-date-from" style="border:none;background:transparent;font-family:'Sora',sans-serif;
+                   font-size:11px;color:var(--green-dark);font-weight:600;outline:none;cursor:pointer;"
+                onchange="onDateWindowChange()">
+            <strong style="margin:0 4px;">→</strong>
+            <strong>To:</strong>
+            <input type="date" id="ctrl-date-to" style="border:none;background:transparent;font-family:'Sora',sans-serif;
+                   font-size:11px;color:var(--green-dark);font-weight:600;outline:none;cursor:pointer;"
+                onchange="onDateWindowChange()">
+            <span id="ctrl-date-hint" style="color:var(--faint);margin-left:6px;font-size:10px;"></span>
+        </div>
+    </div>
+
+    <div id="errorBox" class="error-banner" style="display:none;"></div>
+
+    <div class="main">
+
+        <!-- ══════════════════════════════════════
+       SECTION 1 — WHAT NEEDS YOU TODAY
+  ══════════════════════════════════════ -->
+        <div class="section-header">
+            <div class="section-header-left">
+                <div class="section-eyebrow">Section 01 · What needs you today</div>
+                <div class="section-title">Today's Priority <em>queue</em></div>
+            </div>
+            <div class="section-badge">AY26 <span>·</span> Term 2627</div>
+        </div>
+
+        <div class="s1-grid">
+
+            <div class="s1-card accent-red">
+                <div class="s1-card-top">
+                    <div class="s1-label">Untouched Leads</div>
+                    <div class="s1-badge badge-red">ACT NOW</div>
+                </div>
+                <div class="s1-value placeholder" id="val-untouched">—</div>
+                <div class="s1-footer" id="footer-untouched">AY26 · Never contacted</div>
+            </div>
+
+            <div class="s1-card accent-amber">
+                <div class="s1-card-top">
+                    <div class="s1-label">Follow up Today</div>
+                    <div class="s1-badge badge-amber">DUE</div>
+                </div>
+                <div class="s1-value placeholder" id="val-followup">—</div>
+                <div class="s1-footer" id="footer-followup">Scheduled for today (IST)</div>
+            </div>
+
+            <div class="s1-card accent-orange">
+                <div class="s1-card-top">
+                    <div class="s1-label">Missed Follow ups</div>
+                    <div class="s1-badge" style="background:#FFF0EB;color:#EA580C;">OVERDUE</div>
+                </div>
+                <div class="s1-value placeholder" id="val-missed">—</div>
+                <div class="s1-footer" id="footer-missed">AY26 · Past due</div>
+            </div>
+
+            <div class="s1-card accent-blue">
+                <div class="s1-card-top">
+                    <div class="s1-label">Call Back Bot · Pending</div>
+                    <div class="s1-badge badge-blue">15D</div>
+                </div>
+                <div class="s1-value placeholder" id="val-callback">—</div>
+                <div class="s1-footer" id="footer-callback">Bot routed, not yet called</div>
+            </div>
+
+            <div class="s1-card accent-green">
+                <div class="s1-card-top">
+                    <div class="s1-label">Visit Scheduled Today — Not Done</div>
+                    <div class="s1-badge badge-green">TODAY</div>
+                </div>
+                <div class="s1-value placeholder" id="val-visit">—</div>
+                <div class="s1-footer" id="footer-visit">Branch visit booked today · not completed</div>
+            </div>
+
+        </div>
+
+        <!-- ══════════════════════════════════════
+       SECTION 2 — TEST TAKERS BY EXAM
+  ══════════════════════════════════════ -->
+        <div class="section-header">
+            <div class="section-header-left">
+                <div class="section-eyebrow">Section 02 · Scholarship Pipelines</div>
+                <div class="section-title">Test takers <em>by exam</em></div>
+            </div>
+            <div class="section-badge">iACST + ANTHE <span>·</span> Term 2627</div>
+        </div>
+
+        <div class="s2-grid">
+
+            <!-- ── iACST PANEL ── -->
+            <div class="exam-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="hl-iacst">iACST Test Takers</span>
+                        <span class="panel-term">· Term 2627</span>
+                    </div>
+                    <div class="live-dot">LIVE</div>
+                </div>
+
+                <!-- Digital / Self / Bulk / All -->
+                <div class="panel-stats-row">
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">Digital · API</div>
+                        <div class="panel-stat-value placeholder" id="val-iacst-digital">—</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">Self · Form</div>
+                        <div class="panel-stat-value placeholder" id="val-iacst-self">—</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">Bulk · Upload</div>
+                        <div class="panel-stat-value placeholder" id="val-iacst-bulk">—</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">All Taken</div>
+                        <div class="panel-stat-value placeholder" id="val-iacst-all">—</div>
+                    </div>
+                </div>
+
+                <!-- Untouched / Follow up / Taken / Scheduled -->
+                <div class="panel-sub-row cols-4">
+                    <div class="sub-card pink">
+                        <div class="sub-card-label">Untouched</div>
+                        <div class="sub-card-value placeholder" id="val-iacst-untouched">—</div>
+                    </div>
+                    <div class="sub-card peach">
+                        <div class="sub-card-label">Follow up today</div>
+                        <div class="sub-card-value placeholder" id="val-iacst-followup">—</div>
+                    </div>
+                    <div class="sub-card mint">
+                        <div class="sub-card-label">Taken today</div>
+                        <div class="sub-card-value placeholder" id="val-iacst-taken">—</div>
+                    </div>
+                    <div class="sub-card lavender">
+                        <div class="sub-card-label">Scheduled today · not taken</div>
+                        <div class="sub-card-value placeholder" id="val-iacst-scheduled">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── ANTHE PANEL ── -->
+            <div class="exam-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="hl-anthe">ANTHE Test Takers</span>
+                        <span class="panel-term">· Term 2627</span>
+                    </div>
+                    <div class="live-dot">LIVE</div>
+                </div>
+
+                <!-- Digital / Self / Bulk / All -->
+                <div class="panel-stats-row">
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">Digital · API</div>
+                        <div class="panel-stat-value placeholder" id="val-anthe-digital">—</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">Self · Form</div>
+                        <div class="panel-stat-value placeholder" id="val-anthe-self">—</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">Bulk · Upload</div>
+                        <div class="panel-stat-value placeholder" id="val-anthe-bulk">—</div>
+                    </div>
+                    <div class="panel-stat">
+                        <div class="panel-stat-label">All</div>
+                        <div class="panel-stat-value placeholder" id="val-anthe-all">—</div>
+                    </div>
+                </div>
+
+                <!-- 60%+ bucket -->
+                <div style="padding: 12px 14px 0; display:flex; align-items:center; justify-content:space-between;">
+                    <div
+                        style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--faint);">
+                        Scored 60%+ · Hot</div>
+                    <div style="font-size:10px;color:var(--faint);">Below 60%</div>
+                </div>
+                <div class="panel-sub-row"
+                    style="grid-template-columns: repeat(3,1fr) 1px repeat(3,1fr); padding-top:8px; align-items:stretch;">
+                    <div class="sub-card sand">
+                        <div class="sub-card-label">All 60%+</div>
+                        <div class="sub-card-value placeholder" id="val-anthe-above60">—</div>
+                    </div>
+                    <div class="sub-card pink">
+                        <div class="sub-card-label">Untouched</div>
+                        <div class="sub-card-value placeholder" id="val-anthe-unt-above60">—</div>
+                    </div>
+                    <div class="sub-card peach">
+                        <div class="sub-card-label">Follow up today</div>
+                        <div class="sub-card-value placeholder" id="val-anthe-fu-above60">—</div>
+                    </div>
+                    <!-- divider -->
+                    <div style="background:var(--border);width:1px;margin:4px 0;border-radius:1px;"></div>
+                    <div class="sub-card sand">
+                        <div class="sub-card-label">All &lt;60%</div>
+                        <div class="sub-card-value placeholder" id="val-anthe-below60">—</div>
+                    </div>
+                    <div class="sub-card pink">
+                        <div class="sub-card-label">Untouched</div>
+                        <div class="sub-card-value placeholder" id="val-anthe-unt-below60">—</div>
+                    </div>
+                    <div class="sub-card peach">
+                        <div class="sub-card-label">Follow up today</div>
+                        <div class="sub-card-value placeholder" id="val-anthe-fu-below60">—</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ══════════════════════════════════════
+       SECTION 3 — LEAD STAGE FUNNEL TABLE
+  ══════════════════════════════════════ -->
+        <div class="section-header">
+            <div class="section-header-left">
+                <div class="section-eyebrow">Section 03 · Lead Stage Funnel</div>
+                <div class="section-title">Where every lead <em>is right now</em></div>
+            </div>
+            <div class="section-badge">Tap a row to drill into team / individual leads</div>
+        </div>
+
+        <div class="s3-wrap">
+
+            <!-- S3 Filters -->
+            <div class="s3-filter-bar">
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Qualified</span>
+                    <div class="s3-pill-dropdown" id="fpd-qualified">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-qualified')">
+                            <span class="s3-pill-btn-label" id="fpl-qualified">All Time</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-qualified">
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('qualified','','All Time',this)">All Time</div>
+                            <div class="s3-pill-option" data-val="today"
+                                onclick="selectPillOption('qualified','today','Today',this)">Today</div>
+                            <div class="s3-pill-option" data-val="yesterday"
+                                onclick="selectPillOption('qualified','yesterday','Yesterday',this)">Yesterday</div>
+                            <div class="s3-pill-option" data-val="last7"
+                                onclick="selectPillOption('qualified','last7','Last 7 Days',this)">Last 7 Days</div>
+                            <div class="s3-pill-option" data-val="last30"
+                                onclick="selectPillOption('qualified','last30','Last 30 Days',this)">Last 30 Days</div>
+                            <div class="s3-pill-option" data-val="last90"
+                                onclick="selectPillOption('qualified','last90','Last 90 Days',this)">Last 90 Days</div>
+                            <div class="s3-pill-option" data-val="last180"
+                                onclick="selectPillOption('qualified','last180','Last 180 Days',this)">Last 180 Days
+                            </div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-qualified" style="display:none"
+                        onclick="clearPillFilter('qualified','All Time',event)">×</button>
+                </div>
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Visit Done</span>
+                    <div class="s3-pill-dropdown" id="fpd-visit-done">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-visit-done')">
+                            <span class="s3-pill-btn-label" id="fpl-visit-done">All Time</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-visit-done">
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('visit-done','','All Time',this)">All Time</div>
+                            <div class="s3-pill-option" data-val="today"
+                                onclick="selectPillOption('visit-done','today','Today',this)">Today</div>
+                            <div class="s3-pill-option" data-val="yesterday"
+                                onclick="selectPillOption('visit-done','yesterday','Yesterday',this)">Yesterday</div>
+                            <div class="s3-pill-option" data-val="last7"
+                                onclick="selectPillOption('visit-done','last7','Last 7 Days',this)">Last 7 Days</div>
+                            <div class="s3-pill-option" data-val="last30"
+                                onclick="selectPillOption('visit-done','last30','Last 30 Days',this)">Last 30 Days</div>
+                            <div class="s3-pill-option" data-val="last90"
+                                onclick="selectPillOption('visit-done','last90','Last 90 Days',this)">Last 90 Days</div>
+                            <div class="s3-pill-option" data-val="last180"
+                                onclick="selectPillOption('visit-done','last180','Last 180 Days',this)">Last 180 Days
+                            </div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-visit-done" style="display:none"
+                        onclick="clearPillFilter('visit-done','All Time',event)">×</button>
+                </div>
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Class</span>
+                    <div class="s3-pill-dropdown" id="fpd-class">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-class')">
+                            <span class="s3-pill-btn-label" id="fpl-class">All Classes</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-class">
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('class','','All Classes',this)">All Classes</div>
+                            <div id="class-options-loading" style="padding:8px 12px;font-size:12px;color:var(--faint);">
+                                Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-class" style="display:none"
+                        onclick="clearPillFilter('class','All Classes',event)">×</button>
+                </div>
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Lead Branch</span>
+                    <div class="s3-pill-dropdown" id="fpd-branch">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-branch')">
+                            <span class="s3-pill-btn-label" id="fpl-branch">All Branches</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-branch">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search name or code…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onFilterSearch('aesl_branch__c','fpm-branch','branch',this)"
+                                    onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('branch','','All Branches',this)">All Branches</div>
+                            <div id="branch-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-branch" style="display:none"
+                        onclick="clearPillFilter('branch','All Branches',event)">×</button>
+                </div>
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">School</span>
+                    <div class="s3-pill-dropdown" id="fpd-school">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-school')">
+                            <span class="s3-pill-btn-label" id="fpl-school">All Schools</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-school">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search name or code…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onFilterSearch('aesl_school__c','fpm-school','school',this)"
+                                    onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('school','','All Schools',this)">All Schools</div>
+                            <div id="school-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-school" style="display:none"
+                        onclick="clearPillFilter('school','All Schools',event)">×</button>
+                </div>
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Campaign</span>
+                    <div class="s3-pill-dropdown" id="fpd-campaign">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-campaign')">
+                            <span class="s3-pill-btn-label" id="fpl-campaign">All Campaigns</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-campaign">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search campaign…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onCampaignSearch(this)" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('campaign','','All Campaigns',this)">All Campaigns</div>
+                            <div id="campaign-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-campaign" style="display:none"
+                        onclick="clearPillFilter('campaign','All Campaigns',event)">×</button>
+                </div>
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Source</span>
+                    <div class="s3-pill-dropdown" id="fpd-source">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-source')">
+                            <span class="s3-pill-btn-label" id="fpl-source">All Sources</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-source">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search source…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onSourceSearch(this)" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('source','','All Sources',this)">All Sources</div>
+                            <div id="source-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-source" style="display:none"
+                        onclick="clearPillFilter('source','All Sources',event)">×</button>
+                </div>
+                <!-- Scholarship % Range -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Scholarship %</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <input type="number" id="f-schol-min" placeholder="Min" style="width:64px;padding:5px 8px;border:1px solid var(--border);border-radius:20px;
+             font-size:12px;font-family:'Sora',sans-serif;outline:none;background:var(--cream);
+             color:var(--muted);text-align:center;" oninput="onScholPctChange()" min="0" max="100">
+                        <span style="font-size:11px;color:var(--faint);">–</span>
+                        <input type="number" id="f-schol-max" placeholder="Max" style="width:64px;padding:5px 8px;border:1px solid var(--border);border-radius:20px;
+             font-size:12px;font-family:'Sora',sans-serif;outline:none;background:var(--cream);
+             color:var(--muted);text-align:center;" oninput="onScholPctChange()" min="0" max="100">
+                        <button class="pill-clear-btn" id="fclear-schol-pct" style="display:none;margin-left:0;"
+                            onclick="clearScholPct(event)">×</button>
+                    </div>
+                </div>
+                <!-- Scholarship Result Date -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Result Date</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <input type="date" id="f-result-from" style="padding:5px 8px;border:1px solid var(--border);border-radius:20px;
+             font-size:11px;font-family:'Sora',sans-serif;outline:none;background:var(--cream);color:var(--muted);"
+                            onchange="onDateRangeChange('result')">
+                        <span style="font-size:11px;color:var(--faint);">→</span>
+                        <input type="date" id="f-result-to" style="padding:5px 8px;border:1px solid var(--border);border-radius:20px;
+             font-size:11px;font-family:'Sora',sans-serif;outline:none;background:var(--cream);color:var(--muted);"
+                            onchange="onDateRangeChange('result')">
+                        <button class="pill-clear-btn" id="fclear-result-date" style="display:none;margin-left:0;"
+                            onclick="clearDateRange('result',event)">×</button>
+                    </div>
+                </div>
+                <!-- Scholarship Created At -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Schol. Created At</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <input type="date" id="f-schol-from" style="padding:5px 8px;border:1px solid var(--border);border-radius:20px;
+             font-size:11px;font-family:'Sora',sans-serif;outline:none;background:var(--cream);color:var(--muted);"
+                            onchange="onDateRangeChange('schol')">
+                        <span style="font-size:11px;color:var(--faint);">→</span>
+                        <input type="date" id="f-schol-to" style="padding:5px 8px;border:1px solid var(--border);border-radius:20px;
+             font-size:11px;font-family:'Sora',sans-serif;outline:none;background:var(--cream);color:var(--muted);"
+                            onchange="onDateRangeChange('schol')">
+                        <button class="pill-clear-btn" id="fclear-schol-date" style="display:none;margin-left:0;"
+                            onclick="clearDateRange('schol',event)">×</button>
+                    </div>
+                </div>
+                <!-- Course Name -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Course Name</span>
+                    <div class="s3-pill-dropdown" id="fpd-course">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-course')">
+                            <span class="s3-pill-btn-label" id="fpl-course">All Courses</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-course">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search course…" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;
+                 font-size:12px;font-family:'Sora',sans-serif;outline:none;" oninput="onCourseSearch(this)"
+                                    onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('course','','All Courses',this)">All Courses</div>
+                            <div id="course-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-course" style="display:none"
+                        onclick="clearPillFilter('course','All Courses',event)">×</button>
+                </div>
+                <!-- Course Career -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">Course Career</span>
+                    <div class="s3-pill-dropdown" id="fpd-career">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-career')">
+                            <span class="s3-pill-btn-label" id="fpl-career">All Careers</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-career">
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('career','','All Careers',this)">All Careers</div>
+                            <div id="career-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-career" style="display:none"
+                        onclick="clearPillFilter('career','All Careers',event)">×</button>
+                </div>
+                <!-- User Team -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">User Team</span>
+                    <div class="s3-pill-dropdown" id="fpd-user-team">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-user-team')">
+                            <span class="s3-pill-btn-label" id="fpl-user-team">All Teams</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-user-team">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search team…" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;
+                 font-size:12px;font-family:'Sora',sans-serif;outline:none;" oninput="onUserTeamSearch(this)"
+                                    onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('user-team','','All Teams',this)">All Teams</div>
+                            <div id="user-team-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-user-team" style="display:none"
+                        onclick="clearPillFilter('user-team','All Teams',event)">×</button>
+                </div>
+                <!-- User RSGH -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">User RSGH</span>
+                    <div class="s3-pill-dropdown" id="fpd-user-rsgh">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-user-rsgh')">
+                            <span class="s3-pill-btn-label" id="fpl-user-rsgh">All RSGHs</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-user-rsgh">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search name or email…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onUserSearch('user-rsgh',this)" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('user-rsgh','','All RSGHs',this)">All RSGHs</div>
+                            <div id="user-rsgh-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-user-rsgh" style="display:none"
+                        onclick="clearPillFilter('user-rsgh','All RSGHs',event)">×</button>
+                </div>
+                <!-- User TL/Manager -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">User TL/Manager</span>
+                    <div class="s3-pill-dropdown" id="fpd-user-tl">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-user-tl')">
+                            <span class="s3-pill-btn-label" id="fpl-user-tl">All TLs</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-user-tl">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search name or email…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onUserSearch('user-tl',this)" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('user-tl','','All TLs',this)">All TLs</div>
+                            <div id="user-tl-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-user-tl" style="display:none"
+                        onclick="clearPillFilter('user-tl','All TLs',event)">×</button>
+                </div>
+                <!-- User Branch Name -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">User Branch</span>
+                    <div class="s3-pill-dropdown" id="fpd-user-branch">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-user-branch')">
+                            <span class="s3-pill-btn-label" id="fpl-user-branch">All Branches</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-user-branch">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search name or code…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onFilterSearch('aesl_branch__c','fpm-user-branch','user-branch',this)"
+                                    onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('user-branch','','All Branches',this)">All Branches</div>
+                            <div id="user-branch-options-loading"
+                                style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-user-branch" style="display:none"
+                        onclick="clearPillFilter('user-branch','All Branches',event)">×</button>
+                </div>
+                <!-- User -->
+                <div class="s3-filter-group">
+                    <span class="s3-filter-label">User</span>
+                    <div class="s3-pill-dropdown" id="fpd-user">
+                        <span class="s3-pill-btn" onclick="togglePillDropdown('fpd-user')">
+                            <span class="s3-pill-btn-label" id="fpl-user">All Users</span>
+                            <span class="s3-pill-chevron">▾</span>
+                        </span>
+                        <div class="s3-pill-menu" id="fpm-user">
+                            <div
+                                style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);position:sticky;top:0;background:var(--white);z-index:1;">
+                                <input type="text" placeholder="Search name or email…"
+                                    style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
+                                    oninput="onUserSearch('user',this)" onclick="event.stopPropagation()">
+                            </div>
+                            <div class="s3-pill-option active" data-val=""
+                                onclick="selectPillOption('user','','All Users',this)">All Users</div>
+                            <div id="user-options-loading" style="padding:8px 12px;font-size:12px;color:var(--faint);">
+                                Loading…</div>
+                        </div>
+                    </div>
+                    <button class="pill-clear-btn" id="fclear-user" style="display:none"
+                        onclick="clearPillFilter('user','All Users',event)">×</button>
+                </div>
+            </div>
+
+
+            <!-- Cohort filter pills -->
+            <div class="cohort-bar">
+                <span class="cohort-label">Cohort</span>
+                <span class="cohort-pill active" data-cohort="ay26" onclick="setCohort(this)">
+                    AY26 All Leads <span class="pill-count" id="pill-count-ay26">—</span>
+                </span>
+                <span class="cohort-pill" data-cohort="iacst_tt" onclick="setCohort(this)">
+                    iACST Test Takers <span class="pill-count" id="pill-count-iacst_tt">—</span>
+                </span>
+                <span class="cohort-pill" data-cohort="iacst_rl" onclick="setCohort(this)">
+                    iACST Registered Leads <span class="pill-count" id="pill-count-iacst_rl">—</span>
+                </span>
+                <span class="cohort-pill" data-cohort="anthe_tt" onclick="setCohort(this)">
+                    ANTHE Test Takers <span class="pill-count" id="pill-count-anthe_tt">—</span>
+                </span>
+                <span class="cohort-pill" data-cohort="callback15" onclick="setCohort(this)">
+                    Call Back · 15d <span class="pill-count" id="pill-count-callback15">—</span>
+                </span>
+                <span class="cohort-pill" data-cohort="all" onclick="setCohort(this)">
+                    All Leads (New+Old) <span class="pill-count" id="pill-count-all">—</span>
+                </span>
+            </div>
+
+            <!-- Table header + toggle -->
+            <div class="table-inner-header">
+                <div class="table-inner-title">Lead status by <em>user branch</em></div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <span class="table-inner-hint">Showing totals by branch</span>
+                    <div class="view-toggle">
+                        <button class="active" id="tog-branch" onclick="setView('branch')">By Branch</button>
+                        <button id="tog-user" onclick="setView('user')">By User</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table body -->
+            <div class="s3-table-wrap" id="s3TableWrap">
+                <div class="s3-empty">Click <strong>Apply &amp; Run</strong> to load data</div>
+            </div>
+
+        </div>
+
+        <!-- Footer note -->
+        <div class="dash-note">
+            <strong>Notes:</strong> All date comparisons use <strong>IST (UTC+5:30)</strong>. &nbsp;·&nbsp;
+            "Today" = current calendar date in IST (00:00:00 → 23:59:59). &nbsp;·&nbsp;
+            AY26 = associated product term starts with <code>26</code> or product created in last 90 days.
+        </div>
+
+    </div><!-- /main -->
+
+    <script>
+        const BASE_URL = 'https://aakash.superleap.com';
+        const CLIENT_ID = 'superleapweb';
+        const CLIENT_SECRET = 'UEAlm1PWab8VXB5b';
+        const IST_MS = 5.5 * 60 * 60 * 1000;
+
+        function getToken() {
+            return new URLSearchParams(window.location.search).get('token') ||
+                new URLSearchParams(window.location.search).get('auth') || '';
+        }
+
+        // initialise Filter function to fetch initial filters like class
+        async function initialiseFilters() {
+            try {
+                const query = `SELECT id, name FROM aesl_class__c ORDER BY name ASC`;
+                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'authorization': `Bearer ${getToken()}`,
+                        'client-id': CLIENT_ID,
+                        'client-secret': CLIENT_SECRET,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, slug: 'aesl_class__c' })
+                });
+                const data = await resp.json();
+                const records = data?.data?.records || [];
+                const menu = document.getElementById('fpm-class');
+                const loadingEl = document.getElementById('class-options-loading');
+                if (loadingEl) loadingEl.remove();
+                records.forEach(r => {
+                    const div = document.createElement('div');
+                    div.className = 's3-pill-option';
+                    div.dataset.val = r.name;
+                    div.textContent = r.name;
+                    div.onclick = function () { selectPillOption('class', r.name, r.name, this); };
+                    menu.appendChild(div);
+                });
+            } catch (e) {
+                const loadingEl = document.getElementById('class-options-loading');
+                if (loadingEl) loadingEl.textContent = 'Failed to load';
+            }
+
+            // Fetch branches (initial 100) — cached for reuse in User Branch filter
+            try {
+                _allBranches = await fetchFilterOptions('aesl_branch__c', '');
+                const currentBranch = document.querySelector('#fpm-branch .s3-pill-option.active')?.dataset.val || '';
+                renderFilterOptions('fpm-branch', _allBranches, 'branch', currentBranch);
+                document.getElementById('branch-options-loading')?.remove();
+            } catch (e) {
+                const el = document.getElementById('branch-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+            // Fetch schools (initial 100)
+            try {
+                const schools = await fetchFilterOptions('aesl_school__c', '');
+                const currentSchool = document.querySelector('#fpm-school .s3-pill-option.active')?.dataset.val || '';
+                renderFilterOptions('fpm-school', schools, 'school', currentSchool);
+                document.getElementById('school-options-loading')?.remove();
+            } catch (e) {
+                const el = document.getElementById('school-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+            // Fetch campaigns (initial 100, active only)
+            try {
+                const campaigns = await fetchFilterOptions('campaign', '');
+                const campaignMenu = document.getElementById('fpm-campaign');
+                document.getElementById('campaign-options-loading')?.remove();
+                campaigns.forEach(r => {
+                    const div = document.createElement('div');
+                    div.className = 's3-pill-option';
+                    div.dataset.val = r.id;
+                    div.textContent = r.name;
+                    div.onclick = function () { selectPillOption('campaign', r.id, r.name, this); };
+                    campaignMenu.appendChild(div);
+                });
+            } catch (e) {
+                const el = document.getElementById('campaign-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+            // Fetch sources (initial load, limit 100)
+            try {
+                const sources = await fetchSourceOptions('');
+                const sourceMenu = document.getElementById('fpm-source');
+                document.getElementById('source-options-loading')?.remove();
+                sources.forEach(s => {
+                    const div = document.createElement('div');
+                    div.className = 's3-pill-option';
+                    div.dataset.val = s.slug;
+                    div.textContent = s.slug;
+                    div.onclick = function () { selectPillOption('source', s.slug, s.slug, this); };
+                    sourceMenu.appendChild(div);
+                });
+            } catch (e) {
+                const el = document.getElementById('source-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+            // Fetch courses (product2 slug, initial 100)
+            try {
+                const courses = await fetchFilterOptions('product2', '');
+                const courseMenu = document.getElementById('fpm-course');
+                document.getElementById('course-options-loading')?.remove();
+                courses.forEach(r => {
+                    const div = document.createElement('div');
+                    div.className = 's3-pill-option';
+                    div.dataset.val = r.name;
+                    div.textContent = r.name;
+                    div.onclick = function () { selectPillOption('course', r.name, r.name, this); };
+                    courseMenu.appendChild(div);
+                });
+            } catch (e) {
+                const el = document.getElementById('course-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+            // Fetch careers (aesl_career__c slug, full list — usually small)
+            try {
+                const query = `SELECT id, name FROM aesl_career__c ORDER BY name ASC`;
+                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'authorization': `Bearer ${getToken()}`,
+                        'client-id': CLIENT_ID,
+                        'client-secret': CLIENT_SECRET,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, slug: 'aesl_career__c' })
+                });
+                const data = await resp.json();
+                const careers = data?.data?.records || [];
+                const careerMenu = document.getElementById('fpm-career');
+                document.getElementById('career-options-loading')?.remove();
+                careers.forEach(r => {
+                    const div = document.createElement('div');
+                    div.className = 's3-pill-option';
+                    div.dataset.val = r.id;        // store ID as val
+                    div.textContent = r.name;
+                    div.onclick = function () { selectPillOption('career', r.id, r.name, this); };
+                    careerMenu.appendChild(div);
+                });
+            } catch (e) {
+                const el = document.getElementById('career-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+            // Fetch teams
+            try {
+                const teams = await fetchTeams('');
+                const menu = document.getElementById('fpm-user-team');
+                document.getElementById('user-team-options-loading')?.remove();
+                renderTeamOptions(menu, teams, '');
+            } catch (e) {
+                const el = document.getElementById('user-team-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+
+            // Fetch initial users (shared across RSGH, TL, User filters)
+            try {
+                const users = await fetchUsers('');
+                // Populate all three user-based filters at once from the same fetch
+                ['user-rsgh', 'user-tl', 'user'].forEach(group => {
+                    const loadingId = group === 'user' ? 'user-options-loading'
+                        : group === 'user-rsgh' ? 'user-rsgh-options-loading'
+                            : 'user-tl-options-loading';
+                    document.getElementById(loadingId)?.remove();
+                    renderUserOptions('fpm-' + group, users, group, '');
+                });
+            } catch (e) {
+                ['user-rsgh-options-loading', 'user-tl-options-loading', 'user-options-loading'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = 'Failed to load';
+                });
+            }
+
+            // User Branch — reuse already-fetched branch cache, no extra API call
+            if (_allBranches) {
+                renderFilterOptions('fpm-user-branch', _allBranches, 'user-branch', '');
+                document.getElementById('user-branch-options-loading')?.remove();
+            } else {
+                const el = document.getElementById('user-branch-options-loading');
+                if (el) el.textContent = 'Failed to load';
+            }
+
+
+        }
+
+        function nowIST() { return new Date(Date.now() + IST_MS); }
+
+        function todayISTStartEpoch() {
+            const d = nowIST();
+            return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0, 0) - IST_MS;
+        }
+
+        function todayISTEndEpoch() {
+            const d = nowIST();
+            return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 23, 59, 59, 999) - IST_MS;
+        }
+        function daysAgoISTStartEpoch(n) { return todayISTStartEpoch() - n * 86400000; }
+
+        function ninetyDaysAgoEpoch() { return Date.now() - 90 * 86400000; }
+
+        // 1 May 2026 00:00 IST → 2 May 2026 23:59:59 IST (in UTC epoch)
+        // ── Date window — driven by picker, default last 30 days ──
+        let DATE_FROM = Date.UTC(2026, 3, 30, 18, 30, 0, 0); // overwritten on load
+        let DATE_TO = Date.UTC(2026, 4, 2, 18, 29, 59, 999);
+
+        function initDateWindow() {
+            const toDate = nowIST();
+            const fromDate = new Date(toDate.getTime() - 29 * 86400000); // last 30 days default
+
+            const toStr = toDate.toISOString().slice(0, 10);
+            const fromStr = fromDate.toISOString().slice(0, 10);
+
+            document.getElementById('ctrl-date-from').value = fromStr;
+            document.getElementById('ctrl-date-to').value = toStr;
+
+            // Set max for "to" = today, min for "from" = 90 days ago
+            const maxDate = toStr;
+            const minAllowed = new Date(toDate.getTime() - 89 * 86400000).toISOString().slice(0, 10);
+            document.getElementById('ctrl-date-from').max = maxDate;
+            document.getElementById('ctrl-date-from').min = minAllowed;
+            document.getElementById('ctrl-date-to').max = maxDate;
+
+            applyDateWindow(fromStr, toStr);
+        }
+
+        function applyDateWindow(fromStr, toStr) {
+            DATE_FROM = dateToISTStartEpoch(fromStr);
+            DATE_TO = dateToISTEndEpoch(toStr);
+
+            // Update the hint label
+            const days = Math.round((DATE_TO - DATE_FROM) / 86400000);
+            document.getElementById('ctrl-date-hint').textContent = `${days}d window`;
+        }
+
+        function onDateWindowChange() {
+            const fromStr = document.getElementById('ctrl-date-from').value;
+            const toStr = document.getElementById('ctrl-date-to').value;
+            const hint = document.getElementById('ctrl-date-hint');
+
+            if (!fromStr || !toStr) return;
+
+            const fromTs = dateToISTStartEpoch(fromStr);
+            const toTs = dateToISTEndEpoch(toStr);
+
+            // Enforce: from must be before to
+            if (fromTs > toTs) {
+                hint.textContent = '⚠ From must be before To';
+                hint.style.color = 'var(--red)';
+                return;
+            }
+
+            // Enforce 90-day max
+            const diffDays = Math.round((toTs - fromTs) / 86400000);
+            if (diffDays > 90) {
+                hint.textContent = '⚠ Max 90 days';
+                hint.style.color = 'var(--red)';
+                // Auto-clamp: push "from" forward to keep it within 90 days of "to"
+                const clampedFrom = new Date(toTs - 89 * 86400000).toISOString().slice(0, 10);
+                document.getElementById('ctrl-date-from').value = clampedFrom;
+                applyDateWindow(clampedFrom, toStr);
+                return;
+            }
+
+            hint.style.color = 'var(--faint)';
+            applyDateWindow(fromStr, toStr);
+
+            // Reset S1/S2 cache since date window changed
+            s1s2Loaded = false;
+            s3Data = {};
+        }
+
+        async function executeQuery(query, slug) {
+            const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                method: 'POST',
+                headers: {
+                    'accept': '*/*',
+                    'authorization': `Bearer ${getToken()}`,
+                    'client-id': CLIENT_ID,
+                    'client-secret': CLIENT_SECRET,
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({ query, slug })
+            });
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+            const data = await resp.json();
+            if (!data.success) throw new Error(data.message || 'API returned success=false');
+            return data.data?.records || [];
+        }
+
+        async function safeQuery(queryFn, slug, retries = 3) {
+            for (let i = 0; i < retries; i++) {
+                try { return await executeQuery(queryFn(), slug); }
+                catch (e) {
+                    if (i === retries - 1) throw e;
+                    await new Promise(r => setTimeout(r, 400 * (i + 1)));
+                }
+            }
+        }
+
+        async function runPool(tasks, concurrency = 2) {
+            const results = new Array(tasks.length);
+            let idx = 0;
+            async function next() {
+                const i = idx++;
+                if (i >= tasks.length) return;
+                results[i] = await tasks[i]();
+                await next();
+            }
+            await Promise.all(Array.from({ length: Math.min(concurrency, tasks.length) }, () => next()));
+            return results;
+        }
+
+        // ═══════════════════════ QUERIES ═══════════════════════
+
+        function buildQ_Section1_All() {
+            return `SELECT
+  COUNT(DISTINCT CASE WHEN (
+    stage = 'Untouched Lead'
+    AND (
+      EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${productFloorEpoch()} AND AESL_Level__c.name LIKE '26%')
+      OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${productFloorEpoch()} AND created_at >= ${ninetyDaysAgoEpoch()})
+    )
+  ) THEN id END) as "untouched",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "followup",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c IS NOT NULL
+    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+    AND (
+      EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${productFloorEpoch()} AND created_at >= ${productFloorEpoch()} AND  AESL_Level__c.name LIKE '26%')
+      OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${productFloorEpoch()} AND created_at >= ${productFloorEpoch()} AND created_at >= ${ninetyDaysAgoEpoch()})
+    )
+  ) THEN id END) as "missed",
+  COUNT(DISTINCT CASE WHEN (
+    call_back_date >= ${daysAgoISTStartEpoch(15)}
+    AND call_back_date <= ${todayISTEndEpoch()}
+    AND (last_conversation_date_time IS NULL OR last_conversation_date_time < call_back_date)
+  ) THEN id END) as "callback",
+  COUNT(DISTINCT CASE WHEN (
+    branch_visit_scheduled_for_date_time >= ${todayISTStartEpoch()}
+    AND branch_visit_scheduled_for_date_time <= ${todayISTEndEpoch()}
+    AND (branch_visit_done_date IS NULL OR branch_visit_done_date < ${todayISTStartEpoch()})
+  ) THEN id END) as "visit"
+FROM leads_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+)`;
+        }
+
+        function buildQ_iACST_Main() {
+            return `SELECT
+  COUNT(DISTINCT CASE WHEN superleap_origin = 'API'
+    THEN associated_lead END) as "digital",
+  COUNT(DISTINCT CASE WHEN superleap_origin = 'Forms'
+    THEN associated_lead END) as "self",
+  COUNT(DISTINCT CASE WHEN superleap_origin = 'Upload'
+    THEN associated_lead END) as "bulk",
+  COUNT(DISTINCT associated_lead) as "all",
+  COUNT(DISTINCT CASE WHEN associated_lead.stage = 'Untouched Lead'
+    THEN associated_lead END) as "untouched",
+  COUNT(DISTINCT CASE WHEN (
+      associated_lead.AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+      AND associated_lead.AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+      AND associated_lead.stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+    ) THEN associated_lead END) as "followup_due",
+  COUNT(DISTINCT CASE WHEN (
+      associated_result.created_at >= ${todayISTStartEpoch()}
+      AND associated_result.created_at <= ${todayISTEndEpoch()}
+    ) THEN associated_lead END) as "taken_today"
+FROM scholarship_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+  AND AESL_Lead_Type__c = 'iACST'
+  AND AESL_Level__c.name = '2627'
+  AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+)`;
+        }
+
+        function buildQ_iACST_ScheduledNotTaken() {
+            return `SELECT COUNT(DISTINCT associated_lead) as "count"
+FROM scholarship_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+  AND AESL_Lead_Type__c = 'iACST'
+  AND AESL_Level__c.name = '2627'
+  AND associated_result.AESL_Eligible_Scholarship__c IS NULL
+  AND AESL_Date_of_Exam__c >= ${todayISTStartEpoch()}
+  AND AESL_Date_of_Exam__c <= ${todayISTEndEpoch()}
+)`;
+        }
+
+        function buildQ_ANTHE_Main() {
+            return `SELECT
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+    AND superleap_origin = 'API'
+  ) THEN associated_lead END) as "digital",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+    AND superleap_origin = 'Forms'
+  ) THEN associated_lead END) as "self",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+    AND superleap_origin = 'Upload'
+  ) THEN associated_lead END) as "bulk",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+  ) THEN associated_lead END) as "all",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c >= 60
+  ) THEN associated_lead END) as "above60",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+    AND associated_result.AESL_Eligible_Scholarship__c < 60
+  ) THEN associated_lead END) as "below60",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c >= 60
+    AND associated_lead.stage = 'Untouched Lead'
+  ) THEN associated_lead END) as "unt_above60",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+    AND associated_result.AESL_Eligible_Scholarship__c < 60
+    AND associated_lead.stage = 'Untouched Lead'
+  ) THEN associated_lead END) as "unt_below60",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c >= 60
+    AND associated_lead.stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+    AND associated_lead.AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND associated_lead.AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+  ) THEN associated_lead END) as "fu_above60",
+  COUNT(DISTINCT CASE WHEN (
+    associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+    AND associated_result.AESL_Eligible_Scholarship__c < 60
+    AND associated_lead.stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+    AND associated_lead.AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND associated_lead.AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+  ) THEN associated_lead END) as "fu_below60"
+FROM scholarship_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+  AND AESL_Lead_Type__c = 'ANTHE'
+  AND AESL_Level__c.name = '2627'
+)`;
+        }
+
+        // ═══════════════════════ UI HELPERS ═══════════════════════
+
+        // Section 1 — large serif value
+        function setS1Loading(id) {
+            document.getElementById(`val-${id}`).innerHTML = `<span class="skeleton skel-lg"></span>`;
+            document.getElementById(`footer-${id}`).innerHTML = `<span class="skeleton skel-txt"></span>`;
+        }
+        function setS1Count(id, count, footer) {
+            const el = document.getElementById(`val-${id}`);
+            el.className = 's1-value';
+            el.textContent = Number(count).toLocaleString('en-IN');
+            document.getElementById(`footer-${id}`).textContent = footer;
+        }
+        function setS1Err(id, msg) {
+            document.getElementById(`val-${id}`).innerHTML = `<span style="color:var(--red);font-size:15px;font-weight:600;">Error</span>`;
+            document.getElementById(`footer-${id}`).innerHTML = `<span style="color:var(--red);font-size:10px;">${msg}</span>`;
+        }
+
+        // Panel stat (top row)
+        function setPanelStatLoading(id) {
+            document.getElementById(`val-${id}`).innerHTML = `<span class="skeleton skel-md"></span>`;
+        }
+        function setPanelStatCount(id, count) {
+            const el = document.getElementById(`val-${id}`);
+            el.className = 'panel-stat-value';
+            el.textContent = Number(count).toLocaleString('en-IN');
+        }
+
+        // Sub-card (bottom row)
+        function setSubLoading(id) {
+            document.getElementById(`val-${id}`).innerHTML = `<span class="skeleton skel-sm"></span>`;
+        }
+        function setSubCount(id, count) {
+            const el = document.getElementById(`val-${id}`);
+            el.className = 'sub-card-value';
+            el.textContent = Number(count).toLocaleString('en-IN');
+        }
+        function setSubErr(id, msg) {
+            document.getElementById(`val-${id}`).innerHTML = `<span style="color:var(--red);font-size:12px;font-weight:600;">Err</span>`;
+        }
+
+        function extractCount(records) {
+            if (!records?.length) return 0;
+            const r = records[0];
+            for (const k of Object.keys(r)) {
+                if (k.toLowerCase() === 'count') return Number(r[k]) || 0;
+            }
+            return Number(Object.values(r)[0]) || 0;
+        }
+
+
+        // ═══════════════════════════════════════════════════
+        //  SECTION 3 — Lead Stage Funnel Table
+        //  Grouped by branch (or user). Cohort filters change WHERE clause.
+        // ═══════════════════════════════════════════════════
+
+        // Cohort base WHERE additions (appended to date window)
+
+        // ── Qualified filter ──
+        // Returns an extra WHERE fragment based on the selected qualified window.
+        // Logic: lead has a call_disposition_activity where
+        //   (conversation_status IN ('Visit Done','Call Counseled')
+        //    OR follow_up_mode IN ('Branch Visit','Home Visit'))
+        //   AND that activity's created_at falls in the chosen date window (IST date only).
+        function qualifiedWhere() {
+            const val = document.querySelector('#fpm-qualified .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+
+            let fromEpoch, toEpoch;
+            const todayStart = todayISTStartEpoch();
+            const todayEnd = todayISTEndEpoch();
+
+            switch (val) {
+                case 'today':
+                    fromEpoch = todayStart;
+                    toEpoch = todayEnd;
+                    break;
+                case 'yesterday':
+                    fromEpoch = todayStart - 86400000;
+                    toEpoch = todayStart - 1;
+                    break;
+                case 'last7':
+                    fromEpoch = todayStart - 6 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                case 'last30':
+                    fromEpoch = todayStart - 29 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                case 'last90':
+                    fromEpoch = todayStart - 89 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                case 'last180':
+                    fromEpoch = todayStart - 179 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                default:
+                    return '';
+            }
+
+            return `AND EXISTS (
+      SELECT 1 FROM leads_object_call_disposition
+      WHERE leads_object = leads_object.id
+        AND (
+          conversation_status IN ('Visit Done', 'Call Counseled')
+          OR follow_up_mode IN ('Branch Visit', 'Home Visit')
+        )
+        AND created_at >= ${fromEpoch}
+        AND created_at <= ${toEpoch}
+    )`;
+        }
+
+        function onQualifiedFilterChange(el) {
+            el.classList.toggle('active', el.value !== '');
+            // Clear cached S3 data so next render re-fetches with new filter
+            s3Data = {};
+            // renderS3Table();
+            runSection3Only();
+        }
+        // ── Visit Done filter ──
+        function visitDoneWhere() {
+            const val = document.querySelector('#fpm-visit-done .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+
+            let fromEpoch, toEpoch;
+            const todayStart = todayISTStartEpoch();
+            const todayEnd = todayISTEndEpoch();
+
+            switch (val) {
+                case 'today':
+                    fromEpoch = todayStart;
+                    toEpoch = todayEnd;
+                    break;
+                case 'yesterday':
+                    fromEpoch = todayStart - 86400000;
+                    toEpoch = todayStart - 1;
+                    break;
+                case 'last7':
+                    fromEpoch = todayStart - 6 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                case 'last30':
+                    fromEpoch = todayStart - 29 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                case 'last90':
+                    fromEpoch = todayStart - 89 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                case 'last180':
+                    fromEpoch = todayStart - 179 * 86400000;
+                    toEpoch = todayEnd;
+                    break;
+                default:
+                    return '';
+            }
+
+            return `AND EXISTS (
+    SELECT 1 FROM leads_object_call_disposition
+    WHERE leads_object = leads_object.id
+      AND conversation_status = 'Visit Done'
+      AND created_at >= ${fromEpoch}
+      AND created_at <= ${toEpoch}
+  )`;
+        }
+
+        function onVisitDoneFilterChange(el) {
+            el.classList.toggle('active', el.value !== '');
+            s3Data = {};
+            // renderS3Table();
+            runSection3Only();
+        }
+
+        function setS3Filter(group, el) {
+            // Deactivate siblings, activate clicked
+            el.closest('.s3-pill-group').querySelectorAll('.s3-pill')
+                .forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            s3Data = {};
+            runSection3Only();
+        }
+
+        function cohortWhere(cohort) {
+            const careerClause = getCareerClause();
+            const courseClause = getCourseClause();
+            // Extra conditions to inject into the product_object subquery
+            const productExtra = careerClause + ' ' + courseClause;
+
+            switch (cohort) {
+                case 'ay26':
+                    // Merge career/course into the same product EXISTS to avoid 3 separate scans
+                    if (productExtra.trim()) {
+                        return `AND EXISTS (
+          SELECT 1 FROM product_object
+          WHERE associated_lead = leads_object.id
+          AND created_at >= ${productFloorEpoch()}
+        AND (AESL_Level__c.name LIKE '26%' OR created_at >= ${ninetyDaysAgoEpoch()})
+            ${productExtra}
+        )`;
+                    }
+                    return `AND (
+          EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND AESL_Level__c.name LIKE '26%')
+          OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${ninetyDaysAgoEpoch()})
+        )`;
+
+                case 'iacst_rl':
+                    return `AND EXISTS (
+    SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id
+      AND AESL_Lead_Type__c = 'iACST'
+      AND AESL_Level__c.name = '2627'
+      AND AESL_Roll_No__c IS NOT NULL
+  )${productExtra.trim() ? `
+  AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      ${productExtra}
+  )` : ''}`;
+
+                case 'iacst_tt':
+                    return `AND EXISTS (
+          SELECT 1 FROM scholarship_object
+          WHERE associated_lead = leads_object.id
+            AND AESL_Lead_Type__c = 'iACST'
+            AND AESL_Level__c.name = '2627'
+            AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+        )${productExtra.trim() ? `
+  AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      ${productExtra}
+  )` : ''}`;
+
+                case 'anthe_tt':
+                    return `AND EXISTS (
+          SELECT 1 FROM scholarship_object
+          WHERE associated_lead = leads_object.id
+            AND AESL_Lead_Type__c = 'ANTHE'
+            AND AESL_Level__c.name = '2627'
+            AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+        )${productExtra.trim() ? `
+  AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      ${productExtra}
+  )` : ''}`;
+
+                case 'callback15':
+                    return `AND call_back_date >= ${daysAgoISTStartEpoch(15)}
+        AND call_back_date <= ${todayISTEndEpoch()}${productExtra.trim() ? `
+  AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      ${productExtra}
+  )` : ''}`;
+
+                default: // 'all'
+                    return productExtra.trim() ? `AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      ${productExtra}
+  )` : '';
+            }
+        }
+
+        function classWhere(cohort) {
+            const val = document.querySelector('#fpm-class .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            const escaped = val.replace(/'/g, "''");
+
+            switch (cohort) {
+                case 'ay26':
+                case 'callback15':
+                case 'all':
+                    return `AND AESL_Class_LKP__c.name = '${escaped}'`;
+
+                case 'iacst_tt':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'iACST'
+          AND AESL_Level__c.name = '2627'
+          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+          AND AESL_Class_LKP__c.name = '${escaped}'
+      )`;
+
+                case 'iacst_rl':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'iACST'
+          AND AESL_Level__c.name = '2627'
+          AND AESL_Roll_No__c IS NOT NULL
+          AND AESL_Class_LKP__c.name = '${escaped}'
+      )`;
+
+                case 'anthe_tt':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'ANTHE'
+          AND AESL_Level__c.name = '2627'
+          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+          AND AESL_Class_LKP__c.name = '${escaped}'
+      )`;
+
+                default:
+                    return `AND AESL_Class_LKP__c.name = '${escaped}'`;
+            }
+        }
+
+        function branchWhere(cohort) {
+            const val = document.querySelector('#fpm-branch .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            const escaped = val.replace(/'/g, "''");
+
+            switch (cohort) {
+                case 'ay26':
+                case 'callback15':
+                case 'all':
+                    return `AND AESL_Branch_LK__c.name = '${escaped}'`;
+
+                case 'iacst_tt':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'iACST'
+          AND AESL_Level__c.name = '2627'
+          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+          AND AESL_Branch_LK_c.name = '${escaped}'
+      )`;
+
+                case 'iacst_rl':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'iACST'
+          AND AESL_Level__c.name = '2627'
+          AND AESL_Roll_No__c IS NOT NULL
+          AND AESL_Branch_LK_c.name = '${escaped}'
+      )`;
+
+                case 'anthe_tt':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'ANTHE'
+          AND AESL_Level__c.name = '2627'
+          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+          AND AESL_Branch_LK_c.name = '${escaped}'
+      )`;
+
+                default:
+                    return `AND AESL_Branch_LK__c.name = '${escaped}'`;
+            }
+        }
+
+        function schoolWhere(cohort) {
+            const val = document.querySelector('#fpm-school .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            const escaped = val.replace(/'/g, "''");
+
+            switch (cohort) {
+                case 'ay26':
+                case 'callback15':
+                case 'all':
+                    return `AND AESL_School_Name__c.name = '${escaped}'`;
+
+                case 'iacst_tt':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'iACST'
+          AND AESL_Level__c.name = '2627'
+          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+          AND associated_lead.AESL_School_Name__c.name = '${escaped}'
+      )`;
+
+                case 'iacst_rl':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'iACST'
+          AND AESL_Level__c.name = '2627'
+          AND AESL_Roll_No__c IS NOT NULL
+          AND associated_lead.AESL_School_Name__c.name = '${escaped}'
+      )`;
+
+                case 'anthe_tt':
+                    return `AND EXISTS (
+        SELECT 1 FROM scholarship_object
+        WHERE associated_lead = leads_object.id
+          AND AESL_Lead_Type__c = 'ANTHE'
+          AND AESL_Level__c.name = '2627'
+          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+          AND associated_lead.AESL_School_Name__c.name = '${escaped}'
+      )`;
+
+                default:
+                    return `AND AESL_School_Name__c.name = '${escaped}'`;
+            }
+        }
+
+        function campaignWhere(cohort) {
+            const val = document.querySelector('#fpm-campaign .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            const escaped = val.replace(/'/g, "''");
+            // val here is the campaign ID (not name)
+            // Match on product_object.AESL_Campaign_Id_c = selected campaign id
+            return `AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      AND AESL_Campaign_Id_c = '${escaped}'
+  )`;
+        }
+
+        function sourceWhere(cohort) {
+            const val = document.querySelector('#fpm-source .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            const escaped = val.replace(/'/g, "''");
+            return `AND EXISTS (
+    SELECT 1 FROM product_object
+    WHERE associated_lead = leads_object.id
+      AND AESL_Source__c = '${escaped}'
+  )`;
+        }
+
+        function scholPctWhere() {
+            const min = document.getElementById('f-schol-min')?.value.trim();
+            const max = document.getElementById('f-schol-max')?.value.trim();
+            if (!min && !max) return '';
+            const parts = [];
+            if (min) parts.push(`AND EXISTS (
+    SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id
+      AND associated_result.AESL_Eligible_Scholarship__c >= ${Number(min)}
+  )`);
+            if (max) parts.push(`AND EXISTS (
+    SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id
+      AND associated_result.AESL_Eligible_Scholarship__c <= ${Number(max)}
+  )`);
+            return parts.join(' ');
+        }
+
+        function scholResultDateWhere() {
+            const from = document.getElementById('f-result-from')?.value;
+            const to = document.getElementById('f-result-to')?.value;
+            if (!from && !to) return '';
+            const parts = [`SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id`];
+            if (from) parts.push(`AND associated_result.created_at >= ${dateToISTStartEpoch(from)}`);
+            if (to) parts.push(`AND associated_result.created_at <= ${dateToISTEndEpoch(to)}`);
+            return `AND EXISTS (${parts.join('\n      ')})`;
+        }
+
+        function scholCreatedAtWhere() {
+            const from = document.getElementById('f-schol-from')?.value;
+            const to = document.getElementById('f-schol-to')?.value;
+            if (!from && !to) return '';
+            const parts = [`SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id`];
+            if (from) parts.push(`AND created_at >= ${dateToISTStartEpoch(from)}`);
+            if (to) parts.push(`AND created_at <= ${dateToISTEndEpoch(to)}`);
+            return `AND EXISTS (${parts.join('\n      ')})`;
+        }
+
+        function courseWhere() {
+            return ''; // handled inside cohortWhere via getCourseClause()
+        }
+
+        function careerWhere() {
+            // Returns empty — career is handled inside cohortWhere via getCareerClause()
+            return '';
+        }
+
+        function getCareerClause() {
+            const val = document.querySelector('#fpm-career .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            return `AND AESL_Course_Type_Interested_In__c = '${val.replace(/'/g, "''")}'`;
+        }
+
+        function getCourseClause() {
+            const val = document.querySelector('#fpm-course .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            return `AND AESL_Course_LK__c.name = '${val.replace(/'/g, "''")}'`;
+        }
+
+        function userRsghWhere() {
+            const val = document.querySelector('#fpm-user-rsgh .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            return `AND owner.team_sales_head = '${val.replace(/'/g, "''")}'`;
+        }
+
+        function userTlWhere() {
+            const val = document.querySelector('#fpm-user-tl .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            return `AND owner.team_supervisor = '${val.replace(/'/g, "''")}'`;
+        }
+
+        function userBranchWhere() {
+            const val = document.querySelector('#fpm-user-branch .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            return `AND owner.user_branch_name_user_management_ = '${val.replace(/'/g, "''")}'`;
+        }
+
+        function userWhere() {
+            const val = document.querySelector('#fpm-user .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            return `AND owner.name = '${val.replace(/'/g, "''")}'`;
+        }
+
+        function buildQ_S3_Branch(cohort) {
+            const extra = cohortWhere(cohort) + ' ' + classWhere(cohort) + ' ' + branchWhere(cohort) + ' ' +
+                schoolWhere(cohort) + ' ' + campaignWhere(cohort) + ' ' + sourceWhere(cohort) + ' ' +
+                scholPctWhere() + ' ' + scholResultDateWhere() + ' ' + scholCreatedAtWhere() + ' ' +
+                courseWhere() + ' ' + careerWhere() + ' ' +
+                userTeamWhere() + ' ' + userRsghWhere() + ' ' + userTlWhere() + ' ' +
+                userBranchWhere() + ' ' + userWhere() + ' ' +
+                qualifiedWhere() + ' ' + visitDoneWhere();
+            return `SELECT
+  owner.Branch_Name__c as "branch",
+  COUNT(DISTINCT id) as "total",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c IS NOT NULL
+    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "missed",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "fu_today",
+  COUNT(DISTINCT CASE WHEN stage = 'Untouched Lead' THEN id END) as "untouched",
+  COUNT(DISTINCT CASE WHEN stage = 'Not-Connected' THEN id END) as "not_connected",
+  COUNT(DISTINCT CASE WHEN stage = 'Call Back' THEN id END) as "call_back",
+  COUNT(DISTINCT CASE WHEN stage LIKE '%Qualified%' THEN id END) as "qualified",
+  COUNT(DISTINCT CASE WHEN stage IN ('Not-Interested', 'Not-Eligible') THEN id END) as "junk_ni",
+  COUNT(DISTINCT CASE WHEN stage = 'Admission Done' THEN id END) as "admission_done"
+FROM leads_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+  ${extra}
+)
+GROUP BY owner.Branch_Name__c
+ORDER BY total DESC`;
+        }
+
+        function buildQ_S3_User(cohort) {
+            const extra = cohortWhere(cohort) + ' ' + classWhere(cohort) + ' ' + branchWhere(cohort) + ' ' +
+                schoolWhere(cohort) + ' ' + campaignWhere(cohort) + ' ' + sourceWhere(cohort) + ' ' +
+                scholPctWhere() + ' ' + scholResultDateWhere() + ' ' + scholCreatedAtWhere() + ' ' +
+                courseWhere() + ' ' + careerWhere() + ' ' +
+                userTeamWhere() + ' ' + userRsghWhere() + ' ' + userTlWhere() + ' ' +
+                userBranchWhere() + ' ' + userWhere() + ' ' +
+                qualifiedWhere() + ' ' + visitDoneWhere();
+            return `SELECT
+  owner.name as "user",
+  owner.Branch_Name__c as "branch",
+  COUNT(DISTINCT id) as "total",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c IS NOT NULL
+    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "missed",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "fu_today",
+  COUNT(DISTINCT CASE WHEN stage = 'Untouched Lead' THEN id END) as "untouched",
+  COUNT(DISTINCT CASE WHEN stage = 'Not-Connected' THEN id END) as "not_connected",
+  COUNT(DISTINCT CASE WHEN stage = 'Call Back' THEN id END) as "call_back",
+  COUNT(DISTINCT CASE WHEN stage LIKE '%Qualified%' THEN id END) as "qualified",
+  COUNT(DISTINCT CASE WHEN stage IN ('Not-Interested', 'Not-Eligible') THEN id END) as "junk_ni",
+  COUNT(DISTINCT CASE WHEN stage = 'Admission Done' THEN id END) as "admission_done"
+FROM leads_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+  ${extra}
+)
+GROUP BY owner.name, owner.Branch_Name__c
+ORDER BY total DESC`;
+        }
+
+        // Cohort total counts (for pills)
+        function buildQ_S3_CohortCounts() {
+            return `SELECT
+  COUNT(DISTINCT CASE WHEN (
+    EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND AESL_Level__c.name LIKE '26%')
+    OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${ninetyDaysAgoEpoch()})
+  ) THEN id END) as "ay26",
+  COUNT(DISTINCT CASE WHEN EXISTS (
+    SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id
+      AND AESL_Lead_Type__c = 'iACST'
+      AND AESL_Level__c.name = '2627'
+      AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+  ) THEN id END) as "iacst_tt",
+  COUNT(DISTINCT CASE WHEN EXISTS (
+    SELECT 1 FROM scholarship_object
+    WHERE associated_lead = leads_object.id
+      AND AESL_Lead_Type__c = 'ANTHE'
+      AND AESL_Level__c.name = '2627'
+      AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+  ) THEN id END) as "anthe_tt",
+   COUNT(DISTINCT CASE WHEN EXISTS (
+  SELECT 1 FROM scholarship_object
+  WHERE associated_lead = leads_object.id
+    AND AESL_Lead_Type__c = 'iACST'
+    AND AESL_Level__c.name = '2627'
+    AND AESL_Roll_No__c IS NOT NULL
+) THEN id END) as "iacst_rl",
+  COUNT(DISTINCT CASE WHEN (
+    call_back_date >= ${daysAgoISTStartEpoch(15)}
+    AND call_back_date <= ${todayISTEndEpoch()}
+  ) THEN id END) as "callback15",
+  COUNT(DISTINCT id) as "all"
+FROM leads_object
+WHERE (
+  created_at >= ${DATE_FROM}
+  AND created_at <= ${DATE_TO}
+)`;
+        }
+
+        async function fetchFilterOptions(slug, searchVal = '') {
+            let where = 'AESL_Effective_Status__c = 1';
+
+            if (slug === 'aesl_branch__c') {
+                if (searchVal) {
+                    where += ` AND (name ILIKE '%${searchVal.replace(/'/g, "''")}%' OR AESL_Code__c ILIKE '%${searchVal.replace(/'/g, "''")}%')`;
+                }
+                const query = `SELECT id, name, AESL_Code__c FROM aesl_branch__c WHERE ${where} ORDER BY name ASC LIMIT 100`;
+                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                    method: 'POST',
+                    headers: { 'accept': '*/*', 'authorization': `Bearer ${getToken()}`, 'client-id': CLIENT_ID, 'client-secret': CLIENT_SECRET, 'content-type': 'application/json' },
+                    body: JSON.stringify({ query, slug })
+                });
+                const data = await resp.json();
+                return (data?.data?.records || []).map(r => ({
+                    name: r.name,
+                    code: r['aesl_code__c'] || r['AESL_Code__c'] || ''
+                }));
+            }
+
+            if (slug === 'aesl_school__c') {
+                let schoolWhere = '';
+                if (searchVal) {
+                    schoolWhere = ` WHERE (name ILIKE '%${searchVal.replace(/'/g, "''")}%' OR AESL_School_Code__c ILIKE '%${searchVal.replace(/'/g, "''")}%')`;
+                }
+                const query = `SELECT id, name, AESL_School_Code__c FROM aesl_school__c${schoolWhere} ORDER BY name ASC LIMIT 100`;
+                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                    method: 'POST',
+                    headers: { 'accept': '*/*', 'authorization': `Bearer ${getToken()}`, 'client-id': CLIENT_ID, 'client-secret': CLIENT_SECRET, 'content-type': 'application/json' },
+                    body: JSON.stringify({ query, slug })
+                });
+                const data = await resp.json();
+                return (data?.data?.records || []).map(r => ({
+                    name: r.name,
+                    code: r['aesl_school_code__c'] || r['AESL_School_Code__c'] || ''
+                }));
+            }
+
+            if (slug === 'campaign') {
+                let where = 'IsActive = 1';
+                if (searchVal) {
+                    where += ` AND name ILIKE '%${searchVal.replace(/'/g, "''")}%'`;
+                }
+                const query = `SELECT id, name FROM campaign WHERE ${where} ORDER BY name ASC LIMIT 100`;
+                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'authorization': `Bearer ${getToken()}`,
+                        'client-id': CLIENT_ID,
+                        'client-secret': CLIENT_SECRET,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, slug: 'campaign' })
+                });
+                const data = await resp.json();
+                return (data?.data?.records || []).map(r => ({
+                    name: r.name,
+                    code: '',   // campaigns have no code field
+                    id: r.id    // need to carry id separately since val = id not name
+                }));
+            }
+
+            if (slug === 'product2') {
+                let where = '';
+                if (searchVal) {
+                    where = ` WHERE name ILIKE '%${searchVal.replace(/'/g, "''")}%'`;
+                }
+                const query = `SELECT id, name FROM product2${where} ORDER BY name ASC LIMIT 100`;
+                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'authorization': `Bearer ${getToken()}`,
+                        'client-id': CLIENT_ID,
+                        'client-secret': CLIENT_SECRET,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, slug: 'product2' })
+                });
+                const data = await resp.json();
+                return (data?.data?.records || []).map(r => ({ name: r.name, code: '' }));
+            }
+
+            return [];
+        }
+
+        function renderFilterOptions(menuId, records, pillGroup, currentVal) {
+            const menu = document.getElementById(menuId);
+            // Remove all existing options (not the search input)
+            menu.querySelectorAll('.s3-pill-option').forEach(el => el.remove());
+
+            if (records.length === 0) {
+                const empty = document.createElement('div');
+                empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
+                empty.textContent = 'No results found';
+                empty.id = menuId + '-empty';
+                // remove old empty msg if any
+                document.getElementById(menuId + '-empty')?.remove();
+                menu.appendChild(empty);
+                return;
+            }
+
+            document.getElementById(menuId + '-empty')?.remove();
+
+            records.forEach(r => {
+                const div = document.createElement('div');
+                div.className = 's3-pill-option' + (r.name === currentVal ? ' active' : '');
+                div.dataset.val = r.name;
+                div.innerHTML = `${r.name}${r.code ? `<span style="color:var(--faint);font-size:10px;margin-left:6px;">${r.code}</span>` : ''}`;
+                div.onclick = function () { selectPillOption(pillGroup, r.name, r.name, this); };
+                menu.appendChild(div);
+            });
+        }
+        // ── Section 3 state ──
+        let s3CurrentCohort = 'ay26';
+        let s3CurrentView = 'branch';
+        let s1s2Loaded = false;
+        let s3Data = {}; // keyed by cohort+view
+
+        async function setCohort(el) {
+            document.querySelectorAll('.cohort-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            s3CurrentCohort = el.dataset.cohort;
+            await fetchS3IfNeeded();
+            renderS3Table();
+        }
+
+        async function setView(v) {
+            s3CurrentView = v;
+            document.getElementById('tog-branch').classList.toggle('active', v === 'branch');
+            document.getElementById('tog-user').classList.toggle('active', v === 'user');
+            await fetchS3IfNeeded();
+            renderS3Table();
+        }
+
+        async function fetchS3IfNeeded() {
+            const key = s3CurrentCohort + '_' + s3CurrentView;
+            if (s3Data[key]) return; // already cached
+            document.getElementById('s3TableWrap').innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+            try {
+                const queryFn = s3CurrentView === 'branch'
+                    ? () => buildQ_S3_Branch(s3CurrentCohort)
+                    : () => buildQ_S3_User(s3CurrentCohort);
+                s3Data[key] = await safeQuery(queryFn, 'leads_object');
+            } catch (e) {
+                document.getElementById('s3TableWrap').innerHTML =
+                    '<div class="s3-empty" style="color:var(--red);">Error: ' + e.message + '</div>';
+            }
+        }
+
+        function fmt(n) { return Number(n || 0).toLocaleString('en-IN'); }
+
+        function renderS3Table() {
+            const key = s3CurrentCohort + '_' + s3CurrentView;
+            const rows = s3Data[key];
+            const wrap = document.getElementById('s3TableWrap');
+
+            if (!rows) {
+                wrap.innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+                return;
+            }
+            if (rows.length === 0) {
+                wrap.innerHTML = '<div class="s3-empty">No data for this cohort / view.</div>';
+                return;
+            }
+
+            const isBranch = s3CurrentView === 'branch';
+
+            // Totals row
+            const tot = { total: 0, missed: 0, fu_today: 0, untouched: 0, not_connected: 0, call_back: 0, qualified: 0, junk_ni: 0, admission_done: 0 };
+            rows.forEach(r => {
+                Object.keys(tot).forEach(k => { tot[k] += Number(r[k]) || 0; });
+            });
+
+            const dataRows = rows.map(r => {
+                const name = isBranch ? (r['branch'] || '—') : (r['user'] || '—');
+                const sub = isBranch ? '' : `<div class="td-branch-sub">${r['branch'] || ''}</div>`;
+                return `<tr>
+        <td><div class="td-branch-name">${name}</div>${sub}</td>
+        <td class="num td-missed">${fmt(r['missed'])}</td>
+        <td class="num td-fu">${fmt(r['fu_today'])}</td>
+        <td class="num td-muted">${fmt(r['total'])}</td>
+        <td class="num td-unt">${fmt(r['untouched'])}</td>
+        <td class="num td-muted">${fmt(r['not_connected'])}</td>
+        <td class="num td-muted">${fmt(r['call_back'])}</td>
+        <td class="num td-qual">${fmt(r['qualified'])}</td>
+        <td class="num td-muted">${fmt(r['junk_ni'])}</td>
+        <td class="num td-adm">${fmt(r['admission_done'])}</td>
+      </tr>`;
+            }).join('');
+
+            wrap.innerHTML = `<table class="s3-table">
+      <thead><tr>
+        <th>${isBranch ? 'Branch' : 'User'}</th>
+        <th class="num col-missed">Missed F/U</th>
+        <th class="num col-fu">F/U Today</th>
+        <th class="num">Total Leads</th>
+        <th class="num col-unt">Untouched</th>
+        <th class="num">Not Connected</th>
+        <th class="num">Call Back</th>
+        <th class="num col-qual">Qualified</th>
+        <th class="num">Junk / NI</th>
+        <th class="num col-adm">Admissions Done</th>
+      </tr></thead>
+      <tbody>
+        ${dataRows}
+        <tr class="total-row">
+          <td><div class="td-branch-name">Total</div></td>
+          <td class="num td-missed">${fmt(tot.missed)}</td>
+          <td class="num td-fu">${fmt(tot.fu_today)}</td>
+          <td class="num">${fmt(tot.total)}</td>
+          <td class="num td-unt">${fmt(tot.untouched)}</td>
+          <td class="num td-muted">${fmt(tot.not_connected)}</td>
+          <td class="num td-muted">${fmt(tot.call_back)}</td>
+          <td class="num td-qual">${fmt(tot.qualified)}</td>
+          <td class="num td-muted">${fmt(tot.junk_ni)}</td>
+          <td class="num td-adm">${fmt(tot.admission_done)}</td>
+        </tr>
+      </tbody>
+    </table>`;
+        }
+
+        function togglePillDropdown(id) {
+            // Close all other open dropdowns first
+            document.querySelectorAll('.s3-pill-menu.open').forEach(m => {
+                if (m.id !== 'fpm-' + id.replace('fpd-', '')) {
+                    m.classList.remove('open');
+                    m.previousElementSibling.classList.remove('open');
+                }
+            });
+            const menu = document.getElementById('fpm-' + id.replace('fpd-', ''));
+            const btn = document.querySelector('#' + id + ' .s3-pill-btn');
+            menu.classList.toggle('open');
+            btn.classList.toggle('open');
+        }
+
+        function selectPillOption(group, val, label, el) {
+            // Update active option in menu
+            el.closest('.s3-pill-menu').querySelectorAll('.s3-pill-option')
+                .forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+
+            // Update pill label + active state
+            document.getElementById('fpl-' + group).textContent = label;
+            const btn = el.closest('.s3-pill-dropdown').querySelector('.s3-pill-btn');
+            btn.classList.toggle('active', val !== '');
+            btn.classList.remove('open');
+
+            // Close menu
+            el.closest('.s3-pill-menu').classList.remove('open');
+
+
+            // Show or hide the clear button
+            const clearBtn = document.getElementById('fclear-' + group);
+            if (clearBtn) {
+                clearBtn.style.display = val !== '' ? 'inline-flex' : 'none';
+            }
+
+            // Trigger re-query
+            s3Data = {};
+            if (typeof runSection3Only === 'function') runSection3Only();
+        }
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.s3-pill-dropdown')) {
+                document.querySelectorAll('.s3-pill-menu.open').forEach(m => {
+                    m.classList.remove('open');
+                    m.previousElementSibling.classList.remove('open');
+                });
+            }
+        });
+
+        function hasS3FilterSelected() {
+            const pillIds = ['fpm-qualified', 'fpm-visit-done', 'fpm-class', 'fpm-branch',
+                'fpm-school', 'fpm-campaign', 'fpm-source', 'fpm-course', 'fpm-career',
+                'fpm-user-team', 'fpm-user-rsgh', 'fpm-user-tl', 'fpm-user-branch', 'fpm-user'];
+            const hasPill = pillIds.some(id => {
+                const active = document.querySelector(`#${id} .s3-pill-option.active`);
+                return active && active.dataset.val !== '';
+            });
+            const hasSchol = !!(
+                document.getElementById('f-schol-min')?.value.trim() ||
+                document.getElementById('f-schol-max')?.value.trim()
+            );
+            const hasResultDate = !!(
+                document.getElementById('f-result-from')?.value ||
+                document.getElementById('f-result-to')?.value
+            );
+            const hasScholDate = !!(
+                document.getElementById('f-schol-from')?.value ||
+                document.getElementById('f-schol-to')?.value
+            );
+            return hasPill || hasSchol || hasResultDate || hasScholDate;
+        }
+
+        function clearPillFilter(group, defaultLabel, event) {
+            event.stopPropagation(); // prevent dropdown from opening
+
+            // Reset label
+            document.getElementById('fpl-' + group).textContent = defaultLabel;
+
+            // Deactivate all options, activate the empty "All" option
+            const menu = document.getElementById('fpm-' + group);
+            menu.querySelectorAll('.s3-pill-option').forEach(o => o.classList.remove('active'));
+            const allOption = menu.querySelector('.s3-pill-option[data-val=""]');
+            if (allOption) allOption.classList.add('active');
+
+            // Remove active state from pill btn
+            const btn = document.querySelector('#fpd-' + group + ' .s3-pill-btn');
+            btn.classList.remove('active');
+
+            // Hide clear button
+            document.getElementById('fclear-' + group).style.display = 'none';
+
+            s3Data = {};
+            if (typeof runSection3Only === 'function') runSection3Only();
+        }
+
+
+        let filterSearchDebounce = {};
+
+        async function onFilterSearch(slug, menuId, pillGroup, inputEl) {
+            const val = inputEl.value.trim();
+            clearTimeout(filterSearchDebounce[menuId]);
+            filterSearchDebounce[menuId] = setTimeout(async () => {
+                // Show loading state
+                const menu = document.getElementById(menuId);
+                menu.querySelectorAll('.s3-pill-option').forEach(el => el.remove());
+                const loading = document.createElement('div');
+                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
+                loading.textContent = 'Loading…';
+                loading.id = menuId + '-searching';
+                document.getElementById(menuId + '-searching')?.remove();
+                menu.appendChild(loading);
+
+                try {
+                    const records = await fetchFilterOptions(slug, val);
+                    document.getElementById(menuId + '-searching')?.remove();
+                    const currentVal = document.querySelector(`#${menuId} .s3-pill-option.active`)?.dataset.val || '';
+                    renderFilterOptions(menuId, records, pillGroup, currentVal);
+                } catch (e) {
+                    document.getElementById(menuId + '-searching')?.remove();
+                }
+            }, 300);
+        }
+
+        // filters support functions
+        let campaignSearchDebounce = null;
+
+        function onCampaignSearch(inputEl) {
+            const val = inputEl.value.trim();
+            clearTimeout(campaignSearchDebounce);
+            campaignSearchDebounce = setTimeout(async () => {
+                const menu = document.getElementById('fpm-campaign');
+                // Remove existing options (keep search input + All Campaigns)
+                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+
+                // Show loading
+                const loading = document.createElement('div');
+                loading.id = 'campaign-searching';
+                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
+                loading.textContent = 'Loading…';
+                document.getElementById('campaign-searching')?.remove();
+                menu.appendChild(loading);
+
+                try {
+                    const campaigns = await fetchFilterOptions('campaign', val);
+                    document.getElementById('campaign-searching')?.remove();
+
+                    if (campaigns.length === 0) {
+                        document.getElementById('campaign-no-results')?.remove();
+                        const empty = document.createElement('div');
+                        empty.id = 'campaign-no-results';
+                        empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
+                        empty.textContent = 'No campaigns found';
+                        menu.appendChild(empty);
+                        return;
+                    }
+                    document.getElementById('campaign-no-results')?.remove();
+
+                    const currentVal = document.querySelector('#fpm-campaign .s3-pill-option.active')?.dataset.val || '';
+                    campaigns.forEach(r => {
+                        const div = document.createElement('div');
+                        div.className = 's3-pill-option' + (r.id === currentVal ? ' active' : '');
+                        div.dataset.val = r.id;
+                        div.textContent = r.name;
+                        div.onclick = function () { selectPillOption('campaign', r.id, r.name, this); };
+                        menu.appendChild(div);
+                    });
+                } catch (e) {
+                    document.getElementById('campaign-searching')?.remove();
+                }
+            }, 300);
+        }
+
+        async function fetchSourceOptions(searchVal = '') {
+            const body = {
+                key: '3d429888-ab2c-433c-91cb-698f5f0c16aa',
+                limit: 100,
+                offset: 0
+            };
+            if (searchVal) body.slugs = [searchVal];
+
+            const resp = await fetch(`${BASE_URL}/api/v1/org/objects/dynamic_enum/list`, {
+                method: 'POST',
+                headers: {
+                    'accept': '*/*',
+                    'authorization': `Bearer ${getToken()}`,
+                    'client-id': CLIENT_ID,
+                    'client-secret': CLIENT_SECRET,
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+            const data = await resp.json();
+            return (data?.data || []).filter(s => s.is_active === 1);
+        }
+
+        let sourceSearchDebounce = null;
+
+        function onSourceSearch(inputEl) {
+            const val = inputEl.value.trim();
+            clearTimeout(sourceSearchDebounce);
+            sourceSearchDebounce = setTimeout(async () => {
+                const menu = document.getElementById('fpm-source');
+
+                // Remove previous results and messages, keep "All Sources" option intact
+                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+                document.getElementById('source-no-results')?.remove();
+                document.getElementById('source-searching')?.remove();
+
+                // Show loading
+                const loading = document.createElement('div');
+                loading.id = 'source-searching';
+                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
+                loading.textContent = 'Loading…';
+                menu.appendChild(loading);
+
+                try {
+                    const sources = await fetchSourceOptions(val);
+                    document.getElementById('source-searching')?.remove();
+
+                    if (sources.length === 0) {
+                        const empty = document.createElement('div');
+                        empty.id = 'source-no-results';
+                        empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
+                        empty.textContent = 'No sources found';
+                        menu.appendChild(empty);
+                        return;
+                    }
+
+                    const currentVal = document.querySelector('#fpm-source .s3-pill-option.active')?.dataset.val || '';
+                    sources.forEach(s => {
+                        const div = document.createElement('div');
+                        div.className = 's3-pill-option' + (s.slug === currentVal ? ' active' : '');
+                        div.dataset.val = s.slug;
+                        div.textContent = s.slug;
+                        div.onclick = function () { selectPillOption('source', s.slug, s.slug, this); };
+                        menu.appendChild(div);
+                    });
+                } catch (e) {
+                    document.getElementById('source-searching')?.remove();
+                    const errEl = document.createElement('div');
+                    errEl.id = 'source-no-results';
+                    errEl.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--red);font-style:italic;';
+                    errEl.textContent = 'Search failed';
+                    menu.appendChild(errEl);
+                }
+            }, 300);
+        }
+
+        let courseSearchDebounce = null;
+
+        function onCourseSearch(inputEl) {
+            const val = inputEl.value.trim();
+            clearTimeout(courseSearchDebounce);
+            courseSearchDebounce = setTimeout(async () => {
+                const menu = document.getElementById('fpm-course');
+                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+                document.getElementById('course-no-results')?.remove();
+                document.getElementById('course-searching')?.remove();
+
+                const loading = document.createElement('div');
+                loading.id = 'course-searching';
+                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
+                loading.textContent = 'Loading…';
+                menu.appendChild(loading);
+
+                try {
+                    const courses = await fetchFilterOptions('product2', val);
+                    document.getElementById('course-searching')?.remove();
+
+                    if (courses.length === 0) {
+                        const empty = document.createElement('div');
+                        empty.id = 'course-no-results';
+                        empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
+                        empty.textContent = 'No courses found';
+                        menu.appendChild(empty);
+                        return;
+                    }
+                    document.getElementById('course-no-results')?.remove();
+
+                    const currentVal = document.querySelector('#fpm-course .s3-pill-option.active')?.dataset.val || '';
+                    courses.forEach(r => {
+                        const div = document.createElement('div');
+                        div.className = 's3-pill-option' + (r.name === currentVal ? ' active' : '');
+                        div.dataset.val = r.name;
+                        div.textContent = r.name;
+                        div.onclick = function () { selectPillOption('course', r.name, r.name, this); };
+                        menu.appendChild(div);
+                    });
+                } catch (e) {
+                    document.getElementById('course-searching')?.remove();
+                }
+            }, 300);
+        }
+
+        // Stores the full team list after first fetch (client-side search after that)
+        let _allTeams = null;
+
+        async function fetchTeams(searchVal = '') {
+            // Fetch once and cache
+            if (!_allTeams) {
+                const resp = await fetch(`${BASE_URL}/api/v1/org/team/list`, {
+                    method: 'POST',
+                    headers: {
+                        'accept': '*/*',
+                        'authorization': `Bearer ${getToken()}`,
+                        'client-id': CLIENT_ID,
+                        'client-secret': CLIENT_SECRET,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({ exclude_user_data: true, include_calendar_data: false })
+                });
+                const data = await resp.json();
+                // data is an array of team objects
+                _allTeams = (data?.data || data || []).map(t => ({
+                    id: t.id,
+                    name: t.name
+                })).sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            if (!searchVal) return _allTeams.slice(0, 100);
+            const lower = searchVal.toLowerCase();
+            return _allTeams.filter(t => t.name.toLowerCase().includes(lower)).slice(0, 100);
+        }
+
+        function renderTeamOptions(menu, teams, currentVal) {
+            // Remove existing non-"All" options and messages
+            menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+            document.getElementById('fpm-user-team-empty')?.remove();
+
+            if (teams.length === 0) {
+                const empty = document.createElement('div');
+                empty.id = 'fpm-user-team-empty';
+                empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
+                empty.textContent = 'No teams found';
+                menu.appendChild(empty);
+                return;
+            }
+
+            teams.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 's3-pill-option' + (t.id === currentVal ? ' active' : '');
+                div.dataset.val = t.id;
+                div.textContent = t.name;
+                div.onclick = function () { selectPillOption('user-team', t.id, t.name, this); };
+                menu.appendChild(div);
+            });
+        }
+
+        let userTeamSearchDebounce = null;
+
+        function onUserTeamSearch(inputEl) {
+            const val = inputEl.value.trim();
+            clearTimeout(userTeamSearchDebounce);
+            userTeamSearchDebounce = setTimeout(async () => {
+                const menu = document.getElementById('fpm-user-team');
+                document.getElementById('fpm-user-team-empty')?.remove();
+                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+
+                // Show loading only if teams not yet cached
+                let loading;
+                if (!_allTeams) {
+                    loading = document.createElement('div');
+                    loading.id = 'user-team-searching';
+                    loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
+                    loading.textContent = 'Loading…';
+                    menu.appendChild(loading);
+                }
+
+                try {
+                    const teams = await fetchTeams(val);
+                    document.getElementById('user-team-searching')?.remove();
+                    const currentVal = document.querySelector('#fpm-user-team .s3-pill-option.active')?.dataset.val || '';
+                    renderTeamOptions(menu, teams, currentVal);
+                } catch (e) {
+                    document.getElementById('user-team-searching')?.remove();
+                }
+            }, 200);
+        }
+
+        function userTeamWhere() {
+            const val = document.querySelector('#fpm-user-team .s3-pill-option.active')?.dataset.val || '';
+            if (!val) return '';
+            const escaped = val.replace(/'/g, "''");
+            return `AND owner.new_department = '${escaped}'`;
+        }
+
+        let _allUsers = null; // cached after first fetch
+        let _allBranches = null;
+
+        // async function fetchUsers(searchVal = '') {
+        //     if (!_allUsers) {
+        //         // Paginate until no more results
+        //         let allResults = [];
+        //         let offset = 0;
+        //         const limit = 1000;
+        //         while (true) {
+        //             const resp = await fetch(`${BASE_URL}/api/v1/acl/accessible_users/list`, {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'accept': '*/*',
+        //                     'authorization': `Bearer ${getToken()}`,
+        //                     'client-id': CLIENT_ID,
+        //                     'client-secret': CLIENT_SECRET,
+        //                     'content-type': 'application/json',
+        //                 },
+        //                 body: JSON.stringify({ limit, offset })
+        //             });
+        //             const data = await resp.json();
+        //             const batch = data?.data || [];
+        //             // Filter active users only
+        //             const active = batch.filter(u => u.status === 'active' || u.user_type === 'normal');
+        //             allResults = allResults.concat(active);
+        //             if (batch.length < limit) break; // no more pages
+        //             offset += limit;
+        //         }
+        //         _allUsers = allResults
+        //             .map(u => ({ id: u.user_id, name: u.name, email: u.email }))
+        //             .sort((a, b) => a.name.localeCompare(b.name));
+        //     }
+
+        //     if (!searchVal) return _allUsers.slice(0, 100);
+        //     const lower = searchVal.toLowerCase();
+        //     return _allUsers.filter(u =>
+        //         u.name.toLowerCase().includes(lower) ||
+        //         u.email.toLowerCase().includes(lower)
+        //     ).slice(0, 100);
+        // }
+
+        async function fetchUsers(searchVal = '') {
+            if (!_allUsers) {
+                let allResults = [];
+                let offset = 0;
+                const limit = 5000;
+
+                while (true) {
+                    const query = `SELECT id, name, email FROM user WHERE status = 'active' ORDER BY name ASC LIMIT ${limit} OFFSET ${offset}`;
+                    const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
+                        method: 'POST',
+                        headers: {
+                            'accept': '*/*',
+                            'authorization': `Bearer ${getToken()}`,
+                            'client-id': CLIENT_ID,
+                            'client-secret': CLIENT_SECRET,
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({ query, slug: 'user' })
+                    });
+                    const data = await resp.json();
+                    const batch = data?.data?.records || [];
+                    allResults = allResults.concat(batch);
+                    if (batch.length < limit) break;
+                    offset += limit;
+                }
+
+                _allUsers = allResults
+                    .map(u => ({ id: u.id, name: u.name, email: u.email }))
+                    .sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            if (!searchVal) return _allUsers.slice(0, 100);
+            const lower = searchVal.toLowerCase();
+            return _allUsers.filter(u =>
+                u.name.toLowerCase().includes(lower) ||
+                u.email.toLowerCase().includes(lower)
+            ).slice(0, 100);
+        }
+
+        function renderUserOptions(menuId, users, group, currentVal) {
+            const menu = document.getElementById(menuId);
+            menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+            document.getElementById(menuId + '-empty')?.remove();
+
+            if (users.length === 0) {
+                const empty = document.createElement('div');
+                empty.id = menuId + '-empty';
+                empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
+                empty.textContent = 'No users found';
+                menu.appendChild(empty);
+                return;
+            }
+
+            users.forEach(u => {
+                const div = document.createElement('div');
+                // val = email for RSGH/TL (matched on email fields), name for User filter
+                const val = group === 'user' ? u.name : u.email;
+                div.className = 's3-pill-option' + (val === currentVal ? ' active' : '');
+                div.dataset.val = val;
+                div.innerHTML = `${u.name}<span style="color:var(--faint);font-size:10px;margin-left:6px;">${u.email}</span>`;
+                div.onclick = function () {
+                    const label = u.name + ' · ' + u.email;
+                    selectPillOption(group, val, label, this);
+                };
+                menu.appendChild(div);
+            });
+        }
+
+        const userSearchDebounces = {};
+
+        function onUserSearch(group, inputEl) {
+            const val = inputEl.value.trim();
+            clearTimeout(userSearchDebounces[group]);
+            userSearchDebounces[group] = setTimeout(async () => {
+                const menuId = 'fpm-' + group;
+                const menu = document.getElementById(menuId);
+                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
+                document.getElementById(menuId + '-empty')?.remove();
+                document.getElementById(menuId + '-searching')?.remove();
+
+                // Show loading only if not yet cached
+                if (!_allUsers) {
+                    const loading = document.createElement('div');
+                    loading.id = menuId + '-searching';
+                    loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
+                    loading.textContent = 'Loading…';
+                    menu.appendChild(loading);
+                }
+
+                try {
+                    const users = await fetchUsers(val);
+                    document.getElementById(menuId + '-searching')?.remove();
+                    const currentVal = document.querySelector(`#${menuId} .s3-pill-option.active`)?.dataset.val || '';
+                    renderUserOptions(menuId, users, group, currentVal);
+                } catch (e) {
+                    document.getElementById(menuId + '-searching')?.remove();
+                }
+            }, 250);
+        }
+
+
+        // Helper Functions
+        function dateToISTStartEpoch(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return Date.UTC(y, m - 1, d, 0, 0, 0, 0) - IST_MS;
+        }
+
+        function dateToISTEndEpoch(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return Date.UTC(y, m - 1, d, 23, 59, 59, 999) - IST_MS;
+        }
+
+        function onScholPctChange() {
+            const min = document.getElementById('f-schol-min').value.trim();
+            const max = document.getElementById('f-schol-max').value.trim();
+            const clearBtn = document.getElementById('fclear-schol-pct');
+            if (clearBtn) clearBtn.style.display = (min || max) ? 'inline-flex' : 'none';
+            // Focus border feedback
+            ['f-schol-min', 'f-schol-max'].forEach(id => {
+                const el = document.getElementById(id);
+                el.style.borderColor = (min || max) ? 'var(--green)' : 'var(--border)';
+                el.style.color = (min || max) ? 'var(--text)' : 'var(--muted)';
+            });
+            s3Data = {};
+            runSection3Only();
+        }
+
+        function clearScholPct(event) {
+            event.stopPropagation();
+            document.getElementById('f-schol-min').value = '';
+            document.getElementById('f-schol-max').value = '';
+            ['f-schol-min', 'f-schol-max'].forEach(id => {
+                const el = document.getElementById(id);
+                el.style.borderColor = 'var(--border)';
+                el.style.color = 'var(--muted)';
+            });
+            document.getElementById('fclear-schol-pct').style.display = 'none';
+            s3Data = {};
+            runSection3Only();
+        }
+
+        function onDateRangeChange(group) {
+            const from = document.getElementById(`f-${group}-from`)?.value;
+            const to = document.getElementById(`f-${group}-to`)?.value;
+            const clearBtn = document.getElementById(`fclear-${group}-date`);
+            if (clearBtn) clearBtn.style.display = (from || to) ? 'inline-flex' : 'none';
+            s3Data = {};
+            runSection3Only();
+        }
+
+        function clearDateRange(group, event) {
+            event.stopPropagation();
+            document.getElementById(`f-${group}-from`).value = '';
+            document.getElementById(`f-${group}-to`).value = '';
+            document.getElementById(`fclear-${group}-date`).style.display = 'none';
+            s3Data = {};
+            runSection3Only();
+        }
+
+        // Add near your other epoch constants
+        function productFloorEpoch() {
+            // Look back 2 years max for product associations
+            return Date.now() - 730 * 86400000;
+        }
+
+
+        // ═══════════════════════ RUN ═══════════════════════
+
+        async function runDashboard() {
+            const btn = document.getElementById('btnRun');
+            const errBox = document.getElementById('errorBox');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btn.querySelector('.btn-label').textContent = 'Running…';
+            errBox.style.display = 'none';
+
+            // Set loading states
+            ['untouched', 'followup', 'missed', 'callback', 'visit'].forEach(setS1Loading);
+            ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(setPanelStatLoading);
+            ['iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'].forEach(setSubLoading);
+            ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all'].forEach(setPanelStatLoading);
+            ['anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
+                'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60'].forEach(setSubLoading);
+
+            // Show loading state in S3 table
+            document.getElementById('s3TableWrap').innerHTML = hasS3FilterSelected()
+                ? '<div class="s3-loading"><div class="spinner"></div>Loading…</div>'
+                : '<div class="s3-empty">Select at least one filter above (Class, Branch, School, Qualified, or Visit Done) to load Section 3 data.</div>';
+            ['ay26', 'iacst_rl', 'iacst_tt', 'anthe_tt', 'callback15', 'all'].forEach(k => {
+                const el = document.getElementById('pill-count-' + k);
+                if (el) el.textContent = '—';
+            });
+            s3Data = {};
+
+            const todayStr = nowIST().toISOString().slice(0, 10);
+            let errored = false;
+
+            const tasks = [];
+
+            // Only run S1 + S2 if not yet loaded
+            if (!s1s2Loaded) {
+                tasks.push(
+                    // Section 1 — all 5 in one leads_object query
+                    async () => {
+                        try {
+                            const r = await safeQuery(buildQ_Section1_All, 'leads_object');
+                            const row = r?.[0] || {};
+                            const get = (k) => Number(row[k]) || 0;
+                            setS1Count('untouched', get('untouched'), 'AY26 · Never contacted');
+                            setS1Count('followup', get('followup'), `Scheduled for ${todayStr}`);
+                            setS1Count('missed', get('missed'), 'AY26 · Past due');
+                            setS1Count('callback', get('callback'), 'Bot routed, not yet called');
+                            setS1Count('visit', get('visit'), 'Branch visit booked today · not completed');
+                            s1s2Loaded = true;
+                        } catch (e) {
+                            ['untouched', 'followup', 'missed', 'callback', 'visit'].forEach(id => setS1Err(id, e.message));
+                            errored = true;
+                        }
+                    },
+                    // Section 2 — iACST main (7 columns)
+                    async () => {
+                        try {
+                            const r = await safeQuery(buildQ_iACST_Main, 'scholarship_object');
+                            const row = r?.[0] || {};
+                            const get = (k) => Number(row[k]) || 0;
+                            setPanelStatCount('iacst-digital', get('digital'));
+                            setPanelStatCount('iacst-self', get('self'));
+                            setPanelStatCount('iacst-bulk', get('bulk'));
+                            setPanelStatCount('iacst-all', get('all'));
+                            setSubCount('iacst-untouched', get('untouched'));
+                            setSubCount('iacst-followup', get('followup_due'));
+                            setSubCount('iacst-taken', get('taken_today'));
+                        } catch (e) {
+                            ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(id => setSubErr(id, e.message));
+                            ['iacst-untouched', 'iacst-followup', 'iacst-taken'].forEach(id => setSubErr(id, e.message));
+                            errored = true;
+                        }
+                    },
+                    // Section 2 — iACST scheduled not taken
+                    async () => {
+                        try {
+                            const r = await safeQuery(buildQ_iACST_ScheduledNotTaken, 'scholarship_object');
+                            setSubCount('iacst-scheduled', extractCount(r));
+                        } catch (e) { setSubErr('iacst-scheduled', e.message); errored = true; }
+                    },
+                    // Section 2 — ANTHE (10 columns, 1 query)
+                    async () => {
+                        try {
+                            const r = await safeQuery(buildQ_ANTHE_Main, 'scholarship_object');
+                            const row = r?.[0] || {};
+                            const get = (k) => Number(row[k]) || 0;
+                            setPanelStatCount('anthe-digital', get('digital'));
+                            setPanelStatCount('anthe-self', get('self'));
+                            setPanelStatCount('anthe-bulk', get('bulk'));
+                            setPanelStatCount('anthe-all', get('all'));
+                            setSubCount('anthe-above60', get('above60'));
+                            setSubCount('anthe-unt-above60', get('unt_above60'));
+                            setSubCount('anthe-fu-above60', get('fu_above60'));
+                            setSubCount('anthe-below60', get('below60'));
+                            setSubCount('anthe-unt-below60', get('unt_below60'));
+                            setSubCount('anthe-fu-below60', get('fu_below60'));
+                        } catch (e) {
+                            ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all',
+                                'anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
+                                'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60']
+                                .forEach(id => setSubErr(id, e.message));
+                            errored = true;
+                        }
+                    },
+
+                )
+            }
+
+            // In runDashboard, fire cohort counts AFTER the main table, don't block on it
+            if (hasS3FilterSelected()) {
+                tasks.push(
+                    async () => {
+                        // Main table first — this is what the user needs
+                        const r = await safeQuery(() => buildQ_S3_Branch(s3CurrentCohort), 'leads_object');
+                        s3Data[s3CurrentCohort + '_branch'] = r;
+                        if (s3CurrentView === 'branch') renderS3Table();
+
+                        // Fire cohort counts in background AFTER table renders — don't await
+                        safeQuery(buildQ_S3_CohortCounts, 'leads_object')
+                            .then(r => {
+                                const row = r?.[0] || {};
+                                ['ay26', 'iacst_rl', 'iacst_tt', 'anthe_tt', 'callback15', 'all'].forEach(k => {
+                                    const el = document.getElementById('pill-count-' + k);
+                                    if (el) el.textContent = fmt(row[k] || 0);
+                                });
+                            })
+                            .catch(e => console.warn('Cohort counts failed silently', e));
+                    }
+                );
+            } else {
+                // No S3 filter selected — show placeholder
+                document.getElementById('s3TableWrap').innerHTML =
+                    '<div class="s3-empty">Select at least one filter above (Class, Branch, School, Qualified, or Visit Done) to load Section 3 data.</div>';
+            }
+
+            await runPool(tasks, 2);
+
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.querySelector('.btn-label').textContent = 'Apply & Run';
+
+            if (errored) {
+                errBox.innerHTML = '⚠️ One or more queries failed. Verify your <strong>?token=</strong> in the URL.';
+                errBox.style.display = 'flex';
+            } else {
+                document.getElementById('lastRun').textContent =
+                    'Last run: ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+            }
+        }
+
+        async function runSection3Only() {
+            if (!hasS3FilterSelected()) {
+                s3Data = {};
+                document.getElementById('s3TableWrap').innerHTML =
+                    '<div class="s3-empty">Select at least one filter above to load Section 3 data.</div>';
+                return;  // ← exit early, don't fire any query
+            }
+            const btn = document.getElementById('btnRun');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            btn.querySelector('.btn-label').textContent = 'Running…';
+
+            document.getElementById('s3TableWrap').innerHTML =
+                '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+            s3Data = {};
+
+            try {
+                const r = await safeQuery(() => buildQ_S3_Branch(s3CurrentCohort), 'leads_object');
+                s3Data[s3CurrentCohort + '_branch'] = r;
+                if (s3CurrentView === 'branch') renderS3Table();
+            } catch (e) {
+                document.getElementById('s3TableWrap').innerHTML =
+                    '<div class="s3-empty" style="color:var(--red);">Error: ' + e.message + '</div>';
+            }
+
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.querySelector('.btn-label').textContent = 'Apply & Run';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDateWindow();      // ← add this
+            initialiseFilters();
+        });
+    </script>
+
+</body>
+
+</html>
