@@ -634,84 +634,7 @@
         /* ══════════════════════════════════════
        SECTION 3 — LEAD STAGE TABLE
     ══════════════════════════════════════ */
-        .s3-wrap {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: visible;
-            margin-bottom: 28px;
-        }
-
-        .s3-locked {
-            pointer-events: none;
-            opacity: 0.4;
-        }
-
-        /* Cohort pills */
-        .cohort-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--cream-dark);
-            flex-wrap: wrap;
-        }
-
-        .cohort-label {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--faint);
-            margin-right: 4px;
-            white-space: nowrap;
-        }
-
-        .cohort-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--cream);
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--muted);
-            cursor: pointer;
-            transition: all 0.12s;
-            white-space: nowrap;
-        }
-
-        .cohort-pill:hover {
-            border-color: var(--green);
-            color: var(--green-dark);
-        }
-
-        .cohort-pill.active {
-            background: var(--text);
-            border-color: var(--text);
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .cohort-pill .pill-count {
-            font-size: 11px;
-            opacity: 0.75;
-        }
-
-        .cohort-pill.active .pill-count {
-            opacity: 0.85;
-        }
-
         /* Table inner header */
-        .table-inner-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 22px 14px;
-            border-bottom: 1px solid var(--cream-dark);
-        }
 
         .table-inner-title {
             font-family: 'Inter', sans-serif;
@@ -730,126 +653,7 @@
             color: var(--faint);
         }
 
-        /* Toggle By Branch / By User */
-        .view-toggle {
-            display: flex;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .view-toggle button {
-            padding: 6px 16px;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            border: none;
-            background: transparent;
-            color: var(--muted);
-            cursor: pointer;
-            transition: background 0.12s, color 0.12s;
-        }
-
-        .view-toggle button.active {
-            background: var(--text);
-            color: #fff;
-            font-weight: 600;
-        }
-
         /* The table */
-        .s3-table-wrap {
-            overflow-x: auto;
-            overflow-y: auto;
-            max-height: 680px;
-        }
-
-        .s3-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        .s3-table thead th {
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            background: var(--cream);
-            padding: 10px 16px;
-            text-align: left;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.7px;
-            text-transform: uppercase;
-            color: var(--faint);
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        .s3-table thead th.num {
-            text-align: right;
-        }
-
-        .s3-table thead th.col-missed {
-            color: #EA580C;
-        }
-
-        .s3-table thead th.col-fu {
-            color: var(--amber);
-        }
-
-        .s3-table thead th.col-unt {
-            color: var(--red);
-        }
-
-        .s3-table thead th.col-qual {
-            color: var(--green-dark);
-        }
-
-        .s3-table thead th.col-adm {
-            color: var(--green-dark);
-        }
-
-        .s3-table tbody tr {
-            border-bottom: 1px solid var(--cream-dark);
-            transition: background 0.1s;
-        }
-
-        .s3-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .s3-table tbody tr:hover {
-            background: #FAF9F7;
-        }
-
-        .s3-table tbody tr.total-row {
-            background: var(--cream);
-            font-weight: 700;
-            position: sticky;
-            bottom: 0;
-            z-index: 1;
-        }
-
-        .s3-table tbody tr.total-row:hover {
-            background: var(--cream-dark);
-        }
-
-        .s3-table td {
-            padding: 9px 14px;
-            /* was 12px 16px */
-        }
-
-        .s3-table thead th {
-            padding: 8px 14px;
-            /* was 10px 16px */
-            background: #F8F9FA;
-        }
-
-        .s3-table td.num {
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-        }
-
         .td-branch-name {
             font-weight: 600;
             color: var(--text);
@@ -2119,191 +1923,6 @@
 
         </div>
 
-        <!-- ══════════════════════════════════════
-       SECTION 3 — LEAD STAGE FUNNEL TABLE
-  ══════════════════════════════════════ -->
-        <div class="section-header">
-            <div class="section-header-left">
-                <div class="section-eyebrow">Section 03 · Lead Stage Funnel</div>
-                <div class="section-title">Where every lead <em>is right now</em></div>
-            </div>
-            <!-- <div class="section-badge">Tap a row to drill into team / individual leads</div> -->
-        </div>
-
-        <div class="s3-wrap">
-            <!-- S3 Filters — collapsed behind a button -->
-
-            <!-- Hidden original menus still needed for the where-clause functions -->
-            <div style="display:none">
-                <div id="fpm-qualified">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-visit-done">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-class">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-branch">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-school">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-campaign">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-source">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-course">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-career">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-user-team">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-user-rsgh">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-user-tl">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-user-branch">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-                <div id="fpm-user">
-                    <div class="s3-pill-option active" data-val=""></div>
-                </div>
-            </div>
-
-            <!-- Cohort pills + Filters button — same row -->
-            <div class="cohort-bar s3-locked" id="s3-active-filters-bar" style="justify-content:space-between;">
-                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                    <span class="cohort-label">Cohort</span>
-                    <span class="cohort-pill active" data-cohort="ay26" onclick="setCohort(this)">
-                        AY26 All Leads <span class="pill-count" id="pill-count-ay26">—</span>
-                    </span>
-                    <span class="cohort-pill" data-cohort="iacst_tt" onclick="setCohort(this)">
-                        iACST Test Takers <span class="pill-count" id="pill-count-iacst_tt">—</span>
-                    </span>
-                    <span class="cohort-pill" data-cohort="iacst_rl" onclick="setCohort(this)">
-                        iACST Registered Leads <span class="pill-count" id="pill-count-iacst_rl">—</span>
-                    </span>
-                    <span class="cohort-pill" data-cohort="anthe_tt" onclick="setCohort(this)">
-                        ANTHE Test Takers <span class="pill-count" id="pill-count-anthe_tt">—</span>
-                    </span>
-                    <span class="cohort-pill" data-cohort="callback15" onclick="setCohort(this)">
-                        Call Back · 15d <span class="pill-count" id="pill-count-callback15">—</span>
-                    </span>
-                    <span class="cohort-pill" data-cohort="all" onclick="setCohort(this)">
-                        All Leads (New+Old) <span class="pill-count" id="pill-count-all">—</span>
-                    </span>
-                </div>
-
-                <!-- Filters button + active chips on the right -->
-                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;">
-                    <div id="s3-active-chips" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"></div>
-                    <div style="position:relative;" id="s3-filter-launcher">
-                        <button onclick="toggleFilterPanel()" id="s3-filter-btn"
-                            style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:6px;
-                                   border:1px solid var(--border);background:var(--white);color:var(--muted);
-                                   font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.12s;"
-                            onmouseenter="this.style.borderColor='var(--green)';this.style.color='var(--green-dark)'"
-                            onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
-                            ⚙ Filters
-                            <span id="s3-filter-count-badge" style="display:none;background:var(--green);color:#fff;
-                                  border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;"></span>
-                        </button>
-
-                        <!-- Filter panel -->
-                        <div id="s3-filter-panel" style="display:none;position:absolute;top:calc(100% + 6px);right:0;left:auto;
-                             background:var(--white);border:1px solid var(--border);border-radius:10px;
-                             box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:300;min-width:220px;padding:4px;
-                             max-height:320px;overflow-y:auto;">
-
-                            <div id="s3-fp-categories">
-                                <div class="s3-fp-cat" data-filter="qualified" onclick="openFilterSub('qualified')">
-                                    Qualified <span class="s3-fp-val" id="fpv-qualified"></span></div>
-                                <div class="s3-fp-cat" data-filter="visit-done" onclick="openFilterSub('visit-done')">
-                                    Visit Done <span class="s3-fp-val" id="fpv-visit-done"></span></div>
-                                <div class="s3-fp-cat" data-filter="class" onclick="openFilterSub('class')">Class <span
-                                        class="s3-fp-val" id="fpv-class"></span></div>
-                                <div class="s3-fp-cat" data-filter="branch" onclick="openFilterSub('branch')">Lead
-                                    Branch <span class="s3-fp-val" id="fpv-branch"></span></div>
-                                <div class="s3-fp-cat" data-filter="school" onclick="openFilterSub('school')">School
-                                    <span class="s3-fp-val" id="fpv-school"></span>
-                                </div>
-                                <div class="s3-fp-cat" data-filter="campaign" onclick="openFilterSub('campaign')">
-                                    Campaign <span class="s3-fp-val" id="fpv-campaign"></span></div>
-                                <div class="s3-fp-cat" data-filter="source" onclick="openFilterSub('source')">Source
-                                    <span class="s3-fp-val" id="fpv-source"></span>
-                                </div>
-                                <div class="s3-fp-cat" data-filter="course" onclick="openFilterSub('course')">Course
-                                    Name <span class="s3-fp-val" id="fpv-course"></span></div>
-                                <div class="s3-fp-cat" data-filter="career" onclick="openFilterSub('career')">Course
-                                    Career <span class="s3-fp-val" id="fpv-career"></span></div>
-                                <div class="s3-fp-cat" data-filter="user-team" onclick="openFilterSub('user-team')">User
-                                    Team <span class="s3-fp-val" id="fpv-user-team"></span></div>
-                                <div class="s3-fp-cat" data-filter="user-rsgh" onclick="openFilterSub('user-rsgh')">User
-                                    RSGH <span class="s3-fp-val" id="fpv-user-rsgh"></span></div>
-                                <div class="s3-fp-cat" data-filter="user-tl" onclick="openFilterSub('user-tl')">User
-                                    TL/Manager <span class="s3-fp-val" id="fpv-user-tl"></span></div>
-                                <div class="s3-fp-cat" data-filter="user-branch" onclick="openFilterSub('user-branch')">
-                                    User Branch <span class="s3-fp-val" id="fpv-user-branch"></span></div>
-                                <div class="s3-fp-cat" data-filter="user" onclick="openFilterSub('user')">User <span
-                                        class="s3-fp-val" id="fpv-user"></span></div>
-                                <div class="s3-fp-cat" data-filter="schol-pct" onclick="openFilterSub('schol-pct')">
-                                    Scholarship % <span class="s3-fp-val" id="fpv-schol-pct"></span></div>
-                                <div class="s3-fp-cat" data-filter="result-date" onclick="openFilterSub('result-date')">
-                                    Result Date <span class="s3-fp-val" id="fpv-result-date"></span></div>
-                                <div class="s3-fp-cat" data-filter="schol-date" onclick="openFilterSub('schol-date')">
-                                    Schol. Created At <span class="s3-fp-val" id="fpv-schol-date"></span></div>
-                                <div style="border-top:1px solid var(--border);margin:4px 0;padding:6px 10px;">
-                                    <button onclick="clearAllFilters()"
-                                        style="font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;">Clear
-                                        all filters</button>
-                                </div>
-                            </div>
-
-                            <div id="s3-fp-sub" style="display:none;">
-                                <div
-                                    style="padding:8px 10px 4px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--border);">
-                                    <button onclick="closeFilterSub()"
-                                        style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0 4px 0 0;">←</button>
-                                    <span id="s3-fp-sub-title"
-                                        style="font-size:12px;font-weight:700;color:var(--text);"></span>
-                                </div>
-                                <div id="s3-fp-sub-search"></div>
-                                <div id="s3-fp-sub-options" style="max-height:220px;overflow-y:auto;padding:4px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Table header + toggles -->
-            <div class="table-inner-header s3-locked">
-                <!-- <div class="table-inner-title">Lead status by <em>user branch</em></div> -->
-                <div class="table-inner-title" id="s3-table-title">Lead status by <em>user branch</em></div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span class="table-inner-hint">Showing totals by branch</span>
-                    <div class="view-toggle">
-                        <button class="active" id="tog-branch" onclick="setView('branch')">By Branch</button>
-                        <button id="tog-user" onclick="setView('user')">By User</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Table body -->
-            <div class="s3-table-wrap" id="s3TableWrap">
-                <div class="s3-empty">Click <strong>Apply &amp; Run</strong> to load data</div>
-            </div>
-
-        </div>
-
     </div>
 
     <!-- Drill Down Logics & Body -->
@@ -2410,16 +2029,6 @@
         const JUL_1_2025 = istDateEpoch(2025, 7, 1);
         const NOV_1_2026 = istDateEpoch(2026, 11, 1);
         const MAY_1_2026 = istDateEpoch(2026, 5, 1);
-
-
-        let s3DisplayMode = 'table'; // 'table' or 'charts'
-
-        function setDisplayMode(mode) {
-            s3DisplayMode = mode;
-            document.getElementById('tog-table').classList.toggle('active', mode === 'table');
-            document.getElementById('tog-charts').classList.toggle('active', mode === 'charts');
-            renderS3Table(); // re-render in new mode
-        }
 
         // initialise Filter function to fetch initial filters like class
         async function initialiseFilters() {
@@ -2980,27 +2589,62 @@ WHERE created_at >= ${getDateFrom()}
   `;
         }
 
+
+
+        function buildQ_S1_Combined() {
+            return `SELECT
+  COUNT(DISTINCT id) as "total",
+  COUNT(DISTINCT CASE WHEN stage = 'Untouched Lead' THEN id END) as "untouched",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
+    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "followup",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c IS NOT NULL
+    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
+  ) THEN id END) as "missed",
+  COUNT(DISTINCT CASE WHEN (
+    AESL_Next_Follow_up_date__c > ${todayISTEndEpoch()}
+    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible', 'Untouched Lead')
+  ) THEN id END) as "futureFollowup"
+FROM leads_object
+WHERE created_at >= ${getDateFrom()}
+  AND created_at <= ${getDateTo()}
+  ${s1RsghWhere()} ${s1BranchWhere()} ${s1UserWhere()} ${s1SchoolWhere()}
+  ${s1RdWhere()} ${s1TlWhere()} ${s1ClassStudyingWhere()} ${s1DataModifiedAtWhere()}
+  ${s1TypeOfLeadWhere()}
+`;
+        }
+
         function s1TypeOfLeadWhere(ctx = 'lead') {
             const val = s1Filters.typeOfLead || 'ay26';
             const lead = ctx === 'schol' ? 'associated_lead' : 'leads_object';
 
-            if (val === 'neet_bulk') {
-                return `AND EXISTS (
-      SELECT 1 FROM product_object
-      WHERE associated_lead = ${lead}.id
-        AND (AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c = '1512'
-             OR AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c = '2020')
-        AND created_at >= ${MAY_1_2026}
-    )`;
-            }
+            //         if (val === 'neet_bulk') {
+            //             return `AND EXISTS (
+            //   SELECT 1 FROM product_object
+            //   WHERE associated_lead = ${lead}.id
+            //     AND AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c IN ('1512', '2020')
+            //     AND created_at >= ${MAY_1_2026}
+            // )`;
+            //         }
 
-            if (val === 'neet_rank_predictor') {
-                return `AND EXISTS (
-      SELECT 1 FROM product_object
-      WHERE associated_lead = ${lead}.id
-        AND AESL_Source__c = 'NEET Rank College Predictor LP'
-        AND created_at >= ${MAY_1_2026}
-    )`;
+            //         if (val === 'neet_rank_predictor') {
+            //             return `AND EXISTS (
+            //   SELECT 1 FROM product_object
+            //   WHERE associated_lead = ${lead}.id
+            //     AND AESL_Source__c = 'NEET Rank College Predictor LP'
+            //     AND created_at >= ${MAY_1_2026}
+            // )`;
+            //         }
+            if (val === 'neet_bulk' || val === 'neet_rank_predictor') {
+                const ids = _typeOfLeadIdCache[val];
+                if (!ids || ids.length === 0) return `AND 1=0`; // no matches
+                // chunk if very large to avoid query-size limits
+                const list = ids.map(id => `'${id.replace(/'/g, "''")}'`).join(',');
+                return `AND ${lead}.id IN (${list})`;
             }
 
             // default: 'ay26' — (1 or 2 or 3 or 4 or 5) and 6
@@ -3148,6 +2792,44 @@ WHERE (
 )`;
         }
 
+        let _typeOfLeadIdCache = {}; // keyed by typeOfLead value
+
+        async function getTypeOfLeadIds() {
+            const val = s1Filters.typeOfLead || 'ay26';
+            if (val === 'ay26') return null; // default handled separately/inline
+            if (_typeOfLeadIdCache[val]) return _typeOfLeadIdCache[val];
+
+            let q;
+            if (val === 'neet_bulk') {
+                q = `SELECT DISTINCT associated_lead as "id"
+FROM product_object
+WHERE AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c IN ('1512','2020')
+  AND created_at >= ${MAY_1_2026}`;
+            } else if (val === 'neet_rank_predictor') {
+                q = `SELECT DISTINCT associated_lead as "id"
+FROM product_object
+WHERE AESL_Source__c = 'NEET Rank College Predictor LP'
+  AND created_at >= ${MAY_1_2026}`;
+            }
+            const rows = await safeQuery(() => q, 'product_object');
+            const ids = rows.map(r => r.id).filter(Boolean);
+            _typeOfLeadIdCache[val] = ids;
+            return ids;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // ═══════════════════════ UI HELPERS ═══════════════════════
 
         // Section 1 — large serif value
@@ -3211,437 +2893,25 @@ WHERE (
         // Logic: lead has a call_disposition_activity where
         //   (conversation_status IN ('Visit Done','Call Counseled')
         //    OR follow_up_mode IN ('Branch Visit','Home Visit'))
-        //   AND that activity's created_at falls in the chosen date window (IST date only).
-        function qualifiedWhere() {
-            const val = document.querySelector('#fpm-qualified .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-
-            let fromEpoch, toEpoch;
-            const todayStart = todayISTStartEpoch();
-            const todayEnd = todayISTEndEpoch();
-
-            switch (val) {
-                case 'today':
-                    fromEpoch = todayStart;
-                    toEpoch = todayEnd;
-                    break;
-                case 'yesterday':
-                    fromEpoch = todayStart - 86400000;
-                    toEpoch = todayStart - 1;
-                    break;
-                case 'last7':
-                    fromEpoch = todayStart - 6 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                case 'last30':
-                    fromEpoch = todayStart - 29 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                case 'last90':
-                    fromEpoch = todayStart - 89 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                case 'last180':
-                    fromEpoch = todayStart - 179 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                default:
-                    return '';
-            }
-
-            return `AND EXISTS (
-      SELECT 1 FROM leads_object_call_disposition
-      WHERE leads_object = leads_object.id
-        AND (
-          conversation_status IN ('Visit Done', 'Call Counseled')
-          OR follow_up_mode IN ('Branch Visit', 'Home Visit')
-        )
-        AND created_at >= ${fromEpoch}
-        AND created_at <= ${toEpoch}
-    )`;
+        //   AND that activity's created_at falls in the chosen date window (IST date only)/*
+        function s1RsghWhere() {
+            return s1Filters.rsgh
+                ? `AND owner.team_sales_head = '${s1Filters.rsgh.replace(/'/g, "''")}'`
+                : '';
         }
 
-        function onQualifiedFilterChange(el) {
-            el.classList.toggle('active', el.value !== '');
-            // Clear cached S3 data so next render re-fetches with new filter
-            s3Data = {};
-            // renderS3Table();
-            runSection3Only();
-        }
-        // ── Visit Done filter ──
-        function visitDoneWhere() {
-            const val = document.querySelector('#fpm-visit-done .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-
-            let fromEpoch, toEpoch;
-            const todayStart = todayISTStartEpoch();
-            const todayEnd = todayISTEndEpoch();
-
-            switch (val) {
-                case 'today':
-                    fromEpoch = todayStart;
-                    toEpoch = todayEnd;
-                    break;
-                case 'yesterday':
-                    fromEpoch = todayStart - 86400000;
-                    toEpoch = todayStart - 1;
-                    break;
-                case 'last7':
-                    fromEpoch = todayStart - 6 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                case 'last30':
-                    fromEpoch = todayStart - 29 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                case 'last90':
-                    fromEpoch = todayStart - 89 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                case 'last180':
-                    fromEpoch = todayStart - 179 * 86400000;
-                    toEpoch = todayEnd;
-                    break;
-                default:
-                    return '';
-            }
-
-            return `AND EXISTS (
-    SELECT 1 FROM leads_object_call_disposition
-    WHERE leads_object = leads_object.id
-      AND conversation_status = 'Visit Done'
-      AND created_at >= ${fromEpoch}
-      AND created_at <= ${toEpoch}
-  )`;
+        function s1BranchWhere() {
+            return s1Filters.branch
+                ? `AND owner.user_branch_name_user_management_ = '${s1Filters.branch.replace(/'/g, "''")}'`
+                : '';
         }
 
-        function onVisitDoneFilterChange(el) {
-            el.classList.toggle('active', el.value !== '');
-            s3Data = {};
-            // renderS3Table();
-            runSection3Only();
+        function s1UserWhere() {
+            return s1Filters.user
+                ? `AND owner.name = '${s1Filters.user.replace(/'/g, "''")}'`
+                : '';
         }
 
-        function setS3Filter(group, el) {
-            // Deactivate siblings, activate clicked
-            el.closest('.s3-pill-group').querySelectorAll('.s3-pill')
-                .forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function cohortWhere(cohort) {
-            const careerClause = getCareerClause();
-            const courseClause = getCourseClause();
-            // Extra conditions to inject into the product_object subquery
-            const productExtra = careerClause + ' ' + courseClause;
-
-            switch (cohort) {
-                case 'ay26':
-                    // Merge career/course into the same product EXISTS to avoid 3 separate scans
-                    if (productExtra.trim()) {
-                        return `AND EXISTS (
-          SELECT 1 FROM product_object
-          WHERE associated_lead = leads_object.id
-            AND (AESL_Level__c.name LIKE '26%' OR created_at >= ${ninetyDaysAgoEpoch()})
-            ${productExtra}
-        )`;
-                    }
-                    return `AND (
-          EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND AESL_Level__c.name LIKE '26%')
-          OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${ninetyDaysAgoEpoch()})
-        )`;
-
-                case 'iacst_rl':
-                    return `AND EXISTS (
-    SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id
-      AND AESL_Lead_Type__c = 'iACST'
-      AND AESL_Level__c.name = '2627'
-      AND AESL_Roll_No__c IS NOT NULL
-  )${productExtra.trim() ? `
-  AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      ${productExtra}
-  )` : ''}`;
-
-                case 'iacst_tt':
-                    return `AND EXISTS (
-          SELECT 1 FROM scholarship_object
-          WHERE associated_lead = leads_object.id
-            AND AESL_Lead_Type__c = 'iACST'
-            AND AESL_Level__c.name = '2627'
-            AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-        )${productExtra.trim() ? `
-  AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      ${productExtra}
-  )` : ''}`;
-
-                case 'anthe_tt':
-                    return `AND EXISTS (
-          SELECT 1 FROM scholarship_object
-          WHERE associated_lead = leads_object.id
-            AND AESL_Lead_Type__c = 'ANTHE'
-            AND AESL_Level__c.name = '2627'
-            AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-        )${productExtra.trim() ? `
-  AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      ${productExtra}
-  )` : ''}`;
-
-                case 'callback15':
-                    return `AND call_back_date >= ${daysAgoISTStartEpoch(15)}
-        AND call_back_date <= ${todayISTEndEpoch()}${productExtra.trim() ? `
-  AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      ${productExtra}
-  )` : ''}`;
-
-                default: // 'all'
-                    return productExtra.trim() ? `AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      ${productExtra}
-  )` : '';
-            }
-        }
-
-        function classWhere(cohort) {
-            const val = document.querySelector('#fpm-class .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            const escaped = val.replace(/'/g, "''");
-
-            switch (cohort) {
-                case 'ay26':
-                case 'callback15':
-                case 'all':
-                    return `AND AESL_Class_LKP__c.name = '${escaped}'`;
-
-                case 'iacst_tt':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'iACST'
-          AND AESL_Level__c.name = '2627'
-          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-          AND AESL_Class_LKP__c.name = '${escaped}'
-      )`;
-
-                case 'iacst_rl':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'iACST'
-          AND AESL_Level__c.name = '2627'
-          AND AESL_Roll_No__c IS NOT NULL
-          AND AESL_Class_LKP__c.name = '${escaped}'
-      )`;
-
-                case 'anthe_tt':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'ANTHE'
-          AND AESL_Level__c.name = '2627'
-          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-          AND AESL_Class_LKP__c.name = '${escaped}'
-      )`;
-
-                default:
-                    return `AND AESL_Class_LKP__c.name = '${escaped}'`;
-            }
-        }
-
-        function branchWhere(cohort) {
-            const val = document.querySelector('#fpm-branch .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            const escaped = val.replace(/'/g, "''");
-
-            switch (cohort) {
-                case 'ay26':
-                case 'callback15':
-                case 'all':
-                    return `AND owner.user_branch_name_user_management_ = '${escaped}'`;
-
-                case 'iacst_tt':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'iACST'
-          AND AESL_Level__c.name = '2627'
-          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-          AND owner.user_branch_name_user_management_ = '${escaped}'
-      )`;
-
-                case 'iacst_rl':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'iACST'
-          AND AESL_Level__c.name = '2627'
-          AND AESL_Roll_No__c IS NOT NULL
-          AND owner.user_branch_name_user_management_ = '${escaped}'
-      )`;
-
-                case 'anthe_tt':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'ANTHE'
-          AND AESL_Level__c.name = '2627'
-          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-          AND owner.user_branch_name_user_management_ = '${escaped}'
-      )`;
-
-                default:
-                    return `AND owner.user_branch_name_user_management_ = '${escaped}'`;
-            }
-        }
-
-        function schoolWhere(cohort) {
-            const val = document.querySelector('#fpm-school .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            const escaped = val.replace(/'/g, "''");
-
-            switch (cohort) {
-                case 'ay26':
-                case 'callback15':
-                case 'all':
-                    return `AND AESL_School_Name__c.name = '${escaped}'`;
-
-                case 'iacst_tt':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'iACST'
-          AND AESL_Level__c.name = '2627'
-          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-          AND associated_lead.AESL_School_Name__c.name = '${escaped}'
-      )`;
-
-                case 'iacst_rl':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'iACST'
-          AND AESL_Level__c.name = '2627'
-          AND AESL_Roll_No__c IS NOT NULL
-          AND associated_lead.AESL_School_Name__c.name = '${escaped}'
-      )`;
-
-                case 'anthe_tt':
-                    return `AND EXISTS (
-        SELECT 1 FROM scholarship_object
-        WHERE associated_lead = leads_object.id
-          AND AESL_Lead_Type__c = 'ANTHE'
-          AND AESL_Level__c.name = '2627'
-          AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-          AND associated_lead.AESL_School_Name__c.name = '${escaped}'
-      )`;
-
-                default:
-                    return `AND AESL_School_Name__c.name = '${escaped}'`;
-            }
-        }
-
-        function campaignWhere(cohort) {
-            const val = document.querySelector('#fpm-campaign .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            const escaped = val.replace(/'/g, "''");
-            // val here is the campaign ID (not name)
-            // Match on product_object.AESL_Campaign_Id_c = selected campaign id
-            return `AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      AND AESL_Campaign_Id_c = '${escaped}'
-  )`;
-        }
-
-        function sourceWhere(cohort) {
-            const val = document.querySelector('#fpm-source .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            const escaped = val.replace(/'/g, "''");
-            return `AND EXISTS (
-    SELECT 1 FROM product_object
-    WHERE associated_lead = leads_object.id
-      AND AESL_Source__c = '${escaped}'
-  )`;
-        }
-
-        function scholPctWhere() {
-            const min = document.getElementById('f-schol-min')?.value.trim();
-            const max = document.getElementById('f-schol-max')?.value.trim();
-            if (!min && !max) return '';
-            const parts = [];
-            if (min) parts.push(`AND EXISTS (
-    SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id
-      AND associated_result.AESL_Eligible_Scholarship__c >= ${Number(min)}
-  )`);
-            if (max) parts.push(`AND EXISTS (
-    SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id
-      AND associated_result.AESL_Eligible_Scholarship__c <= ${Number(max)}
-  )`);
-            return parts.join(' ');
-        }
-
-        function scholResultDateWhere() {
-            const from = document.getElementById('f-result-from')?.value;
-            const to = document.getElementById('f-result-to')?.value;
-            if (!from && !to) return '';
-            const parts = [`SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id`];
-            if (from) parts.push(`AND associated_result.created_at >= ${dateToISTStartEpoch(from)}`);
-            if (to) parts.push(`AND associated_result.created_at <= ${dateToISTEndEpoch(to)}`);
-            return `AND EXISTS (${parts.join('\n      ')})`;
-        }
-
-        function scholCreatedAtWhere() {
-            const from = document.getElementById('f-schol-from')?.value;
-            const to = document.getElementById('f-schol-to')?.value;
-            if (!from && !to) return '';
-            const parts = [`SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id`];
-            if (from) parts.push(`AND created_at >= ${dateToISTStartEpoch(from)}`);
-            if (to) parts.push(`AND created_at <= ${dateToISTEndEpoch(to)}`);
-            return `AND EXISTS (${parts.join('\n      ')})`;
-        }
-
-        function courseWhere() {
-            return ''; // handled inside cohortWhere via getCourseClause()
-        }
-
-        function careerWhere() {
-            // Returns empty — career is handled inside cohortWhere via getCareerClause()
-            return '';
-        }
-        /*
-                function s1RsghWhere() {
-                    return s1Filters.rsgh
-                        ? `AND owner.team_sales_head = '${s1Filters.rsgh.replace(/'/g, "''")}'`
-                        : '';
-                }
-        
-                function s1BranchWhere() {
-                    return s1Filters.branch
-                        ? `AND owner.user_branch_name_user_management_ = '${s1Filters.branch.replace(/'/g, "''")}'`
-                        : '';
-                }
-        
-                function s1UserWhere() {
-                    return s1Filters.user
-                        ? `AND owner.name = '${s1Filters.user.replace(/'/g, "''")}'`
-                        : '';
-                }
-        */
         function s1RsghWhere(ctx = 'lead') {
             if (!s1Filters.rsgh) return '';
             const field = ctx === 'schol'
@@ -3728,538 +2998,14 @@ WHERE (
         }
 
 
-
-
-
-        function getCareerClause() {
-            const val = document.querySelector('#fpm-career .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            return `AND AESL_Course_Type_Interested_In__c = '${val.replace(/'/g, "''")}'`;
-        }
-
-        function getCourseClause() {
-            const val = document.querySelector('#fpm-course .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            return `AND AESL_Course_LK__c.name = '${val.replace(/'/g, "''")}'`;
-        }
-
-        function userRsghWhere() {
-            const val = document.querySelector('#fpm-user-rsgh .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            return `AND owner.team_sales_head = '${val.replace(/'/g, "''")}'`;
-        }
-
-        function userTlWhere() {
-            const val = document.querySelector('#fpm-user-tl .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            return `AND owner.team_supervisor = '${val.replace(/'/g, "''")}'`;
-        }
-
-        function userBranchWhere() {
-            const val = document.querySelector('#fpm-user-branch .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            return `AND owner.user_branch_name_user_management_ = '${val.replace(/'/g, "''")}'`;
-        }
-
-        function userWhere() {
-            const val = document.querySelector('#fpm-user .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            return `AND owner.id = '${val.replace(/'/g, "''")}'`;
-        }
-
-        function buildQ_S3_Branch(cohort) {
-            const extra = cohortWhere(cohort) + ' ' + classWhere(cohort) + ' ' + branchWhere(cohort) + ' ' +
-                schoolWhere(cohort) + ' ' + campaignWhere(cohort) + ' ' + sourceWhere(cohort) + ' ' +
-                scholPctWhere() + ' ' + scholResultDateWhere() + ' ' + scholCreatedAtWhere() + ' ' +
-                courseWhere() + ' ' + careerWhere() + ' ' +
-                userTeamWhere() + ' ' + userRsghWhere() + ' ' + userTlWhere() + ' ' +
-                userBranchWhere() + ' ' + userWhere() + ' ' +
-                qualifiedWhere() + ' ' + visitDoneWhere();
-            return `SELECT
-  owner.user_branch_name_user_management_ as "branch",
-  COUNT(DISTINCT id) as "total",
-  COUNT(DISTINCT CASE WHEN (
-    AESL_Next_Follow_up_date__c IS NOT NULL
-    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
-    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
-  ) THEN id END) as "missed",
-  COUNT(DISTINCT CASE WHEN (
-    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
-    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
-    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
-  ) THEN id END) as "fu_today",
-  COUNT(DISTINCT CASE WHEN stage = 'Untouched Lead' THEN id END) as "untouched",
-  COUNT(DISTINCT CASE WHEN stage = 'Not-Connected' THEN id END) as "not_connected",
-  COUNT(DISTINCT CASE WHEN stage = 'Call Back' THEN id END) as "call_back",
-  COUNT(DISTINCT CASE WHEN stage LIKE '%Qualified%' THEN id END) as "qualified",
-  COUNT(DISTINCT CASE WHEN stage IN ('Not-Interested', 'Not-Eligible') THEN id END) as "junk_ni",
-  COUNT(DISTINCT CASE WHEN stage = 'Admission Done' THEN id END) as "admission_done"
-FROM leads_object
-WHERE (
-  created_at >= ${getDateFrom()}
-  AND created_at <= ${getDateTo()}
-  ${extra}
-)
-GROUP BY owner.user_branch_name_user_management_
-ORDER BY total DESC`;
-        }
-
-        function buildQ_S3_User(cohort) {
-            const extra = cohortWhere(cohort) + ' ' + classWhere(cohort) + ' ' + branchWhere(cohort) + ' ' +
-                schoolWhere(cohort) + ' ' + campaignWhere(cohort) + ' ' + sourceWhere(cohort) + ' ' +
-                scholPctWhere() + ' ' + scholResultDateWhere() + ' ' + scholCreatedAtWhere() + ' ' +
-                courseWhere() + ' ' + careerWhere() + ' ' +
-                userTeamWhere() + ' ' + userRsghWhere() + ' ' + userTlWhere() + ' ' +
-                userBranchWhere() + ' ' + userWhere() + ' ' +
-                qualifiedWhere() + ' ' + visitDoneWhere();
-            return `SELECT
-  owner.name as "user",
-  owner.user_branch_name_user_management_ as "branch",
-  COUNT(DISTINCT id) as "total",
-  COUNT(DISTINCT CASE WHEN (
-    AESL_Next_Follow_up_date__c IS NOT NULL
-    AND AESL_Next_Follow_up_date__c < ${todayISTStartEpoch()}
-    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
-  ) THEN id END) as "missed",
-  COUNT(DISTINCT CASE WHEN (
-    AESL_Next_Follow_up_date__c >= ${todayISTStartEpoch()}
-    AND AESL_Next_Follow_up_date__c <= ${todayISTEndEpoch()}
-    AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible')
-  ) THEN id END) as "fu_today",
-  COUNT(DISTINCT CASE WHEN stage = 'Untouched Lead' THEN id END) as "untouched",
-  COUNT(DISTINCT CASE WHEN stage = 'Not-Connected' THEN id END) as "not_connected",
-  COUNT(DISTINCT CASE WHEN stage = 'Call Back' THEN id END) as "call_back",
-  COUNT(DISTINCT CASE WHEN stage LIKE '%Qualified%' THEN id END) as "qualified",
-  COUNT(DISTINCT CASE WHEN stage IN ('Not-Interested', 'Not-Eligible') THEN id END) as "junk_ni",
-  COUNT(DISTINCT CASE WHEN stage = 'Admission Done' THEN id END) as "admission_done"
-FROM leads_object
-WHERE (
-  created_at >= ${getDateFrom()}
-  AND created_at <= ${getDateTo()}
-  ${extra}
-)
-GROUP BY owner.name, owner.user_branch_name_user_management_
-ORDER BY total DESC`;
-        }
-
-        // Cohort total counts (for pills)
-        function buildQ_S3_CohortCounts() {
-            return `SELECT
-  COUNT(DISTINCT CASE WHEN (
-    EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND AESL_Level__c.name LIKE '26%')
-    OR EXISTS (SELECT 1 FROM product_object WHERE associated_lead = leads_object.id AND created_at >= ${ninetyDaysAgoEpoch()})
-  ) THEN id END) as "ay26",
-  COUNT(DISTINCT CASE WHEN EXISTS (
-    SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id
-      AND AESL_Lead_Type__c = 'iACST'
-      AND AESL_Level__c.name = '2627'
-      AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-  ) THEN id END) as "iacst_tt",
-  COUNT(DISTINCT CASE WHEN EXISTS (
-    SELECT 1 FROM scholarship_object
-    WHERE associated_lead = leads_object.id
-      AND AESL_Lead_Type__c = 'ANTHE'
-      AND AESL_Level__c.name = '2627'
-      AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-  ) THEN id END) as "anthe_tt",
-   COUNT(DISTINCT CASE WHEN EXISTS (
-  SELECT 1 FROM scholarship_object
-  WHERE associated_lead = leads_object.id
-    AND AESL_Lead_Type__c = 'iACST'
-    AND AESL_Level__c.name = '2627'
-    AND AESL_Roll_No__c IS NOT NULL
-) THEN id END) as "iacst_rl",
-  COUNT(DISTINCT CASE WHEN (
-    call_back_date >= ${daysAgoISTStartEpoch(15)}
-    AND call_back_date <= ${todayISTEndEpoch()}
-  ) THEN id END) as "callback15",
-  COUNT(DISTINCT id) as "all"
-FROM leads_object
-WHERE (
-  created_at >= ${getDateFrom()}
-  AND created_at <= ${getDateTo()}
-)`;
-        }
-
-        async function fetchFilterOptions(slug, searchVal = '') {
-            let where = 'AESL_Effective_Status__c = 1';
-
-            if (slug === 'aesl_branch__c') {
-                if (searchVal) {
-                    where += ` AND (name ILIKE '%${searchVal.replace(/'/g, "''")}%' OR AESL_Code__c ILIKE '%${searchVal.replace(/'/g, "''")}%')`;
-                }
-                const query = `SELECT id, name, AESL_Code__c FROM aesl_branch__c WHERE ${where} ORDER BY name ASC LIMIT 100`;
-                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
-                    method: 'POST',
-                    headers: { 'accept': '*/*', 'authorization': `Bearer ${getToken()}`, 'client-id': CLIENT_ID, 'client-secret': CLIENT_SECRET, 'content-type': 'application/json' },
-                    body: JSON.stringify({ query, slug })
-                });
-                const data = await resp.json();
-                return (data?.data?.records || []).map(r => ({
-                    name: r.name,
-                    code: r['aesl_code__c'] || r['AESL_Code__c'] || ''
-                }));
-            }
-
-            if (slug === 'aesl_school__c') {
-                let schoolWhere = '';
-                if (searchVal) {
-                    schoolWhere = ` WHERE (name ILIKE '%${searchVal.replace(/'/g, "''")}%' OR AESL_School_Code__c ILIKE '%${searchVal.replace(/'/g, "''")}%')`;
-                }
-                const query = `SELECT id, name, AESL_School_Code__c FROM aesl_school__c${schoolWhere} ORDER BY name ASC LIMIT 100`;
-                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
-                    method: 'POST',
-                    headers: { 'accept': '*/*', 'authorization': `Bearer ${getToken()}`, 'client-id': CLIENT_ID, 'client-secret': CLIENT_SECRET, 'content-type': 'application/json' },
-                    body: JSON.stringify({ query, slug })
-                });
-                const data = await resp.json();
-                return (data?.data?.records || []).map(r => ({
-                    name: r.name,
-                    code: r['aesl_school_code__c'] || r['AESL_School_Code__c'] || '',
-                    id: r.id
-                }));
-            }
-
-            if (slug === 'campaign') {
-                let where = 'IsActive = 1';
-                if (searchVal) {
-                    where += ` AND name ILIKE '%${searchVal.replace(/'/g, "''")}%'`;
-                }
-                const query = `SELECT id, name FROM campaign WHERE ${where} ORDER BY name ASC LIMIT 100`;
-                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
-                    method: 'POST',
-                    headers: {
-                        'accept': '*/*',
-                        'authorization': `Bearer ${getToken()}`,
-                        'client-id': CLIENT_ID,
-                        'client-secret': CLIENT_SECRET,
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({ query, slug: 'campaign' })
-                });
-                const data = await resp.json();
-                return (data?.data?.records || []).map(r => ({
-                    name: r.name,
-                    code: '',   // campaigns have no code field
-                    id: r.id    // need to carry id separately since val = id not name
-                }));
-            }
-
-            if (slug === 'product2') {
-                let where = '';
-                if (searchVal) {
-                    where = ` WHERE name ILIKE '%${searchVal.replace(/'/g, "''")}%'`;
-                }
-                const query = `SELECT id, name FROM product2${where} ORDER BY name ASC LIMIT 100`;
-                const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
-                    method: 'POST',
-                    headers: {
-                        'accept': '*/*',
-                        'authorization': `Bearer ${getToken()}`,
-                        'client-id': CLIENT_ID,
-                        'client-secret': CLIENT_SECRET,
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({ query, slug: 'product2' })
-                });
-                const data = await resp.json();
-                return (data?.data?.records || []).map(r => ({ name: r.name, code: '' }));
-            }
-
-            return [];
-        }
-
-        function renderFilterOptions(menuId, records, pillGroup, currentVal) {
-            const menu = document.getElementById(menuId);
-            // Remove all existing options (not the search input)
-            menu.querySelectorAll('.s3-pill-option').forEach(el => el.remove());
-
-            if (records.length === 0) {
-                const empty = document.createElement('div');
-                empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
-                empty.textContent = 'No results found';
-                empty.id = menuId + '-empty';
-                // remove old empty msg if any
-                document.getElementById(menuId + '-empty')?.remove();
-                menu.appendChild(empty);
-                return;
-            }
-
-            document.getElementById(menuId + '-empty')?.remove();
-
-            records.forEach(r => {
-                const div = document.createElement('div');
-                div.className = 's3-pill-option' + (r.name === currentVal ? ' active' : '');
-                div.dataset.val = r.name;
-                div.innerHTML = `${r.name}${r.code ? `<span style="color:var(--faint);font-size:10px;margin-left:6px;">${r.code}</span>` : ''}`;
-                div.onclick = function () { selectPillOption(pillGroup, r.name, r.name, this); };
-                menu.appendChild(div);
-            });
-        }
         // ── Section 3 state ──
-        let s3CurrentCohort = 'ay26';
-        let s3CurrentView = 'branch';
         let s1s2Loaded = false;
-        let s3Data = {}; // keyed by cohort+view
         let _dashboardRunning = false;
-
-        async function setCohort(el) {
-            document.querySelectorAll('.cohort-pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            s3CurrentCohort = el.dataset.cohort;
-            await fetchS3IfNeeded();
-            renderS3Table();
-        }
-
-        async function setView(v) {
-            s3CurrentView = v;
-            document.getElementById('tog-branch').classList.toggle('active', v === 'branch');
-            document.getElementById('tog-user').classList.toggle('active', v === 'user');
-            document.getElementById('s3-table-title').innerHTML = v === 'branch'
-                ? 'Lead status by <em>user branch</em>'
-                : 'Lead status by <em>user</em>';
-            await fetchS3IfNeeded();
-            renderS3Table();
-        }
-
-        async function fetchS3IfNeeded() {
-            const key = s3CurrentCohort + '_' + s3CurrentView;
-            if (s3Data[key]) return; // already cached
-            document.getElementById('s3TableWrap').innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
-            try {
-                const queryFn = s3CurrentView === 'branch'
-                    ? () => buildQ_S3_Branch(s3CurrentCohort)
-                    : () => buildQ_S3_User(s3CurrentCohort);
-                s3Data[key] = await safeQuery(queryFn, 'leads_object');
-            } catch (e) {
-                document.getElementById('s3TableWrap').innerHTML =
-                    '<div class="s3-empty" style="color:var(--red);">Error: ' + e.message + '</div>';
-            }
-        }
-
         function fmt(n) { return Number(n || 0).toLocaleString('en-IN'); }
 
-        function renderS3Table() {
-            const key = s3CurrentCohort + '_' + s3CurrentView;
-            const rows = s3Data[key];
-            const wrap = document.getElementById('s3TableWrap');
-
-            if (!rows) {
-                wrap.innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
-                return;
-            }
-            if (rows.length === 0) {
-                wrap.innerHTML = '<div class="s3-empty">No data for this cohort / view.</div>';
-                return;
-            }
-
-            const isBranch = s3CurrentView === 'branch';
-
-            // Totals row
-            const tot = { total: 0, missed: 0, fu_today: 0, untouched: 0, not_connected: 0, call_back: 0, qualified: 0, junk_ni: 0, admission_done: 0 };
-            rows.forEach(r => {
-                Object.keys(tot).forEach(k => { tot[k] += Number(r[k]) || 0; });
-            });
-
-            const dataRows = rows.map(r => {
-                const name = isBranch ? (r['branch'] || '—') : (r['user'] || '—');
-                const sub = isBranch ? '' : `<div class="td-branch-sub">${r['branch'] || ''}</div>`;
-                return `<tr>
-        <td><div class="td-branch-name">${name}</div>${sub}</td>
-        <td class="num td-missed">${fmt(r['missed'])}</td>
-        <td class="num td-fu">${fmt(r['fu_today'])}</td>
-        <td class="num td-muted">${fmt(r['total'])}</td>
-        <td class="num td-unt">${fmt(r['untouched'])}</td>
-        <td class="num td-muted">${fmt(r['not_connected'])}</td>
-        <td class="num td-muted">${fmt(r['call_back'])}</td>
-        <td class="num td-qual">${fmt(r['qualified'])}</td>
-        <td class="num td-muted">${fmt(r['junk_ni'])}</td>
-        <td class="num td-adm">${fmt(r['admission_done'])}</td>
-      </tr>`;
-            }).join('');
-
-            const tableHTML = `<table class="s3-table">
-      <thead><tr>
-        <th>${isBranch ? 'Branch' : 'User'}</th>
-        <th class="num col-missed">Missed F/U</th>
-        <th class="num col-fu">F/U Today</th>
-        <th class="num">Total Leads</th>
-        <th class="num col-unt">Untouched</th>
-        <th class="num">Not Connected</th>
-        <th class="num">Call Back</th>
-        <th class="num col-qual">Qualified</th>
-        <th class="num">Junk / NI</th>
-        <th class="num col-adm">Admissions Done</th>
-      </tr></thead>
-      <tbody>
-        ${dataRows}
-        <tr class="total-row">
-          <td><div class="td-branch-name">Total</div></td>
-          <td class="num td-missed">${fmt(tot.missed)}</td>
-          <td class="num td-fu">${fmt(tot.fu_today)}</td>
-          <td class="num">${fmt(tot.total)}</td>
-          <td class="num td-unt">${fmt(tot.untouched)}</td>
-          <td class="num td-muted">${fmt(tot.not_connected)}</td>
-          <td class="num td-muted">${fmt(tot.call_back)}</td>
-          <td class="num td-qual">${fmt(tot.qualified)}</td>
-          <td class="num td-muted">${fmt(tot.junk_ni)}</td>
-          <td class="num td-adm">${fmt(tot.admission_done)}</td>
-        </tr>
-      </tbody>
-    </table>`;
-
-            wrap.innerHTML = tableHTML
-        }
-        function renderS3Charts(rows, isBranch) {
-            const wrap = document.getElementById('s3TableWrap');
-            const labels = rows.map(r => isBranch ? (r['branch'] || '—') : (r['user'] || '—'));
-            const MAX_BARS = 15; // truncate if too many rows
-
-            const display = rows.slice(0, MAX_BARS);
-            const displayLabels = labels.slice(0, MAX_BARS);
-
-            // Build bar chart HTML using pure CSS (no library needed)
-            const metrics = [
-                { key: 'total', label: 'Total', color: '#6C757D' },
-                { key: 'untouched', label: 'Untouched', color: '#DC2626' },
-                { key: 'missed', label: 'Missed F/U', color: '#EA580C' },
-                { key: 'fu_today', label: 'F/U Today', color: '#D97706' },
-                { key: 'qualified', label: 'Qualified', color: '#1B5E4B' },
-                { key: 'admission_done', label: 'Admissions', color: '#2563EB' },
-            ];
-
-            // Active metric selector
-            const metricBtns = metrics.map((m, i) =>
-                `<button onclick="setChartMetric('${m.key}')" id="cm-${m.key}"
-          style="padding:4px 12px;border-radius:20px;border:1px solid var(--border);
-                 background:${i === 0 ? 'var(--text)' : 'var(--cream)'};
-                 color:${i === 0 ? '#fff' : 'var(--muted)'};
-                 font-size:11px;font-family:Sora,sans-serif;cursor:pointer;font-weight:500;">
-          ${m.label}
-        </button>`
-            ).join('');
-
-            wrap.innerHTML = `
-        <div style="padding:16px 20px;border-bottom:1px solid var(--cream-dark);display:flex;gap:8px;flex-wrap:wrap;">
-            ${metricBtns}
-        </div>
-        <div id="chart-area" style="padding:20px 24px;overflow-x:auto;"></div>`;
-
-            // Store rows for metric switching
-            wrap._chartRows = display;
-            wrap._chartLabels = displayLabels;
-            wrap._isBranch = isBranch;
-
-            renderBarChart('total', display, displayLabels);
-        }
-
-        function setChartMetric(key) {
-            const wrap = document.getElementById('s3TableWrap');
-            // Update button styles
-            document.querySelectorAll('[id^="cm-"]').forEach(b => {
-                const isActive = b.id === 'cm-' + key;
-                b.style.background = isActive ? 'var(--text)' : 'var(--cream)';
-                b.style.color = isActive ? '#fff' : 'var(--muted)';
-            });
-            renderBarChart(key, wrap._chartRows, wrap._chartLabels);
-        }
-
-        function renderBarChart(metricKey, rows, labels) {
-            const colors = {
-                total: '#6C757D', untouched: '#DC2626', missed: '#EA580C',
-                fu_today: '#D97706', not_connected: '#94A3B8', call_back: '#7C3AED',
-                qualified: '#1B5E4B', junk_ni: '#9CA3AF', admission_done: '#2563EB'
-            };
-            const color = colors[metricKey] || '#6C757D';
-            const values = rows.map(r => Number(r[metricKey]) || 0);
-            const maxVal = Math.max(...values, 1);
-            const barH = 28;
-            const gap = 8;
-            const labelW = 160;
-            const chartW = 520;
-            const totalH = rows.length * (barH + gap);
-
-            const bars = rows.map((r, i) => {
-                const val = values[i];
-                const pct = (val / maxVal) * 100;
-                return `
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:${gap}px;">
-            <div style="width:${labelW}px;text-align:right;font-size:11px;color:var(--muted);
-                        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;"
-                 title="${labels[i]}">${labels[i]}</div>
-            <div style="flex:1;background:var(--cream-dark);border-radius:4px;height:${barH}px;position:relative;min-width:${chartW}px;">
-                <div style="width:${pct}%;background:${color};height:100%;border-radius:4px;
-                            transition:width 0.3s ease;min-width:${val > 0 ? 2 : 0}px;"></div>
-                <span style="position:absolute;left:${Math.min(pct, 85)}%;top:50%;transform:translateY(-50%);
-                             margin-left:6px;font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;">
-                    ${fmt(val)}
-                </span>
-            </div>
-        </div>`;
-            }).join('');
-
-            document.getElementById('chart-area').innerHTML = `
-        <div style="min-width:${labelW + chartW + 40}px;">
-            ${bars}
-        </div>`;
-        }
 
 
 
-        function togglePillDropdown(id) {
-            // Close all other open dropdowns first
-            document.querySelectorAll('.s3-pill-menu.open').forEach(m => {
-                if (m.id !== 'fpm-' + id.replace('fpd-', '')) {
-                    m.classList.remove('open');
-                    m.previousElementSibling.classList.remove('open');
-                }
-            });
-            const menu = document.getElementById('fpm-' + id.replace('fpd-', ''));
-            const btn = document.querySelector('#' + id + ' .s3-pill-btn');
-            menu.classList.toggle('open');
-            btn.classList.toggle('open');
-        }
-
-        function selectPillOption(group, val, label, el) {
-            // Update active option in menu
-            el.closest('.s3-pill-menu').querySelectorAll('.s3-pill-option')
-                .forEach(o => o.classList.remove('active'));
-            el.classList.add('active');
-
-            // Update pill label + active state
-            document.getElementById('fpl-' + group).textContent = label;
-            const btn = el.closest('.s3-pill-dropdown').querySelector('.s3-pill-btn');
-            btn.classList.toggle('active', val !== '');
-            btn.classList.remove('open');
-
-            // Close menu
-            el.closest('.s3-pill-menu').classList.remove('open');
-
-
-            // Show or hide the clear button
-            const clearBtn = document.getElementById('fclear-' + group);
-            if (clearBtn) {
-                clearBtn.style.display = val !== '' ? 'inline-flex' : 'none';
-            }
-
-            // Trigger re-query
-            s3Data = {};
-            if (typeof runSection3Only === 'function') runSection3Only();
-        }
-
-
-
-
-        // Close dropdowns on outside click
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.s3-pill-dropdown')) {
-                document.querySelectorAll('.s3-pill-menu.open').forEach(m => {
-                    m.classList.remove('open');
-                    m.previousElementSibling.classList.remove('open');
-                });
-            }
-        });
 
         function hasS3FilterSelected() {
             const pillIds = ['fpm-qualified', 'fpm-visit-done', 'fpm-class', 'fpm-branch',
@@ -4307,296 +3053,7 @@ WHERE (
             if (typeof runSection3Only === 'function') runSection3Only();
         }
 
-
-        let filterSearchDebounce = {};
-
-        async function onFilterSearch(slug, menuId, pillGroup, inputEl) {
-            const val = inputEl.value.trim();
-            clearTimeout(filterSearchDebounce[menuId]);
-            filterSearchDebounce[menuId] = setTimeout(async () => {
-                // Show loading state
-                const menu = document.getElementById(menuId);
-                menu.querySelectorAll('.s3-pill-option').forEach(el => el.remove());
-                const loading = document.createElement('div');
-                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
-                loading.textContent = 'Loading…';
-                loading.id = menuId + '-searching';
-                document.getElementById(menuId + '-searching')?.remove();
-                menu.appendChild(loading);
-
-                try {
-                    const records = await fetchFilterOptions(slug, val);
-                    document.getElementById(menuId + '-searching')?.remove();
-                    const currentVal = document.querySelector(`#${menuId} .s3-pill-option.active`)?.dataset.val || '';
-                    renderFilterOptions(menuId, records, pillGroup, currentVal);
-                } catch (e) {
-                    document.getElementById(menuId + '-searching')?.remove();
-                }
-            }, 300);
-        }
-
-        // filters support functions
-        let campaignSearchDebounce = null;
-
-        function onCampaignSearch(inputEl) {
-            const val = inputEl.value.trim();
-            clearTimeout(campaignSearchDebounce);
-            campaignSearchDebounce = setTimeout(async () => {
-                const menu = document.getElementById('fpm-campaign');
-                // Remove existing options (keep search input + All Campaigns)
-                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-
-                // Show loading
-                const loading = document.createElement('div');
-                loading.id = 'campaign-searching';
-                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
-                loading.textContent = 'Loading…';
-                document.getElementById('campaign-searching')?.remove();
-                menu.appendChild(loading);
-
-                try {
-                    const campaigns = await fetchFilterOptions('campaign', val);
-                    document.getElementById('campaign-searching')?.remove();
-
-                    if (campaigns.length === 0) {
-                        document.getElementById('campaign-no-results')?.remove();
-                        const empty = document.createElement('div');
-                        empty.id = 'campaign-no-results';
-                        empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
-                        empty.textContent = 'No campaigns found';
-                        menu.appendChild(empty);
-                        return;
-                    }
-                    document.getElementById('campaign-no-results')?.remove();
-
-                    const currentVal = document.querySelector('#fpm-campaign .s3-pill-option.active')?.dataset.val || '';
-                    campaigns.forEach(r => {
-                        const div = document.createElement('div');
-                        div.className = 's3-pill-option' + (r.id === currentVal ? ' active' : '');
-                        div.dataset.val = r.id;
-                        div.textContent = r.name;
-                        div.onclick = function () { selectPillOption('campaign', r.id, r.name, this); };
-                        menu.appendChild(div);
-                    });
-                } catch (e) {
-                    document.getElementById('campaign-searching')?.remove();
-                }
-            }, 300);
-        }
-
-        async function fetchSourceOptions(searchVal = '') {
-            const body = {
-                key: '3d429888-ab2c-433c-91cb-698f5f0c16aa',
-                limit: 100,
-                offset: 0
-            };
-            if (searchVal) body.slugs = [searchVal];
-
-            const resp = await fetch(`${BASE_URL}/api/v1/org/objects/dynamic_enum/list`, {
-                method: 'POST',
-                headers: {
-                    'accept': '*/*',
-                    'authorization': `Bearer ${getToken()}`,
-                    'client-id': CLIENT_ID,
-                    'client-secret': CLIENT_SECRET,
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify(body)
-            });
-            const data = await resp.json();
-            return (data?.data || []).filter(s => s.is_active === 1);
-        }
-
-        let sourceSearchDebounce = null;
-
-        function onSourceSearch(inputEl) {
-            const val = inputEl.value.trim();
-            clearTimeout(sourceSearchDebounce);
-            sourceSearchDebounce = setTimeout(async () => {
-                const menu = document.getElementById('fpm-source');
-
-                // Remove previous results and messages, keep "All Sources" option intact
-                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-                document.getElementById('source-no-results')?.remove();
-                document.getElementById('source-searching')?.remove();
-
-                // Show loading
-                const loading = document.createElement('div');
-                loading.id = 'source-searching';
-                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
-                loading.textContent = 'Loading…';
-                menu.appendChild(loading);
-
-                try {
-                    const sources = await fetchSourceOptions(val);
-                    document.getElementById('source-searching')?.remove();
-
-                    if (sources.length === 0) {
-                        const empty = document.createElement('div');
-                        empty.id = 'source-no-results';
-                        empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
-                        empty.textContent = 'No sources found';
-                        menu.appendChild(empty);
-                        return;
-                    }
-
-                    const currentVal = document.querySelector('#fpm-source .s3-pill-option.active')?.dataset.val || '';
-                    sources.forEach(s => {
-                        const div = document.createElement('div');
-                        div.className = 's3-pill-option' + (s.slug === currentVal ? ' active' : '');
-                        div.dataset.val = s.slug;
-                        div.textContent = s.slug;
-                        div.onclick = function () { selectPillOption('source', s.slug, s.slug, this); };
-                        menu.appendChild(div);
-                    });
-                } catch (e) {
-                    document.getElementById('source-searching')?.remove();
-                    const errEl = document.createElement('div');
-                    errEl.id = 'source-no-results';
-                    errEl.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--red);font-style:italic;';
-                    errEl.textContent = 'Search failed';
-                    menu.appendChild(errEl);
-                }
-            }, 300);
-        }
-
-        let courseSearchDebounce = null;
-
-        function onCourseSearch(inputEl) {
-            const val = inputEl.value.trim();
-            clearTimeout(courseSearchDebounce);
-            courseSearchDebounce = setTimeout(async () => {
-                const menu = document.getElementById('fpm-course');
-                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-                document.getElementById('course-no-results')?.remove();
-                document.getElementById('course-searching')?.remove();
-
-                const loading = document.createElement('div');
-                loading.id = 'course-searching';
-                loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
-                loading.textContent = 'Loading…';
-                menu.appendChild(loading);
-
-                try {
-                    const courses = await fetchFilterOptions('product2', val);
-                    document.getElementById('course-searching')?.remove();
-
-                    if (courses.length === 0) {
-                        const empty = document.createElement('div');
-                        empty.id = 'course-no-results';
-                        empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
-                        empty.textContent = 'No courses found';
-                        menu.appendChild(empty);
-                        return;
-                    }
-                    document.getElementById('course-no-results')?.remove();
-
-                    const currentVal = document.querySelector('#fpm-course .s3-pill-option.active')?.dataset.val || '';
-                    courses.forEach(r => {
-                        const div = document.createElement('div');
-                        div.className = 's3-pill-option' + (r.name === currentVal ? ' active' : '');
-                        div.dataset.val = r.name;
-                        div.textContent = r.name;
-                        div.onclick = function () { selectPillOption('course', r.name, r.name, this); };
-                        menu.appendChild(div);
-                    });
-                } catch (e) {
-                    document.getElementById('course-searching')?.remove();
-                }
-            }, 300);
-        }
-
         // Stores the full team list after first fetch (client-side search after that)
-        let _allTeams = null;
-
-        async function fetchTeams(searchVal = '') {
-            // Fetch once and cache
-            if (!_allTeams) {
-                const resp = await fetch(`${BASE_URL}/api/v1/org/team/list`, {
-                    method: 'POST',
-                    headers: {
-                        'accept': '*/*',
-                        'authorization': `Bearer ${getToken()}`,
-                        'client-id': CLIENT_ID,
-                        'client-secret': CLIENT_SECRET,
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({ exclude_user_data: true, include_calendar_data: false })
-                });
-                const data = await resp.json();
-                // data is an array of team objects
-                _allTeams = (data?.data || data || []).map(t => ({
-                    id: t.id,
-                    name: t.name
-                })).sort((a, b) => a.name.localeCompare(b.name));
-            }
-
-            if (!searchVal) return _allTeams.slice(0, 100);
-            const lower = searchVal.toLowerCase();
-            return _allTeams.filter(t => t.name.toLowerCase().includes(lower)).slice(0, 100);
-        }
-
-        function renderTeamOptions(menu, teams, currentVal) {
-            // Remove existing non-"All" options and messages
-            menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-            document.getElementById('fpm-user-team-empty')?.remove();
-
-            if (teams.length === 0) {
-                const empty = document.createElement('div');
-                empty.id = 'fpm-user-team-empty';
-                empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
-                empty.textContent = 'No teams found';
-                menu.appendChild(empty);
-                return;
-            }
-
-            teams.forEach(t => {
-                const div = document.createElement('div');
-                div.className = 's3-pill-option' + (t.id === currentVal ? ' active' : '');
-                div.dataset.val = t.id;
-                div.textContent = t.name;
-                div.onclick = function () { selectPillOption('user-team', t.id, t.name, this); };
-                menu.appendChild(div);
-            });
-        }
-
-        let userTeamSearchDebounce = null;
-
-        function onUserTeamSearch(inputEl) {
-            const val = inputEl.value.trim();
-            clearTimeout(userTeamSearchDebounce);
-            userTeamSearchDebounce = setTimeout(async () => {
-                const menu = document.getElementById('fpm-user-team');
-                document.getElementById('fpm-user-team-empty')?.remove();
-                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-
-                // Show loading only if teams not yet cached
-                let loading;
-                if (!_allTeams) {
-                    loading = document.createElement('div');
-                    loading.id = 'user-team-searching';
-                    loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
-                    loading.textContent = 'Loading…';
-                    menu.appendChild(loading);
-                }
-
-                try {
-                    const teams = await fetchTeams(val);
-                    document.getElementById('user-team-searching')?.remove();
-                    const currentVal = document.querySelector('#fpm-user-team .s3-pill-option.active')?.dataset.val || '';
-                    renderTeamOptions(menu, teams, currentVal);
-                } catch (e) {
-                    document.getElementById('user-team-searching')?.remove();
-                }
-            }, 200);
-        }
-
-        function userTeamWhere() {
-            const val = document.querySelector('#fpm-user-team .s3-pill-option.active')?.dataset.val || '';
-            if (!val) return '';
-            const escaped = val.replace(/'/g, "''");
-            return `AND owner.new_department = '${escaped}'`;
-        }
 
         let _allUsers = null; // cached after first fetch
         let _allBranches = null;
@@ -4706,72 +3163,6 @@ WHERE (
         }
 
 
-        function renderUserOptions(menuId, users, group, currentVal) {
-            const menu = document.getElementById(menuId);
-            menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-            document.getElementById(menuId + '-empty')?.remove();
-
-            if (users.length === 0) {
-                const empty = document.createElement('div');
-                empty.id = menuId + '-empty';
-                empty.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;';
-                empty.textContent = 'No users found';
-                menu.appendChild(empty);
-                return;
-            }
-
-            users.forEach(u => {
-                const div = document.createElement('div');
-                // val = email for RSGH/TL (matched on email fields), name for User filter
-
-
-                const val = group === 'user' ? u.id : u.email;
-                div.className = 's3-pill-option' + (val === currentVal ? ' active' : '');
-                div.dataset.val = val;
-                div.innerHTML = `${u.name}
-                <span style="color:var(--faint);font-size:10px;margin-left:6px;">${u.email}</span>
-                <span style="color:var(--faint);font-size:10px;margin-left:6px;">${u.id}</span>`;
-                div.onclick = function () {
-                    const label = u.name + ' · ' + u.email;
-                    selectPillOption(group, val, label, this);
-                };
-                menu.appendChild(div);
-            });
-        }
-
-        const userSearchDebounces = {};
-
-        function onUserSearch(group, inputEl) {
-            const val = inputEl.value.trim();
-            clearTimeout(userSearchDebounces[group]);
-            userSearchDebounces[group] = setTimeout(async () => {
-                const menuId = 'fpm-' + group;
-                const menu = document.getElementById(menuId);
-                menu.querySelectorAll('.s3-pill-option:not([data-val=""])').forEach(el => el.remove());
-                document.getElementById(menuId + '-empty')?.remove();
-                document.getElementById(menuId + '-searching')?.remove();
-
-                // Show loading only if not yet cached
-                if (!_allUsers) {
-                    const loading = document.createElement('div');
-                    loading.id = menuId + '-searching';
-                    loading.style.cssText = 'padding:8px 12px;font-size:12px;color:var(--faint);';
-                    loading.textContent = 'Loading…';
-                    menu.appendChild(loading);
-                }
-
-                try {
-                    const users = await fetchUsers(val);
-                    document.getElementById(menuId + '-searching')?.remove();
-                    const currentVal = document.querySelector(`#${menuId} .s3-pill-option.active`)?.dataset.val || '';
-                    renderUserOptions(menuId, users, group, currentVal);
-                } catch (e) {
-                    document.getElementById(menuId + '-searching')?.remove();
-                }
-            }, 250);
-        }
-
-
         // Helper Functions
         function dateToISTStartEpoch(dateStr) {
             const [y, m, d] = dateStr.split('-').map(Number);
@@ -4782,54 +3173,6 @@ WHERE (
             const [y, m, d] = dateStr.split('-').map(Number);
             return Date.UTC(y, m - 1, d, 23, 59, 59, 999) - IST_MS;
         }
-
-        function onScholPctChange() {
-            const min = document.getElementById('f-schol-min').value.trim();
-            const max = document.getElementById('f-schol-max').value.trim();
-            const clearBtn = document.getElementById('fclear-schol-pct');
-            if (clearBtn) clearBtn.style.display = (min || max) ? 'inline-flex' : 'none';
-            // Focus border feedback
-            ['f-schol-min', 'f-schol-max'].forEach(id => {
-                const el = document.getElementById(id);
-                el.style.borderColor = (min || max) ? 'var(--green)' : 'var(--border)';
-                el.style.color = (min || max) ? 'var(--text)' : 'var(--muted)';
-            });
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function clearScholPct(event) {
-            event.stopPropagation();
-            document.getElementById('f-schol-min').value = '';
-            document.getElementById('f-schol-max').value = '';
-            ['f-schol-min', 'f-schol-max'].forEach(id => {
-                const el = document.getElementById(id);
-                el.style.borderColor = 'var(--border)';
-                el.style.color = 'var(--muted)';
-            });
-            document.getElementById('fclear-schol-pct').style.display = 'none';
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function onDateRangeChange(group) {
-            const from = document.getElementById(`f-${group}-from`)?.value;
-            const to = document.getElementById(`f-${group}-to`)?.value;
-            const clearBtn = document.getElementById(`fclear-${group}-date`);
-            if (clearBtn) clearBtn.style.display = (from || to) ? 'inline-flex' : 'none';
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function clearDateRange(group, event) {
-            event.stopPropagation();
-            document.getElementById(`f-${group}-from`).value = '';
-            document.getElementById(`f-${group}-to`).value = '';
-            document.getElementById(`fclear-${group}-date`).style.display = 'none';
-            s3Data = {};
-            runSection3Only();
-        }
-
 
 
         // ═══════════════════════ S2-Filters ═══════════════════════
@@ -4929,7 +3272,10 @@ WHERE (
             // s1s2Loaded = false;
             // If S1 already ran and a S2 filter is now selected, run S2 queries immediately
             clearS2DrillCache();
-            if (s1s2Loaded && hasS2FilterSelected()) {
+            // if (s1s2Loaded && hasS2FilterSelected()) {
+            //     runS2Only();
+            // }
+            if (s1s2Loaded) {
                 runS2Only();
             }
             // else if (!hasS2FilterSelected()) {
@@ -5012,11 +3358,53 @@ WHERE (
             btn.querySelector('.btn-label').textContent = 'Running…';
             errBox.style.display = 'none';
 
+
             // Set loading states
             // ['untouched', 'followup', 'missed', 'callback', 'visit'].forEach(setS1Loading);
             const hasRSGH = !!s1Filters.rsgh;
             const hasTypeOfLead = !!s1Filters.typeOfLead;
             const canRunS1 = hasRSGH && hasTypeOfLead;
+
+            // ── 1. Paint loading states FIRST, before any await ──
+            if (canRunS1) {
+                ['totalLeads', 'untouched', 'followup', 'missed', 'futureFollowup', 'callback', 'visit'].forEach(setS1Loading);
+                ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(setPanelStatLoading);
+                ['iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'].forEach(setSubLoading);
+                ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all'].forEach(setPanelStatLoading);
+                ['anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
+                    'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60'].forEach(setSubLoading);
+                document.getElementById('s1g-rsgh-body').innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+                document.getElementById('s1g-user-body').innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+            } else {
+                ['totalLeads', 'untouched', 'followup', 'missed', 'futureFollowup', 'callback', 'visit'].forEach(id => {
+                    const el = document.getElementById('val-' + id);
+                    if (el) { el.className = 's1-card-value placeholder'; el.textContent = 'Select RSGH'; }
+                });
+                document.getElementById('s1g-rsgh-body').innerHTML = '<div class="s3-empty">Select User RSGH to load</div>';
+                document.getElementById('s1g-user-body').innerHTML = '<div class="s3-empty">Select User RSGH to load</div>';
+                setS2Placeholder();
+            }
+
+            // ── 2. Force a paint before starting heavy work ──
+            await new Promise(requestAnimationFrame);
+            await new Promise(requestAnimationFrame);
+
+
+
+            // ── Precompute type-of-lead IDs BEFORE any query builds ──
+            if (canRunS1) {
+                try {
+                    await getTypeOfLeadIds();
+                } catch (e) {
+                    errBox.innerHTML = '⚠️ Failed to resolve Type of Lead filter: ' + e.message;
+                    errBox.style.display = 'flex';
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                    btn.querySelector('.btn-label').textContent = 'Apply & Run';
+                    _dashboardRunning = false;
+                    return;
+                }
+            }
 
             // Section 1 requires User RSGH
             if (canRunS1) {
@@ -5033,25 +3421,28 @@ WHERE (
                 document.getElementById('s1g-user-body').innerHTML = '<div class="s3-empty">Select User RSGH to load</div>';
             }
 
-            if (hasS2FilterSelected()) {
-                ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(setPanelStatLoading);
-                ['iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'].forEach(setSubLoading);
-                ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all'].forEach(setPanelStatLoading);
-                ['anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
-                    'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60'].forEach(setSubLoading);
-            } else {
-                setS2Placeholder();
-            }
+            // if (hasS2FilterSelected()) {
+            //     ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(setPanelStatLoading);
+            //     ['iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'].forEach(setSubLoading);
+            //     ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all'].forEach(setPanelStatLoading);
+            //     ['anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
+            //         'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60'].forEach(setSubLoading);
+            // } else {
+            //     setS2Placeholder();
+            // }
 
-            // Show loading state in S3 table
-            document.getElementById('s3TableWrap').innerHTML = hasS3FilterSelected()
-                ? '<div class="s3-loading"><div class="spinner"></div>Loading…</div>'
-                : '<div class="s3-empty">Select at least one filter above (Class, Branch, School, Qualified, or Visit Done) to load Section 3 data.</div>';
-            ['ay26', 'iacst_rl', 'iacst_tt', 'anthe_tt', 'callback15', 'all'].forEach(k => {
-                const el = document.getElementById('pill-count-' + k);
-                if (el) el.textContent = '—';
-            });
-            s3Data = {};
+            // if (canRunS1) {
+            //     ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(setPanelStatLoading);
+            //     ['iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'].forEach(setSubLoading);
+            //     ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all'].forEach(setPanelStatLoading);
+            //     ['anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
+            //         'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60'].forEach(setSubLoading);
+            //     document.getElementById('s1g-rsgh-body').innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+            //     document.getElementById('s1g-user-body').innerHTML = '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
+            // } else {
+            //     setS2Placeholder();
+            // }
+
             clearS1DrillCache();
             clearS2DrillCache();
 
@@ -5066,9 +3457,6 @@ WHERE (
             // }
             // Always lock S3 at the start of every run
             s1s2Loaded = false;
-            document.querySelector('.cohort-bar').classList.add('s3-locked');
-            document.querySelector('.table-inner-header').classList.add('s3-locked');
-            document.getElementById('s3-active-filters-bar').classList.add('s3-locked');
 
             const todayStr = nowIST().toISOString().slice(0, 10);
             let errored = false;
@@ -5109,16 +3497,29 @@ WHERE (
                 tasks.push(
                     async () => {
                         try {
-                            const r = await safeQuery(buildQ_S1_TotalLeads, 'leads_object');
-                            setS1Count('totalLeads', extractCount(r), 'Matches current filters');
-                        } catch (e) { setS1Err('totalLeads', e.message); }
+                            const r = await safeQuery(buildQ_S1_Combined, 'leads_object');
+                            const row = r?.[0] || {};
+                            setS1Count('totalLeads', Number(row['total']) || 0, 'Matches current filters');
+                            setS1Count('untouched', Number(row['untouched']) || 0, 'AY26 · Never contacted');
+                            setS1Count('followup', Number(row['followup']) || 0, `Scheduled for ${todayStr}`);
+                            setS1Count('missed', Number(row['missed']) || 0, 'AY26 · Past due');
+                            setS1Count('futureFollowup', Number(row['futureFollowup']) || 0, 'Scheduled after today');
+                        } catch (e) {
+                            ['totalLeads', 'untouched', 'followup', 'missed', 'futureFollowup'].forEach(id => setS1Err(id, e.message));
+                        }
                     },
-                    async () => {
-                        try {
-                            const r = await safeQuery(buildQ_S1_FollowUp, 'leads_object');
-                            setS1Count('followup', extractCount(r), `Scheduled for ${todayStr}`);
-                        } catch (e) { setS1Err('followup', e.message); }
-                    },
+                    // async () => {
+                    //     try {
+                    //         const r = await safeQuery(buildQ_S1_TotalLeads, 'leads_object');
+                    //         setS1Count('totalLeads', extractCount(r), 'Matches current filters');
+                    //     } catch (e) { setS1Err('totalLeads', e.message); }
+                    // },
+                    // async () => {
+                    //     try {
+                    //         const r = await safeQuery(buildQ_S1_FollowUp, 'leads_object');
+                    //         setS1Count('followup', extractCount(r), `Scheduled for ${todayStr}`);
+                    //     } catch (e) { setS1Err('followup', e.message); }
+                    // },
                     async () => {
                         try {
                             const r = await safeQuery(buildQ_S1_CallbackVisit, 'leads_object');
@@ -5129,24 +3530,24 @@ WHERE (
                             ['callback', 'visit'].forEach(id => setS1Err(id, e.message));
                         }
                     },
-                    async () => {
-                        try {
-                            const r = await safeQuery(buildQ_S1_Untouched, 'leads_object');
-                            setS1Count('untouched', extractCount(r), 'AY26 · Never contacted');
-                        } catch (e) { setS1Err('untouched', e.message); }
-                    },
-                    async () => {
-                        try {
-                            const r = await safeQuery(buildQ_S1_Missed, 'leads_object');
-                            setS1Count('missed', extractCount(r), 'AY26 · Past due');
-                        } catch (e) { setS1Err('missed', e.message); }
-                    },
-                    async () => {
-    try {
-        const r = await safeQuery(buildQ_S1_FutureFollowUp, 'leads_object');
-        setS1Count('futureFollowup', extractCount(r), 'Scheduled after today');
-    } catch (e) { setS1Err('futureFollowup', e.message); }
-},
+                    // async () => {
+                    //     try {
+                    //         const r = await safeQuery(buildQ_S1_Untouched, 'leads_object');
+                    //         setS1Count('untouched', extractCount(r), 'AY26 · Never contacted');
+                    //     } catch (e) { setS1Err('untouched', e.message); }
+                    // },
+                    // async () => {
+                    //     try {
+                    //         const r = await safeQuery(buildQ_S1_Missed, 'leads_object');
+                    //         setS1Count('missed', extractCount(r), 'AY26 · Past due');
+                    //     } catch (e) { setS1Err('missed', e.message); }
+                    // },
+                    // async () => {
+                    //     try {
+                    //         const r = await safeQuery(buildQ_S1_FutureFollowUp, 'leads_object');
+                    //         setS1Count('futureFollowup', extractCount(r), 'Scheduled after today');
+                    //     } catch (e) { setS1Err('futureFollowup', e.message); }
+                    // },
                     // ── moved from runS2Only ──
                     async () => {
                         try {
@@ -5172,7 +3573,65 @@ WHERE (
                 document.getElementById('s1g-user-body').innerHTML = '<div class="s3-empty">Select User RSGH to load</div>';
             }
 
-            if (hasS2FilterSelected()) {
+            // if (hasS2FilterSelected()) {
+            //     tasks.push(
+            //         async () => {
+            //             try {
+            //                 const r = await safeQuery(buildQ_iACST_Main, 'scholarship_object');
+            //                 const row = r?.[0] || {};
+            //                 const get = (k) => Number(row[k]) || 0;
+
+            //                 setPanelStatCount('iacst-digital', get('digital'));
+            //                 setPanelStatCount('iacst-self', get('self'));
+            //                 setPanelStatCount('iacst-bulk', get('bulk'));
+            //                 setPanelStatCount('iacst-all', get('all'));
+            //                 setSubCount('iacst-untouched', get('untouched'));
+            //                 setSubCount('iacst-followup', get('followup_due'));
+            //                 setSubCount('iacst-taken', get('taken_today'));
+            //             } catch (e) {
+            //                 ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all',
+            //                     'iacst-untouched', 'iacst-followup', 'iacst-taken']
+            //                     .forEach(id => setSubErr(id, e.message));
+            //                 errored = true;
+            //             }
+            //         },
+            //         async () => {
+            //             try {
+            //                 const r = await safeQuery(buildQ_iACST_ScheduledNotTaken, 'scholarship_object');
+            //                 setSubCount('iacst-scheduled', extractCount(r));
+            //             } catch (e) {
+            //                 setSubErr('iacst-scheduled', e.message);
+            //                 errored = true;
+            //             }
+            //         },
+            //         async () => {
+            //             try {
+            //                 const r = await safeQuery(buildQ_ANTHE_Main, 'scholarship_object');
+            //                 const row = r?.[0] || {};
+            //                 const get = (k) => Number(row[k]) || 0;
+
+            //                 setPanelStatCount('anthe-digital', get('digital'));
+            //                 setPanelStatCount('anthe-self', get('self'));
+            //                 setPanelStatCount('anthe-bulk', get('bulk'));
+            //                 setPanelStatCount('anthe-all', get('all'));
+            //                 setSubCount('anthe-above60', get('above60'));
+            //                 setSubCount('anthe-unt-above60', get('unt_above60'));
+            //                 setSubCount('anthe-fu-above60', get('fu_above60'));
+            //                 setSubCount('anthe-below60', get('below60'));
+            //                 setSubCount('anthe-unt-below60', get('unt_below60'));
+            //                 setSubCount('anthe-fu-below60', get('fu_below60'));
+            //             } catch (e) {
+            //                 ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all',
+            //                     'anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
+            //                     'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60']
+            //                     .forEach(id => setSubErr(id, e.message));
+            //                 errored = true;
+            //             }
+            //         }
+            //     );
+            // }
+
+            if (canRunS1) {
                 tasks.push(
                     async () => {
                         try {
@@ -5230,43 +3689,6 @@ WHERE (
                 );
             }
 
-
-
-
-
-
-
-
-            if (hasS3FilterSelected()) {
-                tasks.push(
-                    async () => {
-                        try {
-                            const r = await safeQuery(buildQ_S3_CohortCounts, 'leads_object');
-                            const row = r?.[0] || {};
-                            ['ay26', 'iacst_rl', 'iacst_tt', 'anthe_tt', 'callback15', 'all'].forEach(k => {
-                                const el = document.getElementById('pill-count-' + k);
-                                if (el) el.textContent = fmt(row[k] || 0);
-                            });
-                        } catch (e) { console.warn('Cohort counts failed', e); }
-                    },
-                    async () => {
-                        try {
-                            const r = await safeQuery(() => buildQ_S3_Branch(s3CurrentCohort), 'leads_object');
-                            s3Data[s3CurrentCohort + '_branch'] = r;
-                            if (s3CurrentCohort === s3CurrentCohort && s3CurrentView === 'branch') renderS3Table();
-                        } catch (e) {
-                            document.getElementById('s3TableWrap').innerHTML =
-                                '<div class="s3-empty" style="color:var(--red);">Error loading table: ' + e.message + '</div>';
-                            errored = true;
-                        }
-                    },
-                );
-            } else {
-                // No S3 filter selected — show placeholder
-                document.getElementById('s3TableWrap').innerHTML =
-                    '<div class="s3-empty">Select at least one filter above (Class, Branch, School, Qualified, or Visit Done) to load Section 3 data.</div>';
-            }
-
             await runPool(tasks, 2);
 
             btn.disabled = false;
@@ -5275,9 +3697,6 @@ WHERE (
 
             // Unlock S3 controls
             s1s2Loaded = true;
-            document.querySelector('.cohort-bar').classList.remove('s3-locked');
-            document.querySelector('.table-inner-header').classList.remove('s3-locked');
-            document.getElementById('s3-active-filters-bar').classList.remove('s3-locked');
 
             if (errored) {
                 errBox.innerHTML = '⚠️ One or more queries failed. Verify your <strong>?token=</strong> in the URL.';
@@ -5298,12 +3717,23 @@ WHERE (
             btn.disabled = true;
             btn.classList.add('loading');
             btn.querySelector('.btn-label').textContent = 'Running…';
+            try {
+                await getTypeOfLeadIds()
+            } catch (e) {
+                console.log("error in runs2only", e);
+            }
 
             ['iacst-digital', 'iacst-self', 'iacst-bulk', 'iacst-all'].forEach(setPanelStatLoading);
             ['iacst-untouched', 'iacst-followup', 'iacst-taken', 'iacst-scheduled'].forEach(setSubLoading);
             ['anthe-digital', 'anthe-self', 'anthe-bulk', 'anthe-all'].forEach(setPanelStatLoading);
             ['anthe-above60', 'anthe-unt-above60', 'anthe-fu-above60',
                 'anthe-below60', 'anthe-unt-below60', 'anthe-fu-below60'].forEach(setSubLoading);
+
+            await new Promise(requestAnimationFrame);  // paint skeletons before querying
+
+            try { await getTypeOfLeadIds(); } catch (e) { console.log("error in runs2only", e); }
+
+
 
             const tasks = [
                 async () => {
@@ -5379,365 +3809,6 @@ WHERE (
             s1s2Loaded = true;
         }
 
-        async function runSection3Only() {
-            if (_dashboardRunning) return;
-            if (!s1s2Loaded) return;
-            if (!hasS3FilterSelected()) {
-                s3Data = {};
-                document.getElementById('s3TableWrap').innerHTML =
-                    '<div class="s3-empty">Select at least one filter above to load Section 3 data.</div>';
-                return;  // ← exit early, don't fire any query
-            }
-            const btn = document.getElementById('btnRun');
-            btn.disabled = true;
-            btn.classList.add('loading');
-            btn.querySelector('.btn-label').textContent = 'Running…';
-
-            document.getElementById('s3TableWrap').innerHTML =
-                '<div class="s3-loading"><div class="spinner"></div>Loading…</div>';
-            s3Data = {};
-
-            try {
-                const r = await safeQuery(() => buildQ_S3_Branch(s3CurrentCohort), 'leads_object');
-                s3Data[s3CurrentCohort + '_branch'] = r;
-                if (s3CurrentView === 'branch') renderS3Table();
-            } catch (e) {
-                document.getElementById('s3TableWrap').innerHTML =
-                    '<div class="s3-empty" style="color:var(--red);">Error: ' + e.message + '</div>';
-            }
-
-            btn.disabled = false;
-            btn.classList.remove('loading');
-            btn.querySelector('.btn-label').textContent = 'Apply & Run';
-        }
-
-        // ── New unified filter panel ──
-        let _currentFilterSub = null;
-
-        function toggleFilterPanel() {
-            const panel = document.getElementById('s3-filter-panel');
-            const isOpen = panel.style.display !== 'none';
-            panel.style.display = isOpen ? 'none' : 'block';
-            if (!isOpen) {
-                closeFilterSub();
-                refreshCategoryBadges();
-            }
-        }
-
-        function closeFilterPanel() {
-            document.getElementById('s3-filter-panel').style.display = 'none';
-            closeFilterSub();
-        }
-
-        function closeFilterSub() {
-            document.getElementById('s3-fp-categories').style.display = 'block';
-            document.getElementById('s3-fp-sub').style.display = 'none';
-            _currentFilterSub = null;
-        }
-
-        function openFilterSub(filterKey) {
-            _currentFilterSub = filterKey;
-            document.getElementById('s3-fp-categories').style.display = 'none';
-            document.getElementById('s3-fp-sub').style.display = 'block';
-
-            const titles = {
-                'qualified': 'Qualified', 'visit-done': 'Visit Done', 'class': 'Class',
-                'branch': 'Lead Branch', 'school': 'School', 'campaign': 'Campaign',
-                'source': 'Source', 'course': 'Course Name', 'career': 'Course Career',
-                'user-team': 'User Team', 'user-rsgh': 'User RSGH', 'user-tl': 'User TL/Manager',
-                'user-branch': 'User Branch', 'user': 'User',
-                'schol-pct': 'Scholarship %', 'result-date': 'Result Date', 'schol-date': 'Schol. Created At'
-            };
-            document.getElementById('s3-fp-sub-title').textContent = titles[filterKey] || filterKey;
-
-            const searchEl = document.getElementById('s3-fp-sub-search');
-            const optionsEl = document.getElementById('s3-fp-sub-options');
-            searchEl.innerHTML = '';
-            optionsEl.innerHTML = '<div style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>';
-
-            // Date/number filters get inline inputs
-            if (filterKey === 'schol-pct') {
-                optionsEl.innerHTML = `
-            <div style="padding:10px 12px;display:flex;align-items:center;gap:8px;">
-                <input type="number" id="f-schol-min" placeholder="Min %" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;" min="0" max="100">
-                <span style="color:var(--faint);">–</span>
-                <input type="number" id="f-schol-max" placeholder="Max %" style="width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;" min="0" max="100">
-                <button onclick="applyScholPct()" style="padding:5px 12px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;">Apply</button>
-            </div>`;
-                return;
-            }
-            if (filterKey === 'result-date' || filterKey === 'schol-date') {
-                const group = filterKey === 'result-date' ? 'result' : 'schol';
-                optionsEl.innerHTML = `
-            <div style="padding:10px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <input type="date" id="f-${group}-from" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;">
-                <span style="color:var(--faint);">→</span>
-                <input type="date" id="f-${group}-to" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;">
-                <button onclick="applyDateRange('${group}')" style="padding:5px 12px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;cursor:pointer;font-weight:600;">Apply</button>
-            </div>`;
-                return;
-            }
-
-            // Pill-based filters — load options
-            buildSubOptions(filterKey, optionsEl, searchEl);
-        }
-
-        async function buildSubOptions(filterKey, optionsEl, searchEl) {
-            // Add search input for searchable filters
-            const searchable = ['branch', 'school', 'campaign', 'source', 'course', 'user-team', 'user-rsgh', 'user-tl', 'user-branch', 'user'];
-            if (searchable.includes(filterKey)) {
-                searchEl.innerHTML = `<div style="padding:6px 8px;border-bottom:1px solid var(--cream-dark);">
-            <input type="text" placeholder="Search…" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'Sora',sans-serif;outline:none;"
-                oninput="onSubSearch('${filterKey}', this)" onclick="event.stopPropagation()">
-        </div>`;
-            }
-
-            const options = await getFilterOptions(filterKey, '');
-            renderSubOptions(filterKey, options, optionsEl);
-        }
-
-        async function onSubSearch(filterKey, inputEl) {
-            const val = inputEl.value.trim();
-            const optionsEl = document.getElementById('s3-fp-sub-options');
-            optionsEl.innerHTML = '<div style="padding:8px 12px;font-size:12px;color:var(--faint);">Loading…</div>';
-            const options = await getFilterOptions(filterKey, val);
-            renderSubOptions(filterKey, options, optionsEl);
-        }
-
-        async function getFilterOptions(filterKey, search) {
-            // Static options
-            const staticOpts = {
-                'qualified': [
-                    { val: '', label: 'All Time' }, { val: 'today', label: 'Today' }, { val: 'yesterday', label: 'Yesterday' },
-                    { val: 'last7', label: 'Last 7 Days' }, { val: 'last30', label: 'Last 30 Days' },
-                    { val: 'last90', label: 'Last 90 Days' }, { val: 'last180', label: 'Last 180 Days' }
-                ],
-                'visit-done': [
-                    { val: '', label: 'All Time' }, { val: 'today', label: 'Today' }, { val: 'yesterday', label: 'Yesterday' },
-                    { val: 'last7', label: 'Last 7 Days' }, { val: 'last30', label: 'Last 30 Days' },
-                    { val: 'last90', label: 'Last 90 Days' }, { val: 'last180', label: 'Last 180 Days' }
-                ]
-            };
-            if (staticOpts[filterKey]) return staticOpts[filterKey];
-
-            // Dynamic options from API
-            try {
-                if (filterKey === 'class') {
-                    if (!_classOptions) {
-                        const query = `SELECT id, name FROM aesl_class__c ORDER BY name ASC`;
-                        const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
-                            method: 'POST', headers: { 'accept': '*/*', 'authorization': `Bearer ${getToken()}`, 'client-id': CLIENT_ID, 'client-secret': CLIENT_SECRET, 'content-type': 'application/json' },
-                            body: JSON.stringify({ query, slug: 'aesl_class__c' })
-                        });
-                        const data = await resp.json();
-                        _classOptions = (data?.data?.records || []).map(r => ({ val: r.name, label: r.name }));
-                    }
-                    return search ? _classOptions.filter(o => o.label.toLowerCase().includes(search.toLowerCase())) : _classOptions;
-                }
-                if (filterKey === 'branch' || filterKey === 'user-branch') {
-                    if (!_allBranches) _allBranches = await fetchFilterOptions('aesl_branch__c', '');
-                    const items = search ? await fetchFilterOptions('aesl_branch__c', search) : _allBranches;
-                    return items.map(r => ({ val: r.name, label: r.name + (r.code ? ` (${r.code})` : '') }));
-                }
-                if (filterKey === 'school') {
-                    const items = await fetchFilterOptions('aesl_school__c', search);
-                    return items.map(r => ({ val: r.name, label: r.name + (r.code ? ` (${r.code})` : '') }));
-                }
-                if (filterKey === 'campaign') {
-                    const items = await fetchFilterOptions('campaign', search);
-                    return items.map(r => ({ val: r.id, label: r.name }));
-                }
-                if (filterKey === 'source') {
-                    const items = await fetchSourceOptions(search);
-                    return items.map(s => ({ val: s.slug, label: s.slug }));
-                }
-                if (filterKey === 'course') {
-                    const items = await fetchFilterOptions('product2', search);
-                    return items.map(r => ({ val: r.name, label: r.name }));
-                }
-                if (filterKey === 'career') {
-                    if (!_careerOptions) {
-                        const query = `SELECT id, name FROM aesl_career__c ORDER BY name ASC`;
-                        const resp = await fetch(`${BASE_URL}/api/v1/reports/execute/`, {
-                            method: 'POST', headers: { 'accept': '*/*', 'authorization': `Bearer ${getToken()}`, 'client-id': CLIENT_ID, 'client-secret': CLIENT_SECRET, 'content-type': 'application/json' },
-                            body: JSON.stringify({ query, slug: 'aesl_career__c' })
-                        });
-                        const data = await resp.json();
-                        _careerOptions = (data?.data?.records || []).map(r => ({ val: r.id, label: r.name }));
-                    }
-                    return search ? _careerOptions.filter(o => o.label.toLowerCase().includes(search.toLowerCase())) : _careerOptions;
-                }
-                if (filterKey === 'user-team') {
-                    const teams = await fetchTeams(search);
-                    return teams.map(t => ({ val: t.id, label: t.name }));
-                }
-                if (['user-rsgh', 'user-tl', 'user'].includes(filterKey)) {
-                    const users = await fetchUsers(search);
-                    return users.map(u => ({ val: filterKey === 'user' ? u.name : u.email, label: `${u.name}  · ${u.email} · ${u.id} ` }));
-                }
-            } catch (e) { return []; }
-            return [];
-        }
-
-        let _classOptions = null;
-        let _careerOptions = null;
-
-        function renderSubOptions(filterKey, options, optionsEl) {
-            const currentVal = document.querySelector(`#fpm-${filterKey} .s3-pill-option.active`)?.dataset.val || '';
-            optionsEl.innerHTML = options.map(o => `
-        <div onclick="applyFilterOption('${filterKey}','${o.val.replace(/'/g, "\\'")}','${o.label.replace(/'/g, "\\'").replace(/"/g, "&quot;")}',this)"
-             style="padding:8px 12px;font-size:12px;font-weight:${o.val === currentVal ? '700' : '500'};
-                    color:${o.val === currentVal ? 'var(--green-dark)' : 'var(--muted)'};
-                    background:${o.val === currentVal ? 'var(--green-bg)' : 'transparent'};
-                    border-radius:7px;cursor:pointer;transition:background 0.1s;"
-             onmouseenter="this.style.background=this.style.background||'var(--cream)';this.style.color='var(--text)'"
-             onmouseleave="this.style.background='${o.val === currentVal ? 'var(--green-bg)' : 'transparent'}';this.style.color='${o.val === currentVal ? 'var(--green-dark)' : 'var(--muted)'}'">
-            ${o.label}
-        </div>`).join('');
-            if (options.length === 0) {
-                optionsEl.innerHTML = '<div style="padding:8px 12px;font-size:12px;color:var(--faint);font-style:italic;">No options found</div>';
-            }
-        }
-
-        function applyFilterOption(filterKey, val, label) {
-            // Update the hidden fpm- menu so where-clause functions still work
-            const menu = document.getElementById('fpm-' + filterKey);
-            if (menu) {
-                menu.querySelectorAll('.s3-pill-option').forEach(o => o.classList.remove('active'));
-                let opt = menu.querySelector(`.s3-pill-option[data-val="${val}"]`);
-                if (!opt) {
-                    opt = document.createElement('div');
-                    opt.className = 's3-pill-option active';
-                    opt.dataset.val = val;
-                    menu.appendChild(opt);
-                } else {
-                    opt.classList.add('active');
-                }
-            }
-            refreshCategoryBadges();
-            renderActiveChips();
-            closeFilterPanel();
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function applyScholPct() {
-            refreshCategoryBadges();
-            renderActiveChips();
-            closeFilterPanel();
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function applyDateRange(group) {
-            refreshCategoryBadges();
-            renderActiveChips();
-            closeFilterPanel();
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function removeFilterChip(filterKey) {
-            const menu = document.getElementById('fpm-' + filterKey);
-            if (menu) {
-                menu.querySelectorAll('.s3-pill-option').forEach(o => o.classList.remove('active'));
-                const allOpt = menu.querySelector('.s3-pill-option[data-val=""]');
-                if (allOpt) allOpt.classList.add('active');
-                else {
-                    const newOpt = document.createElement('div');
-                    newOpt.className = 's3-pill-option active';
-                    newOpt.dataset.val = '';
-                    menu.prepend(newOpt);
-                }
-            }
-            // Clear date/number inputs
-            if (filterKey === 'schol-pct') {
-                const mn = document.getElementById('f-schol-min'); if (mn) mn.value = '';
-                const mx = document.getElementById('f-schol-max'); if (mx) mx.value = '';
-            }
-            if (filterKey === 'result-date') {
-                const f = document.getElementById('f-result-from'); if (f) f.value = '';
-                const t = document.getElementById('f-result-to'); if (t) t.value = '';
-            }
-            if (filterKey === 'schol-date') {
-                const f = document.getElementById('f-schol-from'); if (f) f.value = '';
-                const t = document.getElementById('f-schol-to'); if (t) t.value = '';
-            }
-            refreshCategoryBadges();
-            renderActiveChips();
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function clearAllFilters() {
-            ['qualified', 'visit-done', 'class', 'branch', 'school', 'campaign', 'source', 'course', 'career',
-                'user-team', 'user-rsgh', 'user-tl', 'user-branch', 'user'].forEach(key => {
-                    const menu = document.getElementById('fpm-' + key);
-                    if (!menu) return;
-                    menu.querySelectorAll('.s3-pill-option').forEach(o => o.classList.remove('active'));
-                    let allOpt = menu.querySelector('.s3-pill-option[data-val=""]');
-                    if (!allOpt) { allOpt = document.createElement('div'); allOpt.className = 's3-pill-option active'; allOpt.dataset.val = ''; menu.prepend(allOpt); }
-                    else allOpt.classList.add('active');
-                });
-            ['f-schol-min', 'f-schol-max', 'f-result-from', 'f-result-to', 'f-schol-from', 'f-schol-to'].forEach(id => {
-                const el = document.getElementById(id); if (el) el.value = '';
-            });
-            refreshCategoryBadges();
-            renderActiveChips();
-            closeFilterPanel();
-            s3Data = {};
-            runSection3Only();
-        }
-
-        function refreshCategoryBadges() {
-            const filterKeys = ['qualified', 'visit-done', 'class', 'branch', 'school', 'campaign', 'source', 'course', 'career',
-                'user-team', 'user-rsgh', 'user-tl', 'user-branch', 'user'];
-            let activeCount = 0;
-            filterKeys.forEach(key => {
-                const val = document.querySelector(`#fpm-${key} .s3-pill-option.active`)?.dataset.val || '';
-                const badge = document.getElementById('fpv-' + key);
-                const cat = document.querySelector(`.s3-fp-cat[data-filter="${key}"]`);
-                if (val) {
-                    activeCount++;
-                    if (badge) { badge.style.display = 'inline-block'; badge.textContent = '✓'; badge.classList.add('visible'); }
-                    if (cat) cat.classList.add('has-val');
-                } else {
-                    if (badge) { badge.style.display = 'none'; badge.classList.remove('visible'); }
-                    if (cat) cat.classList.remove('has-val');
-                }
-            });
-            // Also count date/number filters
-            if (document.getElementById('f-schol-min')?.value || document.getElementById('f-schol-max')?.value) activeCount++;
-            if (document.getElementById('f-result-from')?.value || document.getElementById('f-result-to')?.value) activeCount++;
-            if (document.getElementById('f-schol-from')?.value || document.getElementById('f-schol-to')?.value) activeCount++;
-
-            const badge = document.getElementById('s3-filter-count-badge');
-            if (badge) { badge.style.display = activeCount > 0 ? 'inline-block' : 'none'; badge.textContent = activeCount; }
-        }
-
-        function renderActiveChips() {
-            const chips = document.getElementById('s3-active-chips');
-            if (!chips) return;
-            chips.innerHTML = '';
-            const labels = {
-                'qualified': 'Qualified', 'visit-done': 'Visit Done', 'class': 'Class', 'branch': 'Lead Branch',
-                'school': 'School', 'campaign': 'Campaign', 'source': 'Source', 'course': 'Course',
-                'career': 'Career', 'user-team': 'Team', 'user-rsgh': 'RSGH', 'user-tl': 'TL',
-                'user-branch': 'User Branch', 'user': 'User'
-            };
-            ['qualified', 'visit-done', 'class', 'branch', 'school', 'campaign', 'source', 'course', 'career',
-                'user-team', 'user-rsgh', 'user-tl', 'user-branch', 'user'].forEach(key => {
-                    const active = document.querySelector(`#fpm-${key} .s3-pill-option.active`);
-                    const val = active?.dataset.val || '';
-                    if (!val) return;
-                    const label = active?.textContent?.trim() || val;
-                    const chip = document.createElement('div');
-                    chip.className = 's3-active-chip';
-                    chip.innerHTML = `<span>${labels[key]}: ${label}</span><button onclick="removeFilterChip('${key}')">×</button>`;
-                    chips.appendChild(chip);
-                });
-        }
-
         // ── S1 filter state ──
         const s1Filters = {
             rd: '', rsgh: '', branch: '', tl: '', user: '', school: '',
@@ -5761,6 +3832,10 @@ WHERE (
         }
 
         function selectS1Option(key, val, label, el) {
+
+            if (key === 'typeOfLead') {
+                _typeOfLeadIdCache = {};
+            }
             // Update active state in dropdown
             el.closest('[id^="s1-fpm"]').querySelectorAll('.s3-pill-option')
                 .forEach(o => o.classList.remove('active'));
@@ -6050,16 +4125,16 @@ WHERE (
             ${s1TypeOfLeadWhere()}`
             },
             futureFollowup: {
-    eyebrow: 'Section 01 · Future Follow Up',
-    title: 'Future Follow Ups',
-    color: 'var(--blue)',
-    buildWhere: () => `
+                eyebrow: 'Section 01 · Future Follow Up',
+                title: 'Future Follow Ups',
+                color: 'var(--blue)',
+                buildWhere: () => `
         AND AESL_Next_Follow_up_date__c > ${todayISTEndEpoch()}
         AND stage NOT IN ('Admission Done', 'Not-Interested', 'Not-Eligible', 'Untouched Lead')
         ${s1RsghWhere()} ${s1BranchWhere()} ${s1UserWhere()} ${s1SchoolWhere()}
         ${s1RdWhere()} ${s1TlWhere()} ${s1ClassStudyingWhere()} ${s1DataModifiedAtWhere()}
         ${s1TypeOfLeadWhere()}`
-},
+            },
             callback: {
                 eyebrow: 'Section 01 · Call Back Bot',
                 title: 'Call Back Bot · Pending (15d)',
@@ -6572,14 +4647,6 @@ LIMIT 5000 OFFSET ${offset}`;
             Object.keys(_s2DrillCache).forEach(k => delete _s2DrillCache[k]);
         }
 
-        // Close filter panel on outside click
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#s3-filter-launcher')) {
-                document.getElementById('s3-filter-panel').style.display = 'none';
-                closeFilterSub();
-            }
-        });
-
         // async function fetchClassStudyingOptions(searchVal = '') {
         //     let where = 'AESL_Class_Studying_In__c IS NOT NULL';
         //     if (searchVal) where += ` AND AESL_Class_Studying_In__c ILIKE '%${searchVal.replace(/'/g, "''")}%'`;
@@ -6746,6 +4813,7 @@ WHERE created_at >= ${getDateFrom()}
   AND created_at <= ${getDateTo()}
   ${s1RsghWhere()} ${s1BranchWhere()} ${s1UserWhere()} ${s1SchoolWhere()}
   ${s1RdWhere()} ${s1TlWhere()} ${s1ClassStudyingWhere()} ${s1DataModifiedAtWhere()}
+  ${s1TypeOfLeadWhere()}
 GROUP BY owner.user_branch_name_user_management_
 ORDER BY owner.user_branch_name_user_management_ ASC`;
         }
@@ -6794,6 +4862,7 @@ WHERE created_at >= ${getDateFrom()}
   AND created_at <= ${getDateTo()}
   ${s1RsghWhere()} ${s1BranchWhere()} ${s1UserWhere()} ${s1SchoolWhere()}
   ${s1RdWhere()} ${s1TlWhere()} ${s1ClassStudyingWhere()} ${s1DataModifiedAtWhere()}
+  ${s1TypeOfLeadWhere()}
 GROUP BY owner.team_sales_head
 ORDER BY owner.team_sales_head ASC`;
         }
@@ -6932,13 +5001,14 @@ ORDER BY owner.team_sales_head ASC`;
 
             const tot = { total: 0, untouched: 0, followup: 0, future_followup: 0, missed: 0, callback: 0, visit: 0 };
             rows.forEach(r => {
-            tot.total += Number(r['total']) || 0; 
-            tot.untouched += Number(r['untouched']) || 0; 
-            tot.followup += Number(r['followup']) || 0; 
-            tot.missed += Number(r['missed']) || 0; 
-            tot.future_followup += Number(r['future_followup']) || 0; 
-            tot.callback += Number(r['callback']) || 0; 
-            tot.visit += Number(r['visit']) || 0; });
+                tot.total += Number(r['total']) || 0;
+                tot.untouched += Number(r['untouched']) || 0;
+                tot.followup += Number(r['followup']) || 0;
+                tot.missed += Number(r['missed']) || 0;
+                tot.future_followup += Number(r['future_followup']) || 0;
+                tot.callback += Number(r['callback']) || 0;
+                tot.visit += Number(r['visit']) || 0;
+            });
 
             const dataRows = rows.map(r => `<tr>
         <td style="font-weight:600;">${r['branch'] || '—'}</td>
@@ -6988,15 +5058,16 @@ ORDER BY owner.team_sales_head ASC`;
             }
             exportBtn.style.display = 'inline-flex';
 
-            const tot = { total:0, untouched: 0, followup: 0, future_followup:0, missed: 0, callback: 0, visit: 0 };
-            rows.forEach(r => { 
-                tot.total += Number(r['total']) || 0; 
-                tot.untouched += Number(r['untouched']) || 0; 
-                tot.followup += Number(r['followup']) || 0; 
-                tot.missed += Number(r['missed']) || 0; 
+            const tot = { total: 0, untouched: 0, followup: 0, future_followup: 0, missed: 0, callback: 0, visit: 0 };
+            rows.forEach(r => {
+                tot.total += Number(r['total']) || 0;
+                tot.untouched += Number(r['untouched']) || 0;
+                tot.followup += Number(r['followup']) || 0;
+                tot.missed += Number(r['missed']) || 0;
                 tot.future_followup += Number(r['future_followup']) || 0;
-                tot.callback += Number(r['callback']) || 0; 
-                tot.visit += Number(r['visit']) || 0; });
+                tot.callback += Number(r['callback']) || 0;
+                tot.visit += Number(r['visit']) || 0;
+            });
 
             const dataRows = rows.map(r => `<tr>
         <td style="font-weight:600;">${r['rsgh'] || '—'}</td>
