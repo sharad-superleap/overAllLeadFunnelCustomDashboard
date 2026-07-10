@@ -2686,29 +2686,118 @@ WHERE created_at >= ${getDateFrom()}
   ${s1QualifiedWhere()} ${s1VisitDoneWhere()}
 `;
         }
+        /*
+                function s1TypeOfLeadWhere(ctx = 'lead') {
+                    const val = s1Filters.typeOfLead || 'ay26';
+                    const lead = ctx === 'schol' ? 'associated_lead' : 'leads_object';
+        
+                    //         if (val === 'neet_bulk') {
+                    //             return `AND EXISTS (
+                    //   SELECT 1 FROM product_object
+                    //   WHERE associated_lead = ${lead}.id
+                    //     AND AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c IN ('1512', '2020')
+                    //     AND created_at >= ${MAY_1_2026}
+                    // )`;
+                    //         }
+        
+                    //         if (val === 'neet_rank_predictor') {
+                    //             return `AND EXISTS (
+                    //   SELECT 1 FROM product_object
+                    //   WHERE associated_lead = ${lead}.id
+                    //     AND AESL_Source__c = 'NEET Rank College Predictor LP'
+                    //     AND created_at >= ${MAY_1_2026}
+                    // )`;
+                    //         }
+                    // ── New scholarship-based cohorts ──
+                    if (val === 'iacst_taken') {
+                        return `AND EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'iACST'
+                AND AESL_Level__c.name = '2627'
+                AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+            )`;
+                    }
+                    if (val === 'iacst_not_taken') {
+                        return `AND EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'iACST'
+                AND AESL_Level__c.name = '2627'
+                AND associated_result.AESL_Eligible_Scholarship__c IS NULL
+            )`;
+                    }
+                    if (val === 'anthe_60plus') {
+                        return `AND EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'ANTHE'
+                AND AESL_Level__c.name = '2526'
+                AND AESL_Date_of_Exam__c >= ${OCT_1_2025}
+                AND associated_result.AESL_Eligible_Scholarship__c >= 60
+            )`;
+                    }
+                    if (val === 'anthe_60minus') {
+                        return `AND EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'ANTHE'
+                AND AESL_Level__c.name = '2526'
+                AND AESL_Date_of_Exam__c >= ${OCT_1_2025}
+                AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
+                AND associated_result.AESL_Eligible_Scholarship__c < 60
+            )`;
+                    }
+                    if (val === 'neet_bulk' || val === 'neet_rank_predictor') {
+                        const ids = _typeOfLeadIdCache[val];
+                        if (!ids || ids.length === 0) return `AND 1=0`; // no matches
+                        // chunk if very large to avoid query-size limits
+                        const list = ids.map(id => `'${id.replace(/'/g, "''")}'`).join(',');
+                        return `AND ${lead}.id IN (${list})`;
+                    }
+        
+                    // default: 'ay26' — (1 or 2 or 3 or 4 or 5) and 6
+                    const cond1 = `EXISTS (
+              SELECT 1 FROM product_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Level__c.name IN ('2627','2628','2629','2630')
+            )`;
+                    const cond2 = `EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'iACST'
+                AND AESL_Level__c.name = '2627'
+            )`;
+                    const cond3 = `EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'ANTHE'
+                AND AESL_Level__c.name = '2526'
+                AND AESL_Date_of_Exam__c >= ${OCT_1_2025}
+            )`;
+                    const cond4 = `EXISTS (
+              SELECT 1 FROM scholarship_object
+              WHERE associated_lead = ${lead}.id
+                AND AESL_Lead_Type__c = 'IAT'
+                AND AESL_Level__c.name = '2526'
+                AND AESL_Date_of_Exam__c >= ${JUL_1_2025}
+            )`;
+                    const cond5 = `(
+              ${lead}.created_at >= ${NOV_1_2026}
+              AND NOT EXISTS (SELECT 1 FROM product_object WHERE associated_lead = ${lead}.id)
+              AND NOT EXISTS (SELECT 1 FROM scholarship_object WHERE associated_lead = ${lead}.id)
+            )`;
+                    const cond6 = `${lead}.AESL_Primary_Mobile_Number__c IS NOT NULL`; // ⚠️ see note below
+        
+                    return `AND ((${cond1}) OR (${cond2}) OR (${cond3}) OR (${cond4}) OR (${cond5})) AND (${cond6}) ${s1QualifiedWhere(ctx)} ${s1VisitDoneWhere(ctx)}`;
+                }
+        */
+
 
         function s1TypeOfLeadWhere(ctx = 'lead') {
             const val = s1Filters.typeOfLead || 'ay26';
             const lead = ctx === 'schol' ? 'associated_lead' : 'leads_object';
 
-            //         if (val === 'neet_bulk') {
-            //             return `AND EXISTS (
-            //   SELECT 1 FROM product_object
-            //   WHERE associated_lead = ${lead}.id
-            //     AND AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c IN ('1512', '2020')
-            //     AND created_at >= ${MAY_1_2026}
-            // )`;
-            //         }
-
-            //         if (val === 'neet_rank_predictor') {
-            //             return `AND EXISTS (
-            //   SELECT 1 FROM product_object
-            //   WHERE associated_lead = ${lead}.id
-            //     AND AESL_Source__c = 'NEET Rank College Predictor LP'
-            //     AND created_at >= ${MAY_1_2026}
-            // )`;
-            //         }
-            // ── New scholarship-based cohorts ──
             if (val === 'iacst_taken') {
                 return `AND EXISTS (
       SELECT 1 FROM scholarship_object
@@ -2716,7 +2805,7 @@ WHERE created_at >= ${getDateFrom()}
         AND AESL_Lead_Type__c = 'iACST'
         AND AESL_Level__c.name = '2627'
         AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
-    ) ${s1QualifiedWhere(ctx)} ${s1VisitDoneWhere(ctx)}`;
+    )`;
             }
             if (val === 'iacst_not_taken') {
                 return `AND EXISTS (
@@ -2725,7 +2814,7 @@ WHERE created_at >= ${getDateFrom()}
         AND AESL_Lead_Type__c = 'iACST'
         AND AESL_Level__c.name = '2627'
         AND associated_result.AESL_Eligible_Scholarship__c IS NULL
-    ) ${s1QualifiedWhere(ctx)} ${s1VisitDoneWhere(ctx)}`;
+    )`;
             }
             if (val === 'anthe_60plus') {
                 return `AND EXISTS (
@@ -2735,7 +2824,7 @@ WHERE created_at >= ${getDateFrom()}
         AND AESL_Level__c.name = '2526'
         AND AESL_Date_of_Exam__c >= ${OCT_1_2025}
         AND associated_result.AESL_Eligible_Scholarship__c >= 60
-    ) ${s1QualifiedWhere(ctx)} ${s1VisitDoneWhere(ctx)}`;
+    )`;
             }
             if (val === 'anthe_60minus') {
                 return `AND EXISTS (
@@ -2746,17 +2835,16 @@ WHERE created_at >= ${getDateFrom()}
         AND AESL_Date_of_Exam__c >= ${OCT_1_2025}
         AND associated_result.AESL_Eligible_Scholarship__c IS NOT NULL
         AND associated_result.AESL_Eligible_Scholarship__c < 60
-    ) ${s1QualifiedWhere(ctx)} ${s1VisitDoneWhere(ctx)}`;
+    )`;
             }
             if (val === 'neet_bulk' || val === 'neet_rank_predictor') {
                 const ids = _typeOfLeadIdCache[val];
-                if (!ids || ids.length === 0) return `AND 1=0`; // no matches
-                // chunk if very large to avoid query-size limits
+                if (!ids || ids.length === 0) return `AND 1=0`;
                 const list = ids.map(id => `'${id.replace(/'/g, "''")}'`).join(',');
                 return `AND ${lead}.id IN (${list})`;
             }
 
-            // default: 'ay26' — (1 or 2 or 3 or 4 or 5) and 6
+            // default: 'ay26'
             const cond1 = `EXISTS (
       SELECT 1 FROM product_object
       WHERE associated_lead = ${lead}.id
@@ -2787,10 +2875,12 @@ WHERE created_at >= ${getDateFrom()}
       AND NOT EXISTS (SELECT 1 FROM product_object WHERE associated_lead = ${lead}.id)
       AND NOT EXISTS (SELECT 1 FROM scholarship_object WHERE associated_lead = ${lead}.id)
     )`;
-            const cond6 = `${lead}.AESL_Primary_Mobile_Number__c IS NOT NULL`; // ⚠️ see note below
+            const cond6 = `${lead}.AESL_Primary_Mobile_Number__c IS NOT NULL`;
 
-            return `AND ((${cond1}) OR (${cond2}) OR (${cond3}) OR (${cond4}) OR (${cond5})) AND (${cond6}) ${s1QualifiedWhere(ctx)} ${s1VisitDoneWhere(ctx)}`;
+            return `AND ((${cond1}) OR (${cond2}) OR (${cond3}) OR (${cond4}) OR (${cond5})) AND (${cond6})`;
         }
+
+
 
         function buildQ_iACST_Main() {
             return `SELECT
