@@ -11,6 +11,8 @@
     <title>Overall Lead Funnel Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.8/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.8/highcharts-3d.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -1019,6 +1021,28 @@
             font-weight: 800;
             text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
         }
+
+        /* Drill down new configs */
+
+        .modal-body td .remarks {
+            max-width: 240px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #1e3a5f;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        #drill-pager {
+            flex-shrink: 0;
+            border-top: 1px solid #e5e7eb;
+            padding: 10px 4px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+        }
     </style>
 </head>
 
@@ -1057,7 +1081,7 @@
             <div class="fi" id="fi-datemod"><span class="fi-label">Data Modified At</span><button class="fi-btn"><span
                         class="fbt ph" id="fbt-datemod">All Time</span><span class="arr">▼</span></button>
                 <div class="dd">
-                    <label><input type="radio" name="datemod" value="all" checked> All Time</label>
+                    <label><input type="radio" name="datemod" value="all" checked=""> All Time</label>
                     <label><input type="radio" name="datemod" value="today"> Today</label>
                     <label><input type="radio" name="datemod" value="yesterday"> Yesterday</label>
                     <label><input type="radio" name="datemod" value="last7"> Last 7 Days</label>
@@ -1077,7 +1101,7 @@
             <div class="fi" id="fi-qualified"><span class="fi-label">Qualified Status</span><button class="fi-btn"><span
                         class="fbt ph" id="fbt-qualified">All Time</span><span class="arr">▼</span></button>
                 <div class="dd">
-                    <label><input type="radio" name="qualified" value="all" checked> All Time</label>
+                    <label><input type="radio" name="qualified" value="all" checked=""> All Time</label>
                     <label><input type="radio" name="qualified" value="today"> Today</label>
                     <label><input type="radio" name="qualified" value="yesterday"> Yesterday</label>
                     <label><input type="radio" name="qualified" value="last7"> Last 7 Days</label>
@@ -1090,7 +1114,7 @@
                     class="fi-btn"><span class="fbt ph" id="fbt-visitdone">All Time</span><span
                         class="arr">▼</span></button>
                 <div class="dd">
-                    <label><input type="radio" name="visitdone" value="all" checked> All Time</label>
+                    <label><input type="radio" name="visitdone" value="all" checked=""> All Time</label>
                     <label><input type="radio" name="visitdone" value="today"> Today</label>
                     <label><input type="radio" name="visitdone" value="yesterday"> Yesterday</label>
                     <label><input type="radio" name="visitdone" value="last7"> Last 7 Days</label>
@@ -1124,11 +1148,12 @@
                             <label><input type="radio" name="type" value="anthe_minus"> ANTHE 60%-</label>
                             <label><input type="radio" name="type" value="neet_bulk"> NEET Bulk Uploaded</label>
                             <label><input type="radio" name="type" value="neet_rank"> NEET Rank Predictor</label>
-                            <label><input type="radio" name="type" value="ay26_all" checked> AY26 - All Leads</label>
+                            <label><input type="radio" name="type" value="ay26_all" checked=""> AY26 - All Leads</label>
                         </div>
                     </div>
                     <button class="btn-reset" id="reset-btn"><i class="fas fa-undo"></i> Reset</button>
-                    <button class="btn-apply" id="apply-btn" disabled><i class="fas fa-play"></i> Apply & Run</button>
+                    <button class="btn-apply" id="apply-btn" disabled=""><i class="fas fa-play"></i> Apply &amp;
+                        Run</button>
                 </div>
             </div>
         </div>
@@ -1146,7 +1171,6 @@
         </div>
 
         <!-- CARDS -->
-        <!-- <div class="cards" id="cards"></div> -->
         <div class="s1-grid" id="s1-grid">
             <div class="cards" id="cards"></div>
             <div class="funnel-card" id="funnel-card" style="display:none">
@@ -1158,92 +1182,108 @@
         <!-- SECTION 1B HEAD -->
         <div id="breakdown-head" style="display:none">
             <div class="sec-eyebrow">Section 01B · Priority Breakdown</div>
-            <div class="sec-title">Today's queue <em>by RSGH &amp; user</em></div>
+            <div class="sec-title" id="breakdown-toggle"
+                style="cursor:pointer;display:flex;align-items:center;gap:10px">
+                Today's queue <em>by RSGH &amp; user</em>
+                <i class="fas fa-chevron-down" id="breakdown-chevron" title="Expand this section to view"
+                    style="font-size:14px;color:#6b7280;transition:transform .2s"></i>
+            </div>
         </div>
 
         <!-- BRANCH TABLE -->
-        <div class="report-card" id="branch-card">
-            <div class="report-card-head">
-                <div>
-                    <div class="report-card-title">By Branch</div>
-                    <div class="report-card-sub">Grouped by user's branch · selected RSGH cohort</div>
+        <div id="breakdown-body" style="display:none;flex-direction:column;gap:20px">
+            <div class="report-card" id="branch-card">
+                <div class="report-card-head">
+                    <div>
+                        <div class="report-card-title">By Branch</div>
+                        <div class="report-card-sub">Grouped by user's branch · selected RSGH cohort</div>
+                    </div>
+                    <button class="export-btn" id="export-branch"><i class="fas fa-download"></i> Export</button>
                 </div>
-                <button class="export-btn" id="export-branch"><i class="fas fa-download"></i> Export</button>
+                <div class="loader" id="branch-loader" style="display:none"></div>
+                <div class="table-wrap">
+                    <table id="branch-table">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="loader" id="branch-loader" style="display:none"></div>
-            <div class="table-wrap">
-                <table id="branch-table">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- USER TABLE -->
-        <div class="report-card" id="user-card">
-            <div class="report-card-head">
-                <div>
-                    <div class="report-card-title">By User</div>
-                    <div class="report-card-sub">Grouped by RSGH → Branch → Owner</div>
+            <!-- USER TABLE -->
+            <div class="report-card" id="user-card">
+                <div class="report-card-head">
+                    <div>
+                        <div class="report-card-title">By User</div>
+                        <div class="report-card-sub">Grouped by RSGH → Branch → Owner</div>
+                    </div>
+                    <button class="export-btn" id="export-user"><i class="fas fa-download"></i> Export</button>
                 </div>
-                <button class="export-btn" id="export-user"><i class="fas fa-download"></i> Export</button>
-            </div>
-            <div class="loader" id="user-loader" style="display:none"></div>
-            <div class="table-wrap">
-                <table id="user-table">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
+                <div class="loader" id="user-loader" style="display:none"></div>
+                <div class="table-wrap">
+                    <table id="user-table">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- SECTION 02 HEAD + filters -->
         <div id="s2-head" style="display:none">
             <div class="sec-eyebrow">Section 02 · Scholarship Pipelines</div>
-            <div class="sec-title">Test takers <em>by exam</em> <span class="tag">(iACST · 2627 + ANTHE · 2526)</span>
-            </div>
-            <div class="topbar" style="margin-top:12px">
-                <div class="fi" id="fi-schrange"><span class="fi-label">Scholarship Range</span><button
-                        class="fi-btn"><span class="fbt ph" id="fbt-schrange">All Scholarship</span><span
-                            class="arr">▼</span></button>
-                    <div class="dd">
-                        <label><input type="radio" name="schrange" value="all" checked> All Scholarship</label>
-                        <label><input type="radio" name="schrange" value="zero"> 0%</label>
-                        <label><input type="radio" name="schrange" value="1to44"> 1% – 44%</label>
-                        <label><input type="radio" name="schrange" value="45to59"> 45% – 59%</label>
-                        <label><input type="radio" name="schrange" value="60to89"> 60% – 89%</label>
-                        <label><input type="radio" name="schrange" value="gte90"> 90%+</label>
-                    </div>
-                </div>
-                <div class="fi" id="fi-appeared"><span class="fi-label">Appeared Date</span><button class="fi-btn"><span
-                            class="fbt ph" id="fbt-appeared">All Time</span><span class="arr">▼</span></button>
-                    <div class="dd">
-                        <label><input type="radio" name="appeared" value="all" checked> All Time</label>
-                        <label><input type="radio" name="appeared" value="today"> Today</label>
-                        <label><input type="radio" name="appeared" value="yesterday"> Yesterday</label>
-                        <label><input type="radio" name="appeared" value="last7"> Last 7 Days</label>
-                        <label><input type="radio" name="appeared" value="last15"> Last 15 Days</label>
-                        <label><input type="radio" name="appeared" value="last30"> Last 30 Days</label>
-                    </div>
-                </div>
-                <div class="fi" id="fi-origin"><span class="fi-label">Origin</span><button class="fi-btn"><span
-                            class="fbt ph" id="fbt-origin">All Origins</span><span class="arr">▼</span></button>
-                    <div class="dd">
-                        <label><input type="checkbox" class="select-all"> Select All</label>
-                        <label><input type="checkbox" value="API" data-name="Digital (API)"> Digital (API)</label>
-                        <label><input type="checkbox" value="Forms" data-name="Form"> Form</label>
-                        <label><input type="checkbox" value="Upload" data-name="Upload"> Upload</label>
-                    </div>
-                </div>
+            <div class="sec-title" id="s2-toggle" title="Expand this section to view"
+                style="cursor:pointer;display:flex;align-items:center;gap:10px">
+                Test takers <em>by exam</em> <span class="tag">(iACST · 2627 + ANTHE · 2526)</span>
+                <i class="fas fa-chevron-down" id="s2-chevron"
+                    style="font-size:14px;color:#6b7280;transition:transform .2s"></i>
             </div>
         </div>
+        <div class="topbar" id="s2-filters" style="margin-top:12px;display:none">
+            <div class="fi" id="fi-schrange"><span class="fi-label">Scholarship Range</span><button class="fi-btn"><span
+                        class="fbt ph" id="fbt-schrange">All Scholarship</span><span class="arr">▼</span></button>
+                <div class="dd">
+                    <label><input type="radio" name="schrange" value="all" checked=""> All Scholarship</label>
+                    <label><input type="radio" name="schrange" value="zero"> 0%</label>
+                    <label><input type="radio" name="schrange" value="1to44"> 1% – 44%</label>
+                    <label><input type="radio" name="schrange" value="45to59"> 45% – 59%</label>
+                    <label><input type="radio" name="schrange" value="60to89"> 60% – 89%</label>
+                    <label><input type="radio" name="schrange" value="gte90"> 90%+</label>
+                </div>
+            </div>
+            <div class="fi" id="fi-appeared"><span class="fi-label">Appeared Date</span><button class="fi-btn"><span
+                        class="fbt ph" id="fbt-appeared">All Time</span><span class="arr">▼</span></button>
+                <div class="dd">
+                    <label><input type="radio" name="appeared" value="all" checked=""> All Time</label>
+                    <label><input type="radio" name="appeared" value="today"> Today</label>
+                    <label><input type="radio" name="appeared" value="yesterday"> Yesterday</label>
+                    <label><input type="radio" name="appeared" value="last7"> Last 7 Days</label>
+                    <label><input type="radio" name="appeared" value="last15"> Last 15 Days</label>
+                    <label><input type="radio" name="appeared" value="last30"> Last 30 Days</label>
+                </div>
+            </div>
+            <div class="fi" id="fi-origin"><span class="fi-label">Origin</span><button class="fi-btn"><span
+                        class="fbt ph" id="fbt-origin">All Origins</span><span class="arr">▼</span></button>
+                <div class="dd">
+                    <label><input type="checkbox" class="select-all"> Select All</label>
+                    <label><input type="checkbox" value="API" data-name="Digital (API)"> Digital (API)</label>
+                    <label><input type="checkbox" value="Forms" data-name="Form"> Form</label>
+                    <label><input type="checkbox" value="Upload" data-name="Upload"> Upload</label>
+                </div>
+            </div>
+            <div class="fi" id="fi-s2class"><span class="fi-label">Class Studying In</span><button class="fi-btn"><span
+                        class="fbt ph" id="fbt-s2class">All Classes</span><span class="arr">▼</span></button>
+                <div class="dd"><input type="search" placeholder="Search..."><label><input type="checkbox"
+                            class="select-all"> Select All</label></div>
+            </div>
+        </div>
+    </div>
 
-        <!-- SECTION 02 PANELS -->
-        <div class="s2-wrap" id="s2-wrap" style="display:none">
-            <div class="loader" id="s2-loader" style="display:none;grid-column:1/-1"></div>
-            <div class="s2-panel" id="panel-iacst"></div>
-            <div class="s2-panel" id="panel-anthe"></div>
-        </div>
+    <!-- SECTION 02 PANELS -->
+    <div class="s2-wrap" id="s2-wrap" style="display:none">
+        <div class="loader" id="s2-loader" style="display:none;grid-column:1/-1"></div>
+        <div class="s2-panel" id="panel-iacst"></div>
+        <div class="s2-panel" id="panel-anthe"></div>
+    </div>
 
     </div>
 
@@ -1260,8 +1300,23 @@
             <div class="modal-body">
                 <div id="modal-body-content"></div>
             </div>
+            <div id="drill-pager" style="display:none"></div>
         </div>
     </div>
+
+    <!-- REMARKS MODAL -->
+    <div class="modal-overlay" id="remarks-modal">
+        <div class="modal-box" style="max-width:640px">
+            <div class="modal-hd">
+                <div class="modal-title">Overall Remarks</div>
+                <button class="modal-close" id="remarks-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="remarks-content" style="white-space:normal;line-height:1.6;font-size:13px;color:#374151"></div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         // ═══════════════════════════════════════════════════════════════
@@ -1274,14 +1329,15 @@
 
         const IST = 5.5 * 60 * 60 * 1000;
 
+        const _loadedSchoolNames = new Set();
 
 
         // CONFIGS TO ONLY USE IN DRILL DOWNS
         const LEAD_NEXT_FU_MODE = 'next_follow_up_mode';          // TODO confirm
-        const LEAD_OVERALL_REMARKS = 'AESL_Overall_Remarks__c';             // TODO confirm
+        const LEAD_OVERALL_REMARKS = 'overall_remarks';             // TODO confirm
         // const LEAD_HOME_VISIT_SCHED = 'home_visit_scheduled_for_date_time';  // TODO confirm
         const LEAD_HOME_VISIT_DONE = 'home_visit_done_date';                // TODO confirm
-        const SCHOL_ROLL_NUMBER = 'AESL_Roll_Number__c';                 // TODO confirm
+        const SCHOL_ROLL_NUMBER = 'AESL_Roll_No__c';                 // TODO confirm
 
         // IST midnight (UTC epoch of the IST-day boundary) — timezone independent
         function istDayStart(daysAgo = 0) {
@@ -1335,11 +1391,11 @@
         //   AESL_Date_of_Exam__c (exam date), associated_result.AESL_Eligible_Scholarship__c
         const SCHOL_EXAM_DATE = 'AESL_Date_of_Exam__c';   // TODO confirm
         // Field on product_object holding Term — confirm:
-        const PRODUCT_TERM_FIELD = 'AESL_Level__c';         // TODO confirm
+        const PRODUCT_TERM_FIELD = 'AESL_Level__c.name';         // TODO confirm
         // Lead primary mobile field — confirm:
         const LEAD_PRIMARY_MOBILE = 'AESL_Primary_Mobile_Number__c'; // TODO confirm
 
-        const EXCLUDE_STAGES = ['admission done', 'not-interested', 'not-eligible', 'untouched lead'];
+        const EXCLUDE_STAGES = ['admission done', 'not interested', 'not eligible', 'untouched lead'];
 
         // ═══════════════════════════════════════════════════════════════
         // METRIC / CARD DEFINITIONS  (order == column order in tables)
@@ -1383,34 +1439,114 @@
 
         const funnelGroups = {};   // stageKey -> [rows]
 
+        let _funnelChart = null;
+
         function renderFunnel(rows) {
             Object.keys(funnelGroups).forEach(k => delete funnelGroups[k]);
             FUNNEL_STAGES.forEach(s => funnelGroups[s.key] = []);
             rows.forEach(r => { const k = funnelStageOf(r); if (k) funnelGroups[k].push(r); });
 
-            const n = FUNNEL_STAGES.length;
-            document.getElementById('funnel').innerHTML = FUNNEL_STAGES.map((s, i) => {
-                const w = 100 - i * (58 / (n - 1));   // 100% (top) tapering to 42% (bottom)
+            const total = FUNNEL_STAGES.reduce((s, st) => s + funnelGroups[st.key].length, 0);
+            if (!total) { document.getElementById('funnel').innerHTML = '<div style="padding:30px;text-align:center;color:#9ca3af">No stage data.</div>'; return; }
+
+            // Geometry
+            const W = 520, H = 340, cx = W / 2, cy = 150;   // wider viewBox for label room; smaller pie
+            const rx = 110, ry = 60;                        // smaller ellipse radii
+            const depth = 32;                               // thinner 3D edge
+            const TAU = Math.PI * 2;
+            const START = -Math.PI / 2;                     // start at top
+
+            // darken a hex color for the side walls
+            const dark = (hex, f = 0.62) => {
+                const n = parseInt(hex.slice(1), 16);
+                const r = Math.round(((n >> 16) & 255) * f), g = Math.round(((n >> 8) & 255) * f), b = Math.round((n & 255) * f);
+                return `rgb(${r},${g},${b})`;
+            };
+            const ptOnTop = a => [cx + rx * Math.cos(a), cy + ry * Math.sin(a)];
+            const topArc = (a0, a1) => {   // path of the top ellipse face for a slice
+                const [x0, y0] = ptOnTop(a0), [x1, y1] = ptOnTop(a1);
+                const large = (a1 - a0) % TAU > Math.PI ? 1 : 0;
+                return `M ${cx} ${cy} L ${x0} ${y0} A ${rx} ${ry} 0 ${large} 1 ${x1} ${y1} Z`;
+            };
+
+            // build slices
+            let acc = 0;
+            const slices = FUNNEL_STAGES.map(s => {
                 const count = funnelGroups[s.key].length;
-                return `<div class="funnel-seg" data-fkey="${s.key}" style="width:${w}%;background:${s.color}">
-            <span class="fl">${s.label}</span><span class="fv">${count.toLocaleString('en-IN')}</span>
-        </div>`;
-            }).join('');
+                const frac = count / total;
+                const a0 = START + acc * TAU;
+                acc += frac;
+                const a1 = START + acc * TAU;
+                const mid = (a0 + a1) / 2;
+                return { s, count, frac, a0, a1, mid };
+            }).filter(z => z.count > 0);
+
+            // ── side walls: only the front-facing arc (angles whose sin>0, i.e. bottom half) show depth.
+            // We draw walls for every slice's arc portion that faces the viewer, back-to-front.
+            const wallPaths = [];
+            slices.forEach(z => {
+                // sample the arc; draw wall quads where the arc is on the front (sin(a) > 0)
+                const steps = Math.max(2, Math.ceil((z.a1 - z.a0) / 0.12));
+                for (let i = 0; i < steps; i++) {
+                    const b0 = z.a0 + (z.a1 - z.a0) * (i / steps);
+                    const b1 = z.a0 + (z.a1 - z.a0) * ((i + 1) / steps);
+                    const mids = Math.sin((b0 + b1) / 2);
+                    if (mids <= 0) continue;                 // back-facing, hidden
+                    const [xa, ya] = ptOnTop(b0), [xb, yb] = ptOnTop(b1);
+                    wallPaths.push({
+                        z: mids,   // draw order: larger sin = more front
+                        d: `M ${xa} ${ya} L ${xb} ${yb} L ${xb} ${yb + depth} L ${xa} ${ya + depth} Z`,
+                        fill: dark(z.s.color),
+                    });
+                }
+            });
+            wallPaths.sort((p, q) => p.z - q.z);   // back first, front last
+
+            // ── labels with leader lines
+            const LABEL_H = 30;              // min vertical gap between labels on the same side
+            const build = (arr, right) => {
+                // desired y = slice edge y; then spread so neighbours are >= LABEL_H apart
+                arr.sort((a, b) => a.ey - b.ey);
+                for (let i = 1; i < arr.length; i++)
+                    if (arr[i].ey - arr[i - 1].ly < LABEL_H) arr[i].ly = arr[i - 1].ly + LABEL_H;
+                    else arr[i].ly = arr[i].ey;
+                // shift whole column up a bit so the top label clears the pie top
+                arr.forEach(a => a.ly -= 18);
+                // keep within top bound
+                if (arr.length && arr[0].ly < 20) {
+                    const under = 20 - arr[0].ly;
+                    arr.forEach(a => a.ly += under);
+                }
+                return arr.map(z => {
+                    const pct = Math.round(z.frac * 100);
+                    const tx = cx + (right ? 1 : -1) * (rx + 40);   // text anchor x
+                    return `
+                <line x1="${z.ex}" y1="${z.ey}" x2="${tx - (right ? 6 : -6)}" y2="${z.ly}" stroke="#9ca3af" stroke-width="1.2"/>
+                <text x="${tx}" y="${z.ly - 3}" text-anchor="${right ? 'start' : 'end'}"
+                    style="font-size:10px;font-weight:700;fill:#374151">${z.s.label}</text>
+                <text x="${tx}" y="${z.ly + 12}" text-anchor="${right ? 'start' : 'end'}"
+                    style="font-size:9px;fill:#6b7280">${z.count.toLocaleString('en-IN')} · ${pct}%</text>`;
+                }).join('');
+            };
+
+            const lab = slices.map(z => {
+                const [ex, ey] = ptOnTop(z.mid);
+                return { s: z.s, count: z.count, frac: z.frac, ex, ey, ly: ey, right: Math.cos(z.mid) >= 0 };
+            });
+
+            const labels = build(lab.filter(l => l.right), true) + build(lab.filter(l => !l.right), false);
+
+            const topFaces = slices.map(z =>
+                `<path d="${topArc(z.a0, z.a1)}" fill="${z.s.color}" stroke="#fff" stroke-width="1.5"
+            data-fkey="${z.s.key}" style="cursor:pointer"/>`).join('');
+
+            document.getElementById('funnel').innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
+            ${wallPaths.map(w => `<path d="${w.d}" fill="${w.fill}" stroke="${w.fill}" stroke-width="0.5"/>`).join('')}
+            ${topFaces}
+            ${labels}
+        </svg>`;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // ═══════════════════════════════════════════════════════════════
         // STATE
@@ -1418,7 +1554,7 @@
         const state = {
             rd: [], rsgh: [], branch: [], tl: [], owner: [], school: [], class: [],
             dateMod: 'all', qualified: 'all', visitDone: 'all', type: null,
-            currentDd: null, schRange: 'all', appeared: 'all', origin: [],
+            currentDd: null, schRange: 'all', appeared: 'all', origin: [], s2class: []
         };
 
         let _allUsers = null;   // cached full user list
@@ -1434,11 +1570,12 @@
         // ═══════════════════════════════════════════════════════════════
         function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
         async function safe(fn, retries = 3) {
+            let lastErr;
             for (let i = 0; i < retries; i++) {
                 try { return await fn(); }
-                catch (e) { console.warn(`Attempt ${i + 1}/${retries}:`, e.message); if (i < retries - 1) await sleep(600 * (i + 1)); }
+                catch (e) { lastErr = e; if (i < retries - 1) await sleep(600 * (i + 1)); }
             }
-            return [];
+            throw lastErr;
         }
         async function query(q, slug) {
             return safe(async () => {
@@ -1449,12 +1586,31 @@
                 return j.data.records || [];
             });
         }
+
+        // async function paginate(q, slug, batch = 5000, conc = 1) {
+        //     // let all = [], page = 0, more = true;
+        //     let all = [], page = 0;
+
+        //     while (true) {
+        //         const wave = Array.from({ length: conc }, (_, k) => {
+        //             const pq = q.replace('__LO__', `LIMIT ${batch} OFFSET ${(page + k) * batch}`);
+        //             return query(pq, slug);
+        //         });
+        //         const results = await Promise.all(wave);
+        //         results.forEach(b => all = all.concat(b));
+        //         // more = results[results.length - 1].length === batch; // last page full → keep going
+        //         page += conc;
+        //     }
+        //     return all;
+        // }
         async function paginate(q, slug, batch = 5000) {
-            let all = [], off = 0, more = true;
-            while (more) {
-                const pq = q.replace('__LO__', `LIMIT ${batch} OFFSET ${off}`);
-                const b = await query(pq, slug);
-                all = all.concat(b); more = b.length === batch; off += batch;
+            let all = [], page = 0;
+            while (true) {
+                const pq = q.replace('__LO__', `LIMIT ${batch} OFFSET ${page * batch}`);
+                const rows = await query(pq, slug);
+                all = all.concat(rows);
+                if (!rows.length) break;
+                page++;
             }
             return all;
         }
@@ -1487,7 +1643,8 @@
         // ═══════════════════════════════════════════════════════════════
         function leadScopeWhere(prefix = '') {
             const p = prefix ? prefix + '.' : '';
-            const parts = [];
+            // const parts = [];
+            const parts = [ownerScope(prefix)];
             if (state.rd.length) parts.push(`${p}owner.team_dept_head IN (${sq(state.rd)})`);
             if (state.rsgh.length) parts.push(`${p}owner.team_sales_head IN (${sq(state.rsgh)})`);
             if (state.branch.length) parts.push(`${p}owner.user_branch_name_user_management_ IN (${sq(state.branch)})`);
@@ -1498,21 +1655,62 @@
             return parts.join(' AND ');
         }
 
+        function leadDateModWhere(prefix = '') {
+            const r = dateRange(state.dateMod);
+            if (!r) return '';
+            const p = prefix ? prefix + '.' : '';
+            return `${p}updated_at >= ${r[0]} AND ${p}updated_at <= ${r[1]}`;
+        }
+
+
+
         // ═══════════════════════════════════════════════════════════════
         // TYPE-OF-LEADS RESOLVERS  -> Set of lead ids
         // ═══════════════════════════════════════════════════════════════
         async function scholIds(extraWhere) {
             const where = and(extraWhere, leadScopeWhere('associated_lead'));
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM scholarship_object WHERE ${where} __LO__`, 'scholarship_object');
+            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM scholarship_object WHERE ${where} ORDER BY associated_lead.id ASC __LO__`, 'scholarship_object');
             return rows.map(r => r.lead_id).filter(Boolean);
         }
         async function productIds(extraWhere) {
             const where = and(extraWhere, leadScopeWhere('associated_lead'));
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM product_object WHERE ${where} __LO__`, 'product_object');
+            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM product_object WHERE ${where} ORDER BY associated_lead.id ASC __LO__`, 'product_object');
             return rows.map(r => r.lead_id).filter(Boolean);
         }
 
-        const RESOLVERS = {
+        // shared column list, traversed through any relation prefix `p`
+        const LEAD_COLS_VIA = p => `
+  ${p} as lead_id,
+  ${p}.name as lead_name, ${p}.AESL_PS_ID__c as psid, ${p}.stage as lead_stage,
+  ${p}.AESL_Next_Follow_up_date__c as next_followup,
+  ${p}.call_back_date as call_back_date,
+  ${p}.last_conversation_date_time as last_conv,
+  ${p}.branch_visit_scheduled_for_date_time as visit_sched,
+  ${p}.branch_visit_done_date as visit_done,
+  ${p}.${LEAD_PRIMARY_MOBILE} as primary_mobile,
+  ${p}.owner.id as owner_id, ${p}.owner.name as owner_name, ${p}.owner.email as owner_email,
+  ${p}.owner.team_dept_head as rd, ${p}.owner.team_sales_head as rsgh,
+  ${p}.owner.team_supervisor as supervisor,
+  ${p}.owner.user_branch_name_user_management_ as owner_branch`;
+
+        async function scholRows(extraWhere) {
+            const where = and(extraWhere, leadScopeWhere('associated_lead'), leadDateModWhere('associated_lead'));
+            return paginate(`SELECT ${LEAD_COLS_VIA('associated_lead')}
+    FROM scholarship_object WHERE ${where} ORDER BY id ASC __LO__`, 'scholarship_object');
+        }
+        async function productRows(extraWhere) {
+            const where = and(extraWhere, leadScopeWhere('associated_lead'), leadDateModWhere('associated_lead'));
+            return paginate(`SELECT ${LEAD_COLS_VIA('associated_lead')}
+    FROM product_object WHERE ${where} ORDER BY id ASC  __LO__`, 'product_object');
+        }
+
+        function dedupeByLead(...rowArrays) {
+            const m = new Map();
+            rowArrays.flat().forEach(r => { if (r.lead_id && !m.has(r.lead_id)) m.set(r.lead_id, r); });
+            return [...m.values()];
+        }
+
+        /*const RESOLVERS = {
             iacst_taken: () => scholIds(and(
                 `AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`,
                 `associated_result.AESL_Eligible_Scholarship__c IS NOT NULL`)),
@@ -1546,6 +1744,48 @@
                 return parts.flat();  // primary-mobile-not-empty enforced in detail fetch
             },
         };
+*/
+        const RESOLVERS = {
+            iacst_taken: () => scholRows(and(
+                `AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`,
+                `associated_result.AESL_Eligible_Scholarship__c IS NOT NULL`)),
+            iacst_nottaken: () => scholRows(and(
+                `AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`,
+                `associated_result.AESL_Eligible_Scholarship__c IS NULL`)),
+            anthe_plus: () => scholRows(and(
+                `AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`,
+                `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`,
+                `associated_result.AESL_Eligible_Scholarship__c > 59`)),
+            anthe_minus: () => scholRows(and(
+                `AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`,
+                `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`,
+                `associated_result.AESL_Eligible_Scholarship__c < 60`)),
+            neet_bulk: () => productRows(and(
+                `(AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c = '1512' OR AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c = '2020')`,
+                `created_at >= ${DATES.MAY1_2026}`)),
+            neet_rank: () => productRows(and(
+                `AESL_Source__c ILIKE '%NEET Rank College Predictor LP%'`,
+                `created_at >= ${DATES.MAY1_2026}`)),
+            ay26_all: async () => dedupeByLead(...await Promise.all([
+                scholRows(and(`AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`)),
+                scholRows(and(`AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`, `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`)),
+                scholRows(and(`AESL_Lead_Type__c = 'IAT'`, `AESL_Level__c.id = '${TERMS.IAT_LEVEL_2526}'`, `${SCHOL_EXAM_DATE} >= ${DATES.JUL1_2025}`)),
+                productRows(`${PRODUCT_TERM_FIELD} IN (${sq(TERMS.PRODUCT_TERMS_2627_2630)})`),
+            ])),
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // ═══════════════════════════════════════════════════════════════
         // OPTIONAL call_disposition FILTERS  (Qualified / Visit Done)
@@ -1555,24 +1795,42 @@
             const r = dateRange(state.qualified); if (!r) return null;
             const where = and(
                 `created_at >= ${r[0]}`, `created_at <= ${r[1]}`,
-                `(conversation_status IN ('Visit Done','Counseling Done') OR follow_up_mode IN ('Branch Visit','Home Visit'))`
+                `(conversation_status IN ('Visit Done','Counseling Done') OR follow_up_mode IN ('Branch Visit','Home Visit'))`,
+                ownerScope('leads_object')
             );
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM call_disposition_object WHERE ${where} __LO__`, 'call_disposition_object');
+            const rows = await paginate(`SELECT DISTINCT leads_object as lead_id FROM leads_object_call_disposition WHERE ${where} ORDER BY leads_object ASC __LO__`, 'leads_object_call_disposition');
             return new Set(rows.map(r => r.lead_id).filter(Boolean));
         }
         async function visitDoneLeadIds() {
             const r = dateRange(state.visitDone); if (!r) return null;
             const where = and(
                 `created_at >= ${r[0]}`, `created_at <= ${r[1]}`,
-                `conversation_status = 'Visit Done'`
+                `conversation_status = 'Visit Done'`,
+                ownerScope('leads_object')
             );
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM call_disposition_object WHERE ${where} __LO__`, 'call_disposition_object');
+            const rows = await paginate(`SELECT DISTINCT leads_object as lead_id FROM leads_object_call_disposition WHERE ${where} ORDER BY leads_object ASC __LO__`, 'leads_object_call_disposition');
             return new Set(rows.map(r => r.lead_id).filter(Boolean));
         }
 
         // ═══════════════════════════════════════════════════════════════
         // FETCH LEAD DETAILS
         // ═══════════════════════════════════════════════════════════════
+
+        const ACCESSIBLE_OWNERS = "'{{@accessible_owners}}'";
+        function ownerScope(prefix = '') {
+            const p = prefix ? prefix + '.' : '';
+            return `${p}owner IN (${ACCESSIBLE_OWNERS})`;
+        }
+
+
+
+
+
+
+
+
+
+
         async function fetchLeadDetails(ids) {
             if (!ids.length) return [];
             const CHUNK = 500, chunks = [];
@@ -1600,45 +1858,185 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
+        // FETCH Drill DOWN DETAILS
+        // ═══════════════════════════════════════════════════════════════
+
+        // Lead-level detail for the clicked ids
+        async function fetchDrilldownLeadDetails(ids) {
+            const map = {}; if (!ids.length) return map;
+            const CHUNK = 500, chunks = [];
+            for (let i = 0; i < ids.length; i += CHUNK) chunks.push(ids.slice(i, i + CHUNK));
+            const fns = chunks.map(ch => async () => {
+                const inC = ch.map(id => `'${id}'`).join(',');
+                const q = `SELECT id as lead_id, name as lead_name, AESL_PS_ID__c as psid, stage as lead_stage,
+            AESL_Next_Follow_up_date__c as next_followup, ${LEAD_NEXT_FU_MODE} as next_fu_mode,
+            AESL_Class_Studying_In__c as class_studying,
+            AESL_Branch_LK__c.name as branch_name,
+            ${LEAD_OVERALL_REMARKS} as remarks,
+            branch_visit_scheduled_for_date_time as bv_book, branch_visit_done_date as bv_done,
+            ${LEAD_HOME_VISIT_DONE} as hv_done,
+            owner.name as owner_name, owner.email as owner_email,
+            owner.team_supervisor as supervisor, owner.team_sales_head as rsgh
+            FROM leads_object WHERE id IN (${inC}) AND ${ownerScope('')} LIMIT ${CHUNK} OFFSET 0`;
+                return query(q, 'leads_object');
+            });
+            (await runPool(fns, 4)).flat().forEach(r => { if (r.lead_id) map[r.lead_id] = r; });
+            return map;
+        }
+
+        // Scholarship aggregates: iACST registered (roll not empty), highest iACST %, highest ANTHE %
+        async function fetchScholAggregates(ids) {
+            const map = {}; if (!ids.length) return map;
+            const CHUNK = 500, chunks = [];
+            for (let i = 0; i < ids.length; i += CHUNK) chunks.push(ids.slice(i, i + CHUNK));
+            const fns = chunks.map(ch => async () => {
+                const inC = ch.map(id => `'${id}'`).join(',');
+                const q = `SELECT associated_lead as lead_id, AESL_Lead_Type__c as ltype,
+            AESL_Level__c.id as level_id, ${SCHOL_EXAM_DATE} as exam_date,
+            ${SCHOL_ROLL_NUMBER} as roll,
+            associated_result.AESL_Eligible_Scholarship__c as eligible
+            FROM scholarship_object WHERE associated_lead IN (${inC}) AND ${ownerScope('associated_lead')} LIMIT ${CHUNK} OFFSET 0`;
+                return query(q, 'scholarship_object');
+            });
+            (await runPool(fns, 4)).flat().forEach(r => {
+                const id = r.lead_id; if (!id) return;
+                if (!map[id]) map[id] = { iacstReg: false, iacstPct: null, anthePct: null };
+                const elig = (r.eligible === '' || r.eligible == null) ? null : Number(r.eligible);
+                const isIacst = r.ltype === 'iACST' && r.level_id === TERMS.IACST_LEVEL_2627;
+                const isAnthe = r.ltype === 'ANTHE' && r.level_id === TERMS.ANTHE_LEVEL_2526
+                    && r.exam_date && Number(r.exam_date) >= DATES.OCT1_2025;
+                if (isIacst) {
+                    if (r.roll != null && String(r.roll).trim() !== '') map[id].iacstReg = true;
+                    if (elig !== null && (map[id].iacstPct === null || elig > map[id].iacstPct)) map[id].iacstPct = elig;
+                }
+                if (isAnthe && elig !== null && (map[id].anthePct === null || elig > map[id].anthePct)) map[id].anthePct = elig;
+            });
+            return map;
+        }
+
+        const DRILL_PAGE = 100;
+        let _drill = { ids: [], page: 0, cache: {}, label: '', mode: 'lead', scholRows: [] };
+
+        /*
+        async function openLeadDrilldown(leads, label) {
+            const ids = [...new Set(leads.map(l => l.lead_id).filter(Boolean))];
+            _drill = { ids, page: 0, cache: {}, label, mode: 'lead', scholRows: [] };
+            document.getElementById('modal-title').textContent = `${label} — ${ids.length} leads`;
+            document.getElementById('modal-export').onclick = null;
+            document.getElementById('modal-body-content').innerHTML = '<div class="loader"></div>';
+            document.getElementById('modal').classList.add('active');
+            try {
+                const [detailMap, scholMap] = await Promise.all([
+                    fetchDrilldownLeadDetails(ids),
+                    fetchScholAggregates(ids),
+                ]);
+                const enriched = ids.map(id => ({ lead_id: id, ...(detailMap[id] || {}), ...(scholMap[id] || {}) }));
+                document.getElementById('modal-export').onclick = () => exportDrilldownXLSX(enriched, label);
+                document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(enriched);
+            } catch (e) {
+                console.error(e);
+                document.getElementById('modal-body-content').innerHTML = '<div style="padding:20px;color:#991b1b">Failed to load lead details.</div>';
+            }
+        }
+        */
+        async function openLeadDrilldown(leads, label) {
+            const ids = [...new Set(leads.map(l => l.lead_id).filter(Boolean))];
+            _drill = { ids, page: 0, cache: {}, label, mode: 'lead', scholRows: [] };
+            document.getElementById('modal-title').textContent = `${label} — ${ids.length} leads`;
+            document.getElementById('modal-export').onclick = () => exportAllDrilldown();
+            document.getElementById('modal').classList.add('active');
+            await renderDrillPage();
+        }
+
+        async function loadDrillPage(pageIds) {
+            const missing = pageIds.filter(id => !_drill.cache[id]);
+            if (missing.length) {
+                const [detailMap, scholMap] = await Promise.all([
+                    fetchDrilldownLeadDetails(missing),
+                    fetchScholAggregates(missing),
+                ]);
+                missing.forEach(id => {
+                    _drill.cache[id] = { lead_id: id, ...(detailMap[id] || {}), ...(scholMap[id] || {}) };
+                });
+            }
+            return pageIds.map(id => _drill.cache[id]);
+        }
+
+        async function renderDrillPage() {
+            const start = _drill.page * DRILL_PAGE;
+            const pageIds = _drill.ids.slice(start, start + DRILL_PAGE);
+            const body = document.getElementById('modal-body-content');
+            const pager = document.getElementById('drill-pager');
+            body.innerHTML = '<div class="loader"></div>';
+            pager.style.display = 'none';
+            try {
+                const rows = _drill.mode === 'schol'
+                    ? await loadScholPage(pageIds)
+                    : await loadDrillPage(pageIds);
+                body.innerHTML = _drill.mode === 'schol'
+                    ? renderScholDrilldownTable(rows)
+                    : renderDrilldownTable(rows);
+                pager.innerHTML = drillPager();
+                pager.style.display = 'flex';
+            } catch (e) {
+                console.error(e);
+                body.innerHTML = '<div style="padding:20px;color:#991b1b">Failed to load lead details.</div>';
+            }
+        }
+
+        function drillPager() {
+            const total = _drill.ids.length;
+            const pages = Math.max(1, Math.ceil(total / DRILL_PAGE));
+            const start = _drill.page * DRILL_PAGE;
+            return `<button class="btn-reset" id="drill-prev" ${_drill.page === 0 ? 'disabled' : ''}>
+            <i class="fas fa-chevron-left"></i> Prev</button>
+        <span style="font-size:12px;color:#6b7280">
+            ${total ? start + 1 : 0}–${Math.min(start + DRILL_PAGE, total)} of ${total.toLocaleString('en-IN')}
+            · Page ${_drill.page + 1}/${pages}</span>
+        <button class="btn-reset" id="drill-next" ${_drill.page >= pages - 1 ? 'disabled' : ''}>
+            Next <i class="fas fa-chevron-right"></i></button>`;
+        }
+
+
+
+
+
+
+        // ═══════════════════════════════════════════════════════════════
         // ORCHESTRATOR
         // ═══════════════════════════════════════════════════════════════
         async function fetchAll() {
             const steps = [
-                { key: 'resolve', label: 'Resolve lead type' },
+                { key: 'resolve', label: 'Resolve + lead details' },
                 { key: 'cd', label: 'Qualified / Visit filters' },
-                { key: 'detail', label: 'Lead details' },
             ];
             initProgress(steps);
             steps.forEach(s => setStep(s.key, 'active'));
 
-            // 1) resolve type -> unique ids
-            let ids = [];
-            try { ids = [...new Set(await RESOLVERS[state.type]())]; setStep('resolve', 'done'); }
+            // 1) resolve type -> deduped lead ROWS (details already inlined)
+            let rows = [];
+            try { rows = dedupeByLead(await RESOLVERS[state.type]()); setStep('resolve', 'done'); }
             catch (e) { setStep('resolve', 'error'); throw e; }
-            setProgress(40);
+            setProgress(60);
 
             // 2) optional call_disposition intersections
             let qSet = null, vSet = null;
             try { [qSet, vSet] = await Promise.all([qualifiedLeadIds(), visitDoneLeadIds()]); setStep('cd', 'done'); }
             catch (e) { setStep('cd', 'error'); console.error(e); }
-            if (qSet) ids = ids.filter(id => qSet.has(id));
-            if (vSet) ids = ids.filter(id => vSet.has(id));
+            if (qSet) rows = rows.filter(r => qSet.has(r.lead_id));
+            if (vSet) rows = rows.filter(r => vSet.has(r.lead_id));
             _qSet = qSet; _vSet = vSet;
-            setProgress(60);
-
-            // 3) details
-            let rows = [];
-            try { rows = await fetchLeadDetails(ids); setStep('detail', 'done'); }
-            catch (e) { setStep('detail', 'error'); throw e; }
             setProgress(90);
 
-            // AY26 all-leads requires primary mobile not empty
             if (state.type === 'ay26_all') rows = rows.filter(r => r.primary_mobile);
 
             allRows = rows;
             setProgress(100);
             return rows;
         }
+
+
+
 
         // ═══════════════════════════════════════════════════════════════
         // METRIC COMPUTATION  -> {metricKey: Set(lead_id)}
@@ -1682,13 +2080,6 @@
         // ═══════════════════════════════════════════════════════════════
         // RENDER CARDS
         // ═══════════════════════════════════════════════════════════════
-        // function renderCardShells(skeleton) {
-        //     document.getElementById('cards').innerHTML = METRICS.map(m => `
-        //         <div class="card ${m.cls}">
-        //             <div class="card-top"><div class="card-title">${m.label}</div>${m.badge ? `<span class="card-badge ${m.bcls}">${m.badge}</span>` : ''}</div>
-        //             <div class="card-value ${skeleton ? 'skel' : ''}" id="cv-${m.key}">${skeleton ? '—' : '0'}</div>
-        //         </div>`).join('');
-        // }
         function renderCardShells(skeleton) {
             document.getElementById('cards').innerHTML = METRICS.map(m => `
         <div class="card ${m.cls}" data-cardmetric="${m.key}" style="cursor:pointer">
@@ -1774,7 +2165,7 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // DRILLDOWN
+        // DRILLDOWNS
         // ═══════════════════════════════════════════════════════════════
         function openDrilldown(rowKey, metricKey) {
             const entry = rowLeadMap[rowKey]; if (!entry) return;
@@ -1786,26 +2177,162 @@
             document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(leads);
             document.getElementById('modal').classList.add('active');
         }
+
+        async function openScholDrilldown(scholLeads, label) {
+            const ids = [...new Set(scholLeads.map(r => r.lead_id).filter(Boolean))];
+            _drill = { ids, page: 0, cache: {}, label, mode: 'schol', scholRows: scholLeads };
+            document.getElementById('modal-title').textContent = `${label} — ${ids.length} leads`;
+            document.getElementById('modal-export').onclick = () => exportAllDrilldown();
+            document.getElementById('modal').classList.add('active');
+            await renderDrillPage();
+        }
+
+        async function loadScholPage(pageIds) {
+            const missing = pageIds.filter(id => !_drill.cache[id]);
+            if (missing.length) {
+                const detailMap = await fetchDrilldownLeadDetails(missing);
+                const byId = new Map(_drill.scholRows.map(r => [r.lead_id, r]));
+                missing.forEach(id => {
+                    _drill.cache[id] = {
+                        ...(byId.get(id) || { lead_id: id }),
+                        next_fu_mode: detailMap[id]?.next_fu_mode, remarks: detailMap[id]?.remarks
+                    };
+                });
+            }
+            return pageIds.map(id => _drill.cache[id]);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const DRILL_COLS = ['Lead Name', 'PSID', 'Stage', 'Next Follow Up', 'Next FU Mode', 'Class Studying In', 'Branch Name', 'iACST 2026 Reg', 'iACST 2026 %', 'ANTHE 2025 %', 'Overall Remarks', 'Branch Visit Book', 'Branch Visit Done', 'Home Visit Book', 'Home Visit Done', 'Owner', 'TL/Supervisor', 'RSGH'];
+
         function renderDrilldownTable(leads) {
             if (!leads.length) return '<div style="padding:20px;text-align:center;color:#6b7280">No leads found.</div>';
-            const cols = ['Lead Name', 'PSID', 'Stage', 'Next Follow Up', 'Call Back', 'Visit Sched', 'Owner', 'RSGH', 'Branch', 'Lead ID'];
-            const thead = `<thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>`;
-            const tbody = `<tbody>${leads.map(r => `<tr>
-                <td><a href="${BASE_URL}/leads_object/records/${r.lead_id}" target="_blank" style="color:#175259;text-decoration:underline">${r.lead_name || 'Open'}</a></td>
-                <td>${r.psid || '—'}</td><td>${r.lead_stage || '—'}</td>
-                <td>${fmtDate(r.next_followup)}</td><td>${fmtDate(r.call_back_date)}</td><td>${fmtDate(r.visit_sched)}</td>
-                <td>${r.owner_email || '—'}</td><td>${r.rsgh || '—'}</td><td>${r.owner_branch || '—'}</td>
-                <td style="font-size:11px;color:#9ca3af">${r.lead_id}</td></tr>`).join('')}</tbody>`;
+            window._remarksStore = {};
+            leads.forEach((r, idx) => { window._remarksStore[r.lead_id] = r.remarks || ''; });
+            const thead = `<thead><tr>${DRILL_COLS.map(c => `<th>${c}</th>`).join('')}</tr></thead>`;
+            const tbody = `<tbody>${leads.map((r, idx) => `<tr>
+        <td><a href="${BASE_URL}/leads_object/records/${r.lead_id}" target="_blank" style="color:#175259;text-decoration:underline">${r.lead_name || 'Open'}</a></td>
+        <td>${r.psid || '—'}</td><td>${r.lead_stage || '—'}</td>
+        <td>${fmtDate(r.next_followup)}</td><td>${r.next_fu_mode || '—'}</td>
+        <td>${r.class_studying || '—'}</td><td>${r.branch_name || '—'}</td>
+        <td>${r.iacstReg ? 'Yes' : 'No'}</td>
+        <td>${r.iacstPct == null ? '—' : r.iacstPct + '%'}</td>
+        <td>${r.anthePct == null ? '—' : r.anthePct + '%'}</td>
+        <td>${r.remarks
+                    ? `<div class="remarks" title="Click to view" onclick="openRemarks(${r.lead_id})">${escapeHtml(r.remarks).replace(/&lt;br\s*\/?&gt;/gi, ' ')}</div>`
+                    : '—'}</td>
+        <td>${fmtDate(r.bv_book)}</td><td>${fmtDate(r.bv_done)}</td>
+        <td>${fmtDate(r.hv_book)}</td><td>${fmtDate(r.hv_done)}</td>
+        <td>${r.owner_name || r.owner_email || '—'}</td><td>${r.supervisor || '—'}</td><td>${r.rsgh || '—'}</td>
+    </tr>`).join('')}</tbody>`;
             return `<table>${thead}${tbody}</table>`;
         }
-        function exportLeadsXLSX(leads, label) {
+
+
+
+
+
+
+        async function exportAllDrilldown() {
+            const btn = document.getElementById('modal-export');
+            const old = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = 'Exporting…';
+            try {
+                const CH = 500;
+                for (let i = 0; i < _drill.ids.length; i += CH) {
+                    const chunk = _drill.ids.slice(i, i + CH);
+                    await (_drill.mode === 'schol' ? loadScholPage(chunk) : loadDrillPage(chunk));
+                    btn.innerHTML = `Exporting… ${Math.min(i + CH, _drill.ids.length)}/${_drill.ids.length}`;
+                }
+                const rows = _drill.ids.map(id => _drill.cache[id]);
+                (_drill.mode === 'schol' ? exportScholDrilldownXLSX : exportDrilldownXLSX)(rows, _drill.label);
+            } catch (e) { console.error(e); alert('Export failed'); }
+            finally { btn.disabled = false; btn.innerHTML = old; }
+        }
+
+
+
+        function exportDrilldownXLSX(leads, label) {
             if (!leads.length) return;
-            const cols = ['Lead Name', 'PSID', 'Stage', 'Next Follow Up', 'Call Back', 'Owner', 'RSGH', 'Branch', 'Lead ID'];
-            const rows = leads.map(r => [r.lead_name || '', r.psid || '', r.lead_stage || '', fmtDate(r.next_followup), fmtDate(r.call_back_date), r.owner_email || '', r.rsgh || '', r.owner_branch || '', r.lead_id]);
+            const rows = leads.map(r => [r.lead_name || '', r.psid || '', r.lead_stage || '', fmtDate(r.next_followup),
+            r.next_fu_mode || '', r.class_studying || '', r.branch_name || '', r.iacstReg ? 'Yes' : 'No', r.iacstPct == null ? '' : r.iacstPct,
+            r.anthePct == null ? '' : r.anthePct, r.remarks || '', fmtDate(r.bv_book), fmtDate(r.bv_done),
+            fmtDate(r.hv_book), fmtDate(r.hv_done), r.owner_name || r.owner_email || '', r.supervisor || '', r.rsgh || '']);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([cols, ...rows]), 'Leads');
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([DRILL_COLS, ...rows]), 'Leads');
             XLSX.writeFile(wb, `${label.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.xlsx`);
         }
+
+        // Section 2 DrillDowns
+        const S2_DRILL_COLS = ['Lead Name', 'PSID', 'Stage', 'Next Follow Up', 'Next FU Mode', 'Roll Number', 'Origin', 'Mode', 'Scholarship Created', 'Exam Type', 'Branch', 'Class Studying In', 'School Name', 'Term', 'Appear Date', 'Scholarship %', 'Remarks', 'Owner', 'TL/Supervisor', 'RSGH'];
+
+        function renderScholDrilldownTable(leads) {
+            if (!leads.length) return '<div style="padding:20px;text-align:center;color:#6b7280">No leads found.</div>';
+            window._remarksStore = {};
+            leads.forEach((r, idx) => { window._remarksStore[r.lead_id] = r.remarks || ''; });
+            const thead = `<thead><tr>${S2_DRILL_COLS.map(c => `<th>${c}</th>`).join('')}</tr></thead>`;
+            const tbody = `<tbody>${leads.map((r, idx) => `<tr>
+        <td><a href="${BASE_URL}/leads_object/records/${r.lead_id}" target="_blank" style="color:#175259;text-decoration:underline">${r.lead_name || 'Open'}</a></td>
+        <td>${r.psid || '—'}</td><td>${r.lead_stage || '—'}</td>
+        <td>${fmtDate(r.next_followup)}</td><td>${r.next_fu_mode || '—'}</td>
+        <td>${r.roll || '—'}</td><td>${r.origin || '—'}</td><td>${r.mode || '—'}</td>
+        <td>${fmtDate(r.schol_created)}</td><td>${r.exam_type || '—'}</td>
+        <td>${r.schol_branch || '—'}</td><td>${r.class_studying || '—'}</td><td>${r.school_name || '—'}</td>
+        <td>${r.term || '—'}</td><td>${r.appear_date || '—'}</td>
+        <td>${eligNum(r) == null ? '—' : eligNum(r) + '%'}</td>
+        <td>${r.remarks
+                    ? `<div class="remarks" title="Click to view" onclick="openRemarks(${r.lead_id})">${escapeHtml(r.remarks).replace(/&lt;br\s*\/?&gt;/gi, ' ')}</div>`
+                    : '—'}</td>
+        <td>${r.owner_name || r.owner_email || '—'}</td><td>${r.supervisor || '—'}</td><td>${r.rsgh || '—'}</td>
+    </tr>`).join('')}</tbody>`;
+            return `<table>${thead}${tbody}</table>`;
+        }
+
+        function exportScholDrilldownXLSX(leads, label) {
+            if (!leads.length) return;
+            const rows = leads.map(r => [r.lead_name || '', r.psid || '', r.lead_stage || '', fmtDate(r.next_followup),
+            r.next_fu_mode || '', r.roll || '', r.origin || '', r.mode || '', fmtDate(r.schol_created), r.exam_type || '',
+            r.schol_branch || '', r.class_studying || '', r.school_name || '', r.term || '', fmtDate(r.appear_date),
+            eligNum(r) == null ? '' : eligNum(r), r.remarks || '', r.owner_name || r.owner_email || '', r.supervisor || '', r.rsgh || '']);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([S2_DRILL_COLS, ...rows]), 'Leads');
+            XLSX.writeFile(wb, `${label.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.xlsx`);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function openDrilldown(rowKey, metricKey) {
+            const entry = rowLeadMap[rowKey]; if (!entry) return;
+            const leads = entry.rows.filter(r => entry.sets[metricKey].has(r.lead_id));
+            openLeadDrilldown(leads, METRICS.find(m => m.key === metricKey).label);
+        }
+
+
+
+
+
         function exportTable(tableId, name) {
             const t = document.getElementById(tableId); if (!t) return;
             const wb = XLSX.utils.book_new();
@@ -1834,7 +2361,7 @@
         const DEFAULTS = {
             'fi-rd': 'All RDs', 'fi-rsgh': 'Select RSGH', 'fi-branch': 'All Branches', 'fi-tl': 'All TL/Managers',
             'fi-owner': 'All Owners', 'fi-datemod': 'All Time', 'fi-school': 'All Schools', 'fi-class': 'All Classes',
-            'fi-qualified': 'All Time', 'fi-visitdone': 'All Time', 'fi-type': 'Select lead type', 'fi-schrange': 'All Scholarship', 'fi-appeared': 'All Time', 'fi-origin': 'All Origins',
+            'fi-qualified': 'All Time', 'fi-visitdone': 'All Time', 'fi-type': 'Select lead type', 'fi-schrange': 'All Scholarship', 'fi-appeared': 'All Time', 'fi-origin': 'All Origins', 'fi-s2class': 'All Classes',
         };
         function setupDropdown(id) {
             const el = document.getElementById(id); if (!el) return;
@@ -1908,17 +2435,33 @@
             fillCheckboxDd('fi-branch', distinct(users, 'user_branch_name_user_management_').map(v => ({ value: v, name: v })));
             fillCheckboxDd('fi-tl', distinct(users, 'team_supervisor').map(v => ({ value: v, name: v })));
             fillCheckboxDd('fi-owner', users.slice().sort((a, b) => (a.name || '').localeCompare(b.name || '')).map(u => ({ value: u.id, name: `${u.name} (${u.email})` })));
-
-            const [schools, classes] = await Promise.all([
-                query(`SELECT id, name FROM aesl_school__c ORDER BY name ASC LIMIT 5000 OFFSET 0`, 'aesl_school__c'),
-                query(`SELECT AESL_Class_Studying_In__c as v FROM leads_object WHERE AESL_Class_Studying_In__c IS NOT NULL GROUP BY AESL_Class_Studying_In__c ORDER BY AESL_Class_Studying_In__c ASC LIMIT 500 OFFSET 0`, 'leads_object'),
-            ]);
-            fillCheckboxDd('fi-school', schools.map(s => ({ value: s.name, name: s.name })));  // matches AESL_School_Name__c.name
-            // fillCheckboxDd('fi-class', classes.map(c => ({ value: c.v, name: c.v })));
+            const schools = await query(`SELECT id, name, AESL_School_Code__c as code FROM aesl_school__c ORDER BY name ASC LIMIT 5000 OFFSET 0`, 'aesl_school__c');
+            const classes = await query(`SELECT AESL_Class_Studying_In__c as v FROM leads_object WHERE AESL_Class_Studying_In__c IS NOT NULL GROUP BY AESL_Class_Studying_In__c ORDER BY AESL_Class_Studying_In__c ASC LIMIT 500 OFFSET 0`, 'leads_object');
+            fillCheckboxDd('fi-school', schools.map(s => ({ value: s.name, name: s.code ? `${s.name} (${s.code})` : s.name })));
+            schools.forEach(s => _loadedSchoolNames.add(s.name));
             fillCheckboxDd('fi-class', classes
                 .map(c => c.v)
                 .sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }))
                 .map(v => ({ value: v, name: v })));
+            fillCheckboxDd('fi-s2class', classes
+                .map(c => c.v)
+                .sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }))
+                .map(v => ({ value: v, name: v })));
+        }
+
+        // School Search Function
+        async function searchSchools(term) {
+            const t = term.replace(/'/g, "''");
+            const q = `SELECT id, name, AESL_School_Code__c as code FROM aesl_school__c
+        WHERE name ILIKE '%${t}%' OR AESL_School_Code__c ILIKE '%${t}%'
+        ORDER BY name ASC LIMIT 500 OFFSET 0`;
+            const rows = await query(q, 'aesl_school__c');
+            const fresh = rows.filter(s => s.name && !_loadedSchoolNames.has(s.name));
+            if (fresh.length) {
+                fillCheckboxDd('fi-school', fresh.map(s => ({ value: s.name, name: s.code ? `${s.name} (${s.code})` : s.name })));
+                fresh.forEach(s => _loadedSchoolNames.add(s.name));
+            }
+            return fresh.length;
         }
 
 
@@ -1948,18 +2491,26 @@
                 leadScopeWhere('associated_lead'),
                 schRangeWhere(),
                 appearedWhere(),
-                state.origin.length ? `superleap_origin IN (${sq(state.origin)})` : ''
+                state.origin.length ? `superleap_origin IN (${sq(state.origin)})` : '',
+                state.s2class.length ? `AESL_Class_Studying_In__c IN (${sq(state.s2class)})` : ''
             );
             const q = `SELECT associated_lead as lead_id, associated_lead.name as lead_name,
         associated_lead.AESL_PS_ID__c as psid, associated_lead.stage as lead_stage,
         associated_lead.AESL_Next_Follow_up_date__c as next_followup,
+        associated_lead.AESL_School_Name__c.name as school_name,
         associated_lead.owner.name as owner_name, associated_lead.owner.email as owner_email,
         associated_lead.owner.team_sales_head as rsgh,
+        associated_lead.owner.team_supervisor as supervisor,
         associated_lead.owner.user_branch_name_user_management_ as owner_branch,
+        ${SCHOL_ROLL_NUMBER} as roll, superleap_origin as origin, AESL_Exam_Mode__c as mode,
+        created_at as schol_created, AESL_Lead_Type__c as exam_type,
+    AESL_Branch_LK_c.name as schol_branch, AESL_Class_Studying_In__c as class_studying,
+    AESL_Level__c.name as term,
         associated_result.AESL_Eligible_Scholarship__c as eligible,
         associated_result.created_at as result_created,
-        ${SCHOL_EXAM_DATE} as exam_date, superleap_origin as origin
-        FROM scholarship_object WHERE ${where} __LO__`;
+        associated_result.AESL_Date_of_Exam__c as appear_date,
+        ${SCHOL_EXAM_DATE} as exam_date
+        FROM scholarship_object WHERE ${where} ORDER BY associated_lead.id ASC __LO__`;
             let rows = await paginate(q, 'scholarship_object');
             if (_qSet) rows = rows.filter(r => _qSet.has(r.lead_id));   // Qualified Status filter
             if (_vSet) rows = rows.filter(r => _vSet.has(r.lead_id));   // Visit Done filter
@@ -1969,14 +2520,9 @@
         // ── helpers ──────────────────────────────────────────────────
         function eligNum(r) { return (r.eligible === '' || r.eligible == null) ? null : Number(r.eligible); }
         function stageNorm(r) { return (r.lead_stage || '').toLowerCase().replace(/-/g, ' ').trim(); }
-        // const S2_EXCLUDE = ['admission done', 'not interested', 'not eligible'];  // NOTE: untouched NOT excluded here
-        // function isDueRow(r) {
-        //     const nf = istDayFloor(r.next_followup);
-        //     if (nf === null || nf > DATES.TODAY_S) return false;   // today or before today
-        //     const st = stageNorm(r);
-        //     return !S2_EXCLUDE.some(x => st === x || st.includes(x));
-        // }
+
         const S2_EXCLUDE = ['admission done', 'not interested', 'not eligible', 'untouched lead'];
+
         function notExcluded(r) {
             const st = stageNorm(r);
             return !S2_EXCLUDE.some(x => st === x || st.includes(x));
@@ -2004,19 +2550,8 @@
 
             // iACST
             const iAll = uniqLeads(iacstRows, taken);
-            // const i = {
-            //     digital: B('i_digital', 'iACST · Digital (API)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'API')),
-            //     self: B('i_self', 'iACST · Self (Form)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'Forms')),
-            //     bulk: B('i_bulk', 'iACST · Bulk (Upload)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'Upload')),
-            //     all: B('i_all', 'iACST · All Taken', iAll),
-            //     unt: B('i_unt', 'iACST · Untouched', uniqLeads(iacstRows, r => taken(r) && untouched(r))),
-            //     due: B('i_due', 'iACST · Follow Up Due', uniqLeads(iacstRows, r => taken(r) && isDueRow(r))),
-            //     today: B('i_today', 'iACST · Taken Today', uniqLeads(iacstRows, r => taken(r) && istDayFloor(r.result_created) === today)),
-            //     sched: B('i_sched', 'iACST · Scheduled Today Not Taken', uniqLeads(iacstRows, r => eligNum(r) === null && istDayFloor(r.exam_date) === today)),
-            // };
 
             // ANTHE
-
             const i = {
                 digital: B('i_digital', 'iACST · Digital (API)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'API')),
                 self: B('i_self', 'iACST · Self (Form)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'Forms')),
@@ -2036,18 +2571,6 @@
 
             const a60 = r => eligNum(r) !== null && eligNum(r) >= 60;
             const aB60 = r => eligNum(r) !== null && eligNum(r) < 60;
-            // const a = {
-            //     digital: B('a_digital', 'ANTHE · Digital (API)', uniqLeads(antheRows, r => taken(r) && r.origin === 'API')),
-            //     self: B('a_self', 'ANTHE · Self (Form)', uniqLeads(antheRows, r => taken(r) && r.origin === 'Forms')),
-            //     bulk: B('a_bulk', 'ANTHE · Bulk (Upload)', uniqLeads(antheRows, r => taken(r) && r.origin === 'Upload')),
-            //     all: B('a_all', 'ANTHE · All Taken', uniqLeads(antheRows, taken)),
-            //     s60: B('a_60', 'ANTHE · All 60%+', uniqLeads(antheRows, a60)),
-            //     sb60: B('a_b60', 'ANTHE · All <60%', uniqLeads(antheRows, aB60)),
-            //     unt60: B('a_unt60', 'ANTHE 60%+ · Untouched', uniqLeads(antheRows, r => a60(r) && untouched(r))),
-            //     untb60: B('a_untb60', 'ANTHE <60% · Untouched', uniqLeads(antheRows, r => aB60(r) && untouched(r))),
-            //     due60: B('a_due60', 'ANTHE 60%+ · Follow Up Due', uniqLeads(antheRows, r => a60(r) && isDueRow(r))),
-            //     dueb60: B('a_dueb60', 'ANTHE <60% · Follow Up Due', uniqLeads(antheRows, r => aB60(r) && isDueRow(r))),
-            // };
 
             const a = {
                 digital: B('a_digital', 'ANTHE · Digital (API)', uniqLeads(antheRows, r => taken(r) && r.origin === 'API')),
@@ -2072,16 +2595,6 @@
             const oCell = (k, key, v) => `<div class="s2-ocell" data-s2="${key}"><div class="k">${k}</div><div class="v">${v}</div></div>`;
             const blk = (cls, k, key, v) => `<div class="s2-block ${cls}" data-s2="${key}"><div class="k">${k}</div><div class="v">${v}</div></div>`;
 
-            //     document.getElementById('panel-iacst').innerHTML = `
-            // <div class="s2-ph"><span class="s2-badge iacst">iACST Test Takers</span><span class="s2-term">· Term 2627</span><span class="s2-live">LIVE</span></div>
-            // <div class="s2-orow">${oCell('Digital · API', 'i_digital', i.digital)}${oCell('Self · Form', 'i_self', i.self)}${oCell('Bulk · Upload', 'i_bulk', i.bulk)}${oCell('All Taken', 'i_all', i.all)}</div>
-            // <div class="s2-blocks" style="margin-top:14px">
-            //     ${blk('s2-red', 'Untouched', 'i_unt', i.unt)}
-            //     ${blk('s2-orange', 'Follow Up Due', 'i_due', i.due)}
-            //     ${blk('s2-green', 'Taken Today', 'i_today', i.today)}
-            //     ${blk('s2-purple', 'Scheduled Today · Not Taken', 'i_sched', i.sched)}
-            // </div>`;
-
             document.getElementById('panel-iacst').innerHTML = `
         <div class="s2-ph"><span class="s2-badge iacst">iACST Test Takers</span><span class="s2-term">· Term 2627</span><span class="s2-live">LIVE</span></div>
         <div class="s2-orow">${oCell('Digital · API', 'i_digital', i.digital)}${oCell('Self · Form', 'i_self', i.self)}${oCell('Bulk · Upload', 'i_bulk', i.bulk)}${oCell('All Taken', 'i_all', i.all)}</div>
@@ -2095,25 +2608,6 @@
             ${blk('s2-green', 'Taken Today', 'i_today', i.today)}
             ${blk('s2-purple', 'Scheduled Today · Not Taken', 'i_sched', i.sched)}
         </div>`;
-
-
-
-
-            //     document.getElementById('panel-anthe').innerHTML = `
-            // <div class="s2-ph"><span class="s2-badge anthe">ANTHE Test Takers</span><span class="s2-term">· Term 2627</span><span class="s2-live">LIVE</span></div>
-            // <div class="s2-orow">${oCell('Digital · API', 'a_digital', a.digital)}${oCell('Self · Form', 'a_self', a.self)}${oCell('Bulk · Upload', 'a_bulk', a.bulk)}${oCell('All', 'a_all', a.all)}</div>
-            // <div class="s2-grouplbl">Scored 60%+ · Hot</div>
-            // <div class="s2-blocks">
-            //     ${blk('s2-plain', 'All 60%+', 'a_60', a.s60)}
-            //     ${blk('s2-red', 'Untouched', 'a_unt60', a.unt60)}
-            //     ${blk('s2-orange', 'Follow Up Due', 'a_due60', a.due60)}
-            // </div>
-            // <div class="s2-grouplbl">Below 60%</div>
-            // <div class="s2-blocks">
-            //     ${blk('s2-plain', 'All <60%', 'a_b60', a.sb60)}
-            //     ${blk('s2-red', 'Untouched', 'a_untb60', a.untb60)}
-            //     ${blk('s2-orange', 'Follow Up Due', 'a_dueb60', a.dueb60)}
-            // </div>`;
 
             document.getElementById('panel-anthe').innerHTML = `
         <div class="s2-ph"><span class="s2-badge anthe">ANTHE Test Takers</span><span class="s2-term">· Term 2526</span><span class="s2-live">LIVE</span></div>
@@ -2141,10 +2635,7 @@
             document.getElementById('s2-wrap').onclick = e => {
                 const el = e.target.closest('[data-s2]'); if (!el) return;
                 const b = s2Blocks[el.dataset.s2]; if (!b) return;
-                document.getElementById('modal-title').textContent = `${b.label} — ${b.leads.length} leads`;
-                document.getElementById('modal-export').onclick = () => exportLeadsXLSX(b.leads, b.label);
-                document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(b.leads);
-                document.getElementById('modal').classList.add('active');
+                openScholDrilldown(b.leads, b.label);
             };
         }
 
@@ -2170,12 +2661,40 @@
 
 
 
+        // Helper for ay 26
+        // Clause 5: leads created on/after the AY26 cutoff that lack a product OR lack a scholarship
+        async function ay26NoOppIds() {
+            // 1) candidate leads — created after cutoff, mobile present, in current scope
+            const candWhere = and(
+                `created_at >= ${DATES.NOV1_2025}`,          // ⚠ confirm year — spec said 1 Nov 2026, constant is 2025
+                `${LEAD_PRIMARY_MOBILE} IS NOT NULL`,
+                leadScopeWhere('')                            // leads_object → empty prefix
+            );
+            const candRows = await paginate(
+                `SELECT id as lead_id FROM leads_object WHERE ${candWhere} __LO__`, 'leads_object');
+            const candidates = candRows.map(r => r.lead_id).filter(Boolean);
+            if (!candidates.length) return [];
 
+            // 2) of those candidates, which HAVE a product and which HAVE a scholarship
+            //    (scoped to candidate ids so we don't pull the whole table)
+            const hasProduct = new Set(), hasSchol = new Set();
+            const CHUNK = 500, fns = [];
+            for (let i = 0; i < candidates.length; i += CHUNK) {
+                const inC = sq(candidates.slice(i, i + CHUNK));
+                fns.push(async () => {
+                    (await query(`SELECT DISTINCT associated_lead as lead_id FROM product_object WHERE associated_lead IN (${inC}) ORDER BY associated_lead.id ASC LIMIT ${CHUNK} OFFSET 0`, 'product_object'))
+                        .forEach(r => r.lead_id && hasProduct.add(r.lead_id));
+                });
+                fns.push(async () => {
+                    (await query(`SELECT DISTINCT associated_lead as lead_id FROM scholarship_object WHERE associated_lead IN (${inC}) ORDER BY associated_lead.id ASC LIMIT ${CHUNK} OFFSET 0`, 'scholarship_object'))
+                        .forEach(r => r.lead_id && hasSchol.add(r.lead_id));
+                });
+            }
+            await runPool(fns, 4);
 
-
-
-
-
+            // 3) keep candidates missing a product OR missing a scholarship
+            return candidates.filter(id => !(hasProduct.has(id) && hasSchol.has(id)));
+        }
 
 
         // ═══════════════════════════════════════════════════════════════
@@ -2190,11 +2709,27 @@
             state.schRange = getRadio('fi-schrange');
             state.appeared = getRadio('fi-appeared');
             state.origin = getChecked('fi-origin');
+            state.s2class = getChecked('fi-s2class')
         }
 
         function updateS1Tag() {
             const t = document.querySelector('input[name=type]:checked')?.value;
             document.getElementById('s1-tag').textContent = t ? `(${TYPE_TAGS[t]})` : '';
+        }
+
+        // UTILITY FUNCTIONS
+        function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+        // escape, then restore <br> as line breaks
+        function remarksToHtml(s) {
+            if (!s) return '<span style="color:#9ca3af">No remarks.</span>';
+            return escapeHtml(s).replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+        }
+        // hold full remarks keyed by index so the cell click can look them up
+        window._remarksStore = window._remarksStore || {};
+
+        function openRemarks(idx) {
+            document.getElementById('remarks-content').innerHTML = remarksToHtml(window._remarksStore[idx]);
+            document.getElementById('remarks-modal').classList.add('active');
         }
 
 
@@ -2207,7 +2742,11 @@
             document.getElementById('apply-btn').disabled = !(rsgh && type);
         }
 
+
+        let _s1bRendered = false, _s2Rendered = false;
+
         async function onApply() {
+            _s1bRendered = false, _s2Rendered = false;
             readState();
             if (!state.rsgh.length || !state.type) return;
             document.getElementById('info-banner').style.display = 'none';
@@ -2215,6 +2754,8 @@
             document.getElementById('apply-btn').disabled = true;
             document.getElementById('run-pill').className = 'run-pill'; document.getElementById('run-pill').textContent = 'Running…';
             document.getElementById('breakdown-head').style.display = 'block';
+            document.getElementById('breakdown-body').style.display = 'none';   // collapsed by default
+            document.getElementById('breakdown-chevron').style.transform = 'rotate(0deg)';
             document.getElementById('branch-card').style.display = 'flex';
             document.getElementById('user-card').style.display = 'flex';
             document.getElementById('branch-loader').style.display = 'block';
@@ -2227,19 +2768,12 @@
                 // renderCards(computeSets(allRows));
                 window._globalSets = computeSets(allRows);
                 renderCards(window._globalSets);
-                renderTables();
+                // show + draw the funnel
                 document.getElementById('s1-grid').classList.add('show-funnel');
                 document.getElementById('funnel-card').style.display = 'block';
                 renderFunnel(allRows);
                 document.getElementById('s2-head').style.display = 'block';
-                document.getElementById('s2-wrap').style.display = 'grid';
-                document.getElementById('s2-loader').style.display = 'block';
-                [s2Data.iacst, s2Data.anthe] = await Promise.all([
-                    fetchScholCohort('iACST', TERMS.IACST_LEVEL_2627),
-                    fetchScholCohort('ANTHE', TERMS.ANTHE_LEVEL_2526),
-                ]);
-                document.getElementById('s2-loader').style.display = 'none';
-                renderSection2(s2Data.iacst, s2Data.anthe);
+
                 document.getElementById('progress-wrap').style.display = 'none';
                 ['branch', 'user'].forEach(t => { document.getElementById(t + '-loader').style.display = 'none'; document.getElementById(t + '-table').style.display = ''; });
                 const rp = document.getElementById('run-pill'); rp.className = 'run-pill ran'; rp.textContent = `${allRows.length.toLocaleString('en-IN')} leads`;
@@ -2253,6 +2787,7 @@
         }
 
         function onReset() {
+            _s1bRendered = false, _s2Rendered = false;
             document.querySelectorAll('.topbar input[type=checkbox], #fi-type input[type=radio]').forEach(c => c.checked = false);
             document.querySelectorAll('input[type=radio]').forEach(r => { if (r.value === 'all') r.checked = true; });
             document.querySelector('input[name=type][value="ay26_all"]').checked = true;
@@ -2263,7 +2798,9 @@
             document.getElementById('breakdown-head').style.display = 'none';
             document.getElementById('branch-card').style.display = 'none';
             document.getElementById('user-card').style.display = 'none';
+            document.getElementById('breakdown-body').style.display = 'none';
             document.getElementById('run-pill').className = 'run-pill'; document.getElementById('run-pill').textContent = 'Not yet run';
+            document.getElementById('s2-filters').style.display = 'none';
             document.getElementById('s2-head').style.display = 'none';
             document.getElementById('s2-wrap').style.display = 'none';
             document.getElementById('s1-grid').classList.remove('show-funnel');
@@ -2279,9 +2816,8 @@
         // ═══════════════════════════════════════════════════════════════
         document.addEventListener('DOMContentLoaded', async () => {
             renderCardShells(true);
-            // ['fi-rd', 'fi-rsgh', 'fi-branch', 'fi-tl', 'fi-owner', 'fi-datemod', 'fi-school', 'fi-class', 'fi-qualified', 'fi-visitdone', 'fi-type'].forEach(setupDropdown);
-            ['fi-rd', 'fi-rsgh', 'fi-branch', 'fi-tl', 'fi-owner', 'fi-datemod', 'fi-school', 'fi-class', 'fi-qualified', 'fi-visitdone', 'fi-type', 'fi-schrange', 'fi-appeared', 'fi-origin'].forEach(setupDropdown);
-            ['fi-schrange', 'fi-appeared', 'fi-origin'].forEach(id => {
+            ['fi-rd', 'fi-rsgh', 'fi-branch', 'fi-tl', 'fi-owner', 'fi-datemod', 'fi-school', 'fi-class', 'fi-qualified', 'fi-visitdone', 'fi-type', 'fi-schrange', 'fi-appeared', 'fi-origin', 'fi-s2class'].forEach(setupDropdown);
+            ['fi-schrange', 'fi-appeared', 'fi-origin', 'fi-s2class'].forEach(id => {
                 document.getElementById(id).querySelector('.dd')
                     .addEventListener('change', () => reloadSection2());
             });
@@ -2291,6 +2827,15 @@
             document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') document.getElementById('modal').classList.remove('active'); });
             document.getElementById('export-branch').addEventListener('click', () => exportTable('branch-table', 'By_Branch'));
             document.getElementById('export-user').addEventListener('click', () => exportTable('user-table', 'By_User'));
+            document.getElementById('drill-pager').addEventListener('click', e => {
+                if (e.target.closest('#drill-prev')) { _drill.page--; renderDrillPage(); }
+                if (e.target.closest('#drill-next')) { _drill.page++; renderDrillPage(); }
+            });
+
+            document.getElementById('modal-close').addEventListener('click', () => {
+                document.getElementById('modal').classList.remove('active');
+                document.getElementById('drill-pager').style.display = 'none';
+            });
             // for drill downs
             document.getElementById('cards').addEventListener('click', e => {
                 const card = e.target.closest('[data-cardmetric]'); if (!card) return;
@@ -2299,26 +2844,110 @@
                 const idSet = window._globalSets[metricKey];
                 const leads = allRows.filter(r => idSet.has(r.lead_id));
                 const label = METRICS.find(m => m.key === metricKey).label;
-                document.getElementById('modal-title').textContent = `${label} — ${leads.length} leads`;
-                document.getElementById('modal-export').onclick = () => exportLeadsXLSX(leads, label);
-                document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(leads);
-                document.getElementById('modal').classList.add('active');
+                openLeadDrilldown(leads, METRICS.find(m => m.key === metricKey).label);
             });
             // For funnel at right 
             document.getElementById('funnel').addEventListener('click', e => {
                 const seg = e.target.closest('[data-fkey]'); if (!seg) return;
                 const leads = funnelGroups[seg.dataset.fkey] || [];
-                const label = 'Stage · ' + FUNNEL_STAGES.find(s => s.key === seg.dataset.fkey).label;
-                document.getElementById('modal-title').textContent = `${label} — ${leads.length} leads`;
-                document.getElementById('modal-export').onclick = () => exportLeadsXLSX(leads, label);
-                document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(leads);
-                document.getElementById('modal').classList.add('active');
+                openLeadDrilldown(leads, 'Stage · ' + FUNNEL_STAGES.find(s => s.key === seg.dataset.fkey).label);
             });
+
+
+
+
+            // For Remarks modal
+            document.getElementById('remarks-close').addEventListener('click', () => document.getElementById('remarks-modal').classList.remove('active'));
+            document.getElementById('remarks-modal').addEventListener('click', e => { if (e.target.id === 'remarks-modal') document.getElementById('remarks-modal').classList.remove('active'); });
             updateFbt('fi-type');
             checkApply();
             try { await loadFilters(); } catch (e) { console.error('Filter load failed', e); }
+
+            // School: query the full table on search (debounced), then re-filter labels
+            (() => {
+                const dd = document.getElementById('fi-school').querySelector('.dd');
+                const srch = dd.querySelector('input[type=search]');
+                if (!srch) return;
+                let timer = null;
+                srch.addEventListener('input', () => {
+                    const term = srch.value.trim();
+                    clearTimeout(timer);
+                    if (term.length < 2) return;               // too short — client filter already handled it
+                    timer = setTimeout(async () => {
+                        try {
+                            await searchSchools(term);
+                            // re-run the existing client-side show/hide so new labels obey the current query
+                            const q = srch.value.toLowerCase();
+                            dd.querySelectorAll('label').forEach(l => {
+                                if (l.querySelector('.select-all')) return;
+                                l.style.display = l.textContent.toLowerCase().includes(q) ? '' : 'none';
+                            });
+                        } catch (e) { console.error('School search failed', e); }
+                    }, 350);
+                });
+            })();
+            // For Collapsible Tables
+            document.getElementById('breakdown-toggle').addEventListener('click', () => {
+                const body = document.getElementById('breakdown-body');
+                const chev = document.getElementById('breakdown-chevron');
+                const open = body.style.display !== 'none';
+                if (open) { body.style.display = 'none'; chev.style.transform = 'rotate(0deg)'; return; }
+
+                body.style.display = 'flex';                       // open immediately
+                chev.style.transform = 'rotate(180deg)';
+                if (_s1bRendered) return;
+
+                document.getElementById('branch-loader').style.display = 'block';
+                document.getElementById('user-loader').style.display = 'block';
+                document.getElementById('branch-table').style.display = 'none';
+                document.getElementById('user-table').style.display = 'none';
+                setTimeout(() => {                                  // render off the click paint
+                    renderTables();
+                    _s1bRendered = true;
+                    ['branch', 'user'].forEach(t => {
+                        document.getElementById(t + '-loader').style.display = 'none';
+                        document.getElementById(t + '-table').style.display = '';
+                    });
+                }, 20);
+            });
+
+
+
+            // For Collapsible Section 02
+            document.getElementById('s2-toggle').addEventListener('click', async () => {
+                const wrap = document.getElementById('s2-wrap');
+                const chev = document.getElementById('s2-chevron');
+                const filters = document.getElementById('s2-filters');
+                const open = wrap.style.display !== 'none';
+
+                if (open) {                                   // collapse
+                    wrap.style.display = 'none';
+                    filters.style.display = 'none';
+                    chev.style.transform = 'rotate(0deg)';
+                    return;
+                }
+
+                // expand
+                wrap.style.display = 'grid';
+                filters.style.display = 'flex';               // reveal filters now
+                chev.style.transform = 'rotate(180deg)';
+                if (_s2Rendered) return;                      // already loaded once
+
+                document.getElementById('s2-loader').style.display = 'block';
+                try {
+                    [s2Data.iacst, s2Data.anthe] = await Promise.all([
+                        fetchScholCohort('iACST', TERMS.IACST_LEVEL_2627),
+                        fetchScholCohort('ANTHE', TERMS.ANTHE_LEVEL_2526),
+                    ]);
+                    renderSection2(s2Data.iacst, s2Data.anthe);
+                    _s2Rendered = true;
+                } catch (err) { console.error('Section 2 load failed', err); }
+                finally { document.getElementById('s2-loader').style.display = 'none'; }
+            });
         });
     </script>
+
+
 </body>
 
 </html>

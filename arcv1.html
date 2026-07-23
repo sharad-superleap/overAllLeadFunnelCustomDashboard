@@ -8,9 +8,11 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Overall Lead Funnel Dashboard</title>
+    <title>Overall Lead Funnel Dashboard · Optimized</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.8/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/11.4.8/highcharts-3d.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -655,6 +657,44 @@
             color: #991b1b;
         }
 
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 10px 0 2px;
+            color: #737373;
+            font-size: 12px;
+        }
+
+        .pagination-controls button {
+            min-width: 76px;
+            padding: 7px 12px;
+            border: 1px solid #d8dada;
+            border-radius: 8px;
+            background: #fff;
+            color: #175259;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .pagination-controls button:hover:not(:disabled) {
+            background: #f5feff;
+        }
+
+        .pagination-controls button:disabled {
+            color: #a4a6a5;
+            cursor: not-allowed;
+            background: #f4f6f6;
+        }
+
+        .s2-filter-status {
+            align-self: center;
+            color: #737373;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
         .loader {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #175259;
@@ -1022,19 +1062,6 @@
 
         /* Drill down new configs */
 
-        /* .modal-body td .remarks {
-            max-width: 240px;
-            white-space: normal;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .modal-body td .remarks.exp {
-            -webkit-line-clamp: unset;
-        } */
         .modal-body td .remarks {
             max-width: 240px;
             white-space: nowrap;
@@ -1082,7 +1109,7 @@
             <div class="fi" id="fi-datemod"><span class="fi-label">Data Modified At</span><button class="fi-btn"><span
                         class="fbt ph" id="fbt-datemod">All Time</span><span class="arr">▼</span></button>
                 <div class="dd">
-                    <label><input type="radio" name="datemod" value="all" checked> All Time</label>
+                    <label><input type="radio" name="datemod" value="all" checked=""> All Time</label>
                     <label><input type="radio" name="datemod" value="today"> Today</label>
                     <label><input type="radio" name="datemod" value="yesterday"> Yesterday</label>
                     <label><input type="radio" name="datemod" value="last7"> Last 7 Days</label>
@@ -1102,7 +1129,7 @@
             <div class="fi" id="fi-qualified"><span class="fi-label">Qualified Status</span><button class="fi-btn"><span
                         class="fbt ph" id="fbt-qualified">All Time</span><span class="arr">▼</span></button>
                 <div class="dd">
-                    <label><input type="radio" name="qualified" value="all" checked> All Time</label>
+                    <label><input type="radio" name="qualified" value="all" checked=""> All Time</label>
                     <label><input type="radio" name="qualified" value="today"> Today</label>
                     <label><input type="radio" name="qualified" value="yesterday"> Yesterday</label>
                     <label><input type="radio" name="qualified" value="last7"> Last 7 Days</label>
@@ -1115,7 +1142,7 @@
                     class="fi-btn"><span class="fbt ph" id="fbt-visitdone">All Time</span><span
                         class="arr">▼</span></button>
                 <div class="dd">
-                    <label><input type="radio" name="visitdone" value="all" checked> All Time</label>
+                    <label><input type="radio" name="visitdone" value="all" checked=""> All Time</label>
                     <label><input type="radio" name="visitdone" value="today"> Today</label>
                     <label><input type="radio" name="visitdone" value="yesterday"> Yesterday</label>
                     <label><input type="radio" name="visitdone" value="last7"> Last 7 Days</label>
@@ -1149,11 +1176,12 @@
                             <label><input type="radio" name="type" value="anthe_minus"> ANTHE 60%-</label>
                             <label><input type="radio" name="type" value="neet_bulk"> NEET Bulk Uploaded</label>
                             <label><input type="radio" name="type" value="neet_rank"> NEET Rank Predictor</label>
-                            <label><input type="radio" name="type" value="ay26_all" checked> AY26 - All Leads</label>
+                            <label><input type="radio" name="type" value="ay26_all" checked=""> AY26 - All Leads</label>
                         </div>
                     </div>
                     <button class="btn-reset" id="reset-btn"><i class="fas fa-undo"></i> Reset</button>
-                    <button class="btn-apply" id="apply-btn" disabled><i class="fas fa-play"></i> Apply & Run</button>
+                    <button class="btn-apply" id="apply-btn" disabled=""><i class="fas fa-play"></i> Apply &amp;
+                        Run</button>
                 </div>
             </div>
         </div>
@@ -1171,7 +1199,6 @@
         </div>
 
         <!-- CARDS -->
-        <!-- <div class="cards" id="cards"></div> -->
         <div class="s1-grid" id="s1-grid">
             <div class="cards" id="cards"></div>
             <div class="funnel-card" id="funnel-card" style="display:none">
@@ -1183,42 +1210,49 @@
         <!-- SECTION 1B HEAD -->
         <div id="breakdown-head" style="display:none">
             <div class="sec-eyebrow">Section 01B · Priority Breakdown</div>
-            <div class="sec-title">Today's queue <em>by RSGH &amp; user</em></div>
+            <div class="sec-title" id="breakdown-toggle"
+                style="cursor:pointer;display:flex;align-items:center;gap:10px">
+                Today's queue <em>by RSGH &amp; user</em>
+                <i class="fas fa-chevron-down" id="breakdown-chevron"
+                    style="font-size:14px;color:#6b7280;transition:transform .2s"></i>
+            </div>
         </div>
 
         <!-- BRANCH TABLE -->
-        <div class="report-card" id="branch-card">
-            <div class="report-card-head">
-                <div>
-                    <div class="report-card-title">By Branch</div>
-                    <div class="report-card-sub">Grouped by user's branch · selected RSGH cohort</div>
+        <div id="breakdown-body" style="display:none;flex-direction:column;gap:20px">
+            <div class="report-card" id="branch-card">
+                <div class="report-card-head">
+                    <div>
+                        <div class="report-card-title">By Branch</div>
+                        <div class="report-card-sub">Grouped by user's branch · selected RSGH cohort</div>
+                    </div>
+                    <button class="export-btn" id="export-branch"><i class="fas fa-download"></i> Export</button>
                 </div>
-                <button class="export-btn" id="export-branch"><i class="fas fa-download"></i> Export</button>
+                <div class="loader" id="branch-loader" style="display:none"></div>
+                <div class="table-wrap">
+                    <table id="branch-table">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="loader" id="branch-loader" style="display:none"></div>
-            <div class="table-wrap">
-                <table id="branch-table">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
 
-        <!-- USER TABLE -->
-        <div class="report-card" id="user-card">
-            <div class="report-card-head">
-                <div>
-                    <div class="report-card-title">By User</div>
-                    <div class="report-card-sub">Grouped by RSGH → Branch → Owner</div>
+            <!-- USER TABLE -->
+            <div class="report-card" id="user-card">
+                <div class="report-card-head">
+                    <div>
+                        <div class="report-card-title">By User</div>
+                        <div class="report-card-sub">Grouped by RSGH → Branch → Owner</div>
+                    </div>
+                    <button class="export-btn" id="export-user"><i class="fas fa-download"></i> Export</button>
                 </div>
-                <button class="export-btn" id="export-user"><i class="fas fa-download"></i> Export</button>
-            </div>
-            <div class="loader" id="user-loader" style="display:none"></div>
-            <div class="table-wrap">
-                <table id="user-table">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
+                <div class="loader" id="user-loader" style="display:none"></div>
+                <div class="table-wrap">
+                    <table id="user-table">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -1232,7 +1266,7 @@
                         class="fi-btn"><span class="fbt ph" id="fbt-schrange">All Scholarship</span><span
                             class="arr">▼</span></button>
                     <div class="dd">
-                        <label><input type="radio" name="schrange" value="all" checked> All Scholarship</label>
+                        <label><input type="radio" name="schrange" value="all" checked=""> All Scholarship</label>
                         <label><input type="radio" name="schrange" value="zero"> 0%</label>
                         <label><input type="radio" name="schrange" value="1to44"> 1% – 44%</label>
                         <label><input type="radio" name="schrange" value="45to59"> 45% – 59%</label>
@@ -1243,7 +1277,7 @@
                 <div class="fi" id="fi-appeared"><span class="fi-label">Appeared Date</span><button class="fi-btn"><span
                             class="fbt ph" id="fbt-appeared">All Time</span><span class="arr">▼</span></button>
                     <div class="dd">
-                        <label><input type="radio" name="appeared" value="all" checked> All Time</label>
+                        <label><input type="radio" name="appeared" value="all" checked=""> All Time</label>
                         <label><input type="radio" name="appeared" value="today"> Today</label>
                         <label><input type="radio" name="appeared" value="yesterday"> Yesterday</label>
                         <label><input type="radio" name="appeared" value="last7"> Last 7 Days</label>
@@ -1260,6 +1294,15 @@
                         <label><input type="checkbox" value="Upload" data-name="Upload"> Upload</label>
                     </div>
                 </div>
+                <div class="fi" id="fi-s2class"><span class="fi-label">Class Studying In</span><button
+                        class="fi-btn"><span class="fbt ph" id="fbt-s2class">All Classes</span><span
+                            class="arr">▼</span></button>
+                    <div class="dd"><input type="search" placeholder="Search..."><label><input type="checkbox"
+                                class="select-all"> Select All</label></div>
+                </div>
+                <button class="btn-apply" id="s2-apply-btn" disabled=""><i class="fas fa-filter"></i> Apply Section
+                    2</button>
+                <span class="s2-filter-status" id="s2-filter-status">Filters applied</span>
             </div>
         </div>
 
@@ -1300,7 +1343,7 @@
             </div>
         </div>
     </div>
-    </div>
+
 
     <script>
         // ═══════════════════════════════════════════════════════════════
@@ -1313,6 +1356,7 @@
 
         const IST = 5.5 * 60 * 60 * 1000;
 
+        const _loadedSchoolNames = new Set();
 
 
         // CONFIGS TO ONLY USE IN DRILL DOWNS
@@ -1374,7 +1418,7 @@
         //   AESL_Date_of_Exam__c (exam date), associated_result.AESL_Eligible_Scholarship__c
         const SCHOL_EXAM_DATE = 'AESL_Date_of_Exam__c';   // TODO confirm
         // Field on product_object holding Term — confirm:
-        const PRODUCT_TERM_FIELD = 'AESL_Level__c';         // TODO confirm
+        const PRODUCT_TERM_FIELD = 'AESL_Level__c.name';         // TODO confirm
         // Lead primary mobile field — confirm:
         const LEAD_PRIMARY_MOBILE = 'AESL_Primary_Mobile_Number__c'; // TODO confirm
 
@@ -1422,34 +1466,163 @@
 
         const funnelGroups = {};   // stageKey -> [rows]
 
+        /*function renderFunnel(rows) {
+            Object.keys(funnelGroups).forEach(k => delete funnelGroups[k]);
+            FUNNEL_STAGES.forEach(s => funnelGroups[s.key] = []);
+            rows.forEach(r => { const k = funnelStageOf(r); if (k) funnelGroups[k].push(r); });
+
+            const total = FUNNEL_STAGES.reduce((s, st) => s + funnelGroups[st.key].length, 0);
+            const cx = 130, cy = 130, R = 120;
+            let acc = 0;
+            const slices = FUNNEL_STAGES.map(s => {
+                const count = funnelGroups[s.key].length;
+                const frac = total ? count / total : 0;
+                const a0 = acc * 2 * Math.PI - Math.PI / 2;
+                acc += frac;
+                const a1 = acc * 2 * Math.PI - Math.PI / 2;
+                const large = frac > 0.5 ? 1 : 0;
+                const x0 = cx + R * Math.cos(a0), y0 = cy + R * Math.sin(a0);
+                const x1 = cx + R * Math.cos(a1), y1 = cy + R * Math.sin(a1);
+                const d = count === 0 ? '' :
+                    (frac >= 0.9999
+                        ? `M ${cx} ${cy - R} A ${R} ${R} 0 1 1 ${cx - 0.01} ${cy - R} Z`
+                        : `M ${cx} ${cy} L ${x0} ${y0} A ${R} ${R} 0 ${large} 1 ${x1} ${y1} Z`);
+                return { s, count, frac, d };
+            });
+
+            const svg = `<svg viewBox="0 0 260 260" style="width:100%;max-width:260px;display:block;margin:0 auto">
+        ${slices.filter(z => z.d).map(z =>
+                `<path d="${z.d}" fill="${z.s.color}" stroke="#fff" stroke-width="2"
+                data-fkey="${z.s.key}" style="cursor:pointer" />`).join('')}
+    </svg>`;
+
+            const legend = `<div style="display:flex;flex-direction:column;gap:6px;margin-top:14px">
+        ${FUNNEL_STAGES.map(s => {
+                const count = funnelGroups[s.key].length;
+                const pct = total ? Math.round(count / total * 100) : 0;
+                return `<div data-fkey="${s.key}" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px">
+                <span style="width:12px;height:12px;border-radius:3px;background:${s.color};flex-shrink:0"></span>
+                <span style="font-weight:700;color:#374151">${s.label}</span>
+                <span style="margin-left:auto;color:#6b7280">${count.toLocaleString('en-IN')} · ${pct}%</span>
+            </div>`;
+            }).join('')}
+    </div>`;
+
+            document.getElementById('funnel').innerHTML = svg + legend;
+        }
+
+        */
+
+
+
+        let _funnelChart = null;
+
         function renderFunnel(rows) {
             Object.keys(funnelGroups).forEach(k => delete funnelGroups[k]);
             FUNNEL_STAGES.forEach(s => funnelGroups[s.key] = []);
             rows.forEach(r => { const k = funnelStageOf(r); if (k) funnelGroups[k].push(r); });
 
-            const n = FUNNEL_STAGES.length;
-            document.getElementById('funnel').innerHTML = FUNNEL_STAGES.map((s, i) => {
-                const w = 100 - i * (58 / (n - 1));   // 100% (top) tapering to 42% (bottom)
+            const total = FUNNEL_STAGES.reduce((s, st) => s + funnelGroups[st.key].length, 0);
+            if (!total) { document.getElementById('funnel').innerHTML = '<div style="padding:30px;text-align:center;color:#9ca3af">No stage data.</div>'; return; }
+
+            // Geometry
+            const W = 520, H = 340, cx = W / 2, cy = 150;   // wider viewBox for label room; smaller pie
+            const rx = 110, ry = 60;                        // smaller ellipse radii
+            const depth = 32;                               // thinner 3D edge
+            const TAU = Math.PI * 2;
+            const START = -Math.PI / 2;                     // start at top
+
+            // darken a hex color for the side walls
+            const dark = (hex, f = 0.62) => {
+                const n = parseInt(hex.slice(1), 16);
+                const r = Math.round(((n >> 16) & 255) * f), g = Math.round(((n >> 8) & 255) * f), b = Math.round((n & 255) * f);
+                return `rgb(${r},${g},${b})`;
+            };
+            const ptOnTop = a => [cx + rx * Math.cos(a), cy + ry * Math.sin(a)];
+            const topArc = (a0, a1) => {   // path of the top ellipse face for a slice
+                const [x0, y0] = ptOnTop(a0), [x1, y1] = ptOnTop(a1);
+                const large = (a1 - a0) % TAU > Math.PI ? 1 : 0;
+                return `M ${cx} ${cy} L ${x0} ${y0} A ${rx} ${ry} 0 ${large} 1 ${x1} ${y1} Z`;
+            };
+
+            // build slices
+            let acc = 0;
+            const slices = FUNNEL_STAGES.map(s => {
                 const count = funnelGroups[s.key].length;
-                return `<div class="funnel-seg" data-fkey="${s.key}" style="width:${w}%;background:${s.color}">
-            <span class="fl">${s.label}</span><span class="fv">${count.toLocaleString('en-IN')}</span>
-        </div>`;
-            }).join('');
+                const frac = count / total;
+                const a0 = START + acc * TAU;
+                acc += frac;
+                const a1 = START + acc * TAU;
+                const mid = (a0 + a1) / 2;
+                return { s, count, frac, a0, a1, mid };
+            }).filter(z => z.count > 0);
+
+            // ── side walls: only the front-facing arc (angles whose sin>0, i.e. bottom half) show depth.
+            // We draw walls for every slice's arc portion that faces the viewer, back-to-front.
+            const wallPaths = [];
+            slices.forEach(z => {
+                // sample the arc; draw wall quads where the arc is on the front (sin(a) > 0)
+                const steps = Math.max(2, Math.ceil((z.a1 - z.a0) / 0.12));
+                for (let i = 0; i < steps; i++) {
+                    const b0 = z.a0 + (z.a1 - z.a0) * (i / steps);
+                    const b1 = z.a0 + (z.a1 - z.a0) * ((i + 1) / steps);
+                    const mids = Math.sin((b0 + b1) / 2);
+                    if (mids <= 0) continue;                 // back-facing, hidden
+                    const [xa, ya] = ptOnTop(b0), [xb, yb] = ptOnTop(b1);
+                    wallPaths.push({
+                        z: mids,   // draw order: larger sin = more front
+                        d: `M ${xa} ${ya} L ${xb} ${yb} L ${xb} ${yb + depth} L ${xa} ${ya + depth} Z`,
+                        fill: dark(z.s.color),
+                    });
+                }
+            });
+            wallPaths.sort((p, q) => p.z - q.z);   // back first, front last
+
+            // ── labels with leader lines
+            const LABEL_H = 30;              // min vertical gap between labels on the same side
+            const build = (arr, right) => {
+                // desired y = slice edge y; then spread so neighbours are >= LABEL_H apart
+                arr.sort((a, b) => a.ey - b.ey);
+                for (let i = 1; i < arr.length; i++)
+                    if (arr[i].ey - arr[i - 1].ly < LABEL_H) arr[i].ly = arr[i - 1].ly + LABEL_H;
+                    else arr[i].ly = arr[i].ey;
+                // shift whole column up a bit so the top label clears the pie top
+                arr.forEach(a => a.ly -= 18);
+                // keep within top bound
+                if (arr.length && arr[0].ly < 20) {
+                    const under = 20 - arr[0].ly;
+                    arr.forEach(a => a.ly += under);
+                }
+                return arr.map(z => {
+                    const pct = Math.round(z.frac * 100);
+                    const tx = cx + (right ? 1 : -1) * (rx + 40);   // text anchor x
+                    return `
+                <line x1="${z.ex}" y1="${z.ey}" x2="${tx - (right ? 6 : -6)}" y2="${z.ly}" stroke="#9ca3af" stroke-width="1.2"/>
+                <text x="${tx}" y="${z.ly - 3}" text-anchor="${right ? 'start' : 'end'}"
+                    style="font-size:10px;font-weight:700;fill:#374151">${z.s.label}</text>
+                <text x="${tx}" y="${z.ly + 12}" text-anchor="${right ? 'start' : 'end'}"
+                    style="font-size:9px;fill:#6b7280">${z.count.toLocaleString('en-IN')} · ${pct}%</text>`;
+                }).join('');
+            };
+
+            const lab = slices.map(z => {
+                const [ex, ey] = ptOnTop(z.mid);
+                return { s: z.s, count: z.count, frac: z.frac, ex, ey, ly: ey, right: Math.cos(z.mid) >= 0 };
+            });
+
+            const labels = build(lab.filter(l => l.right), true) + build(lab.filter(l => !l.right), false);
+
+            const topFaces = slices.map(z =>
+                `<path d="${topArc(z.a0, z.a1)}" fill="${z.s.color}" stroke="#fff" stroke-width="1.5"
+            data-fkey="${z.s.key}" style="cursor:pointer"/>`).join('');
+
+            document.getElementById('funnel').innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
+            ${wallPaths.map(w => `<path d="${w.d}" fill="${w.fill}" stroke="${w.fill}" stroke-width="0.5"/>`).join('')}
+            ${topFaces}
+            ${labels}
+        </svg>`;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // ═══════════════════════════════════════════════════════════════
         // STATE
@@ -1457,7 +1630,7 @@
         const state = {
             rd: [], rsgh: [], branch: [], tl: [], owner: [], school: [], class: [],
             dateMod: 'all', qualified: 'all', visitDone: 'all', type: null,
-            currentDd: null, schRange: 'all', appeared: 'all', origin: [],
+            currentDd: null, schRange: 'all', appeared: 'all', origin: [], s2class: []
         };
 
         let _allUsers = null;   // cached full user list
@@ -1472,27 +1645,52 @@
         // API HELPERS
         // ═══════════════════════════════════════════════════════════════
         function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-        async function safe(fn, retries = 3) {
+        const _controllers = { main: null, section2: null, drill: null };
+        const _requestSeq = { main: 0, section2: 0, drill: 0 };
+        let _lastSection2Signature = '';
+
+        function startRequest(channel) {
+            _controllers[channel]?.abort();
+            const controller = new AbortController();
+            _controllers[channel] = controller;
+            return { controller, id: ++_requestSeq[channel] };
+        }
+        function isCurrentRequest(channel, id) {
+            return _requestSeq[channel] === id && !_controllers[channel]?.signal.aborted;
+        }
+        async function safe(fn, retries = 1) {
+            let lastError;
             for (let i = 0; i < retries; i++) {
                 try { return await fn(); }
-                catch (e) { console.warn(`Attempt ${i + 1}/${retries}:`, e.message); if (i < retries - 1) await sleep(600 * (i + 1)); }
+                catch (e) {
+                    if (e?.name === 'AbortError') throw e; // cancelled work must never retry
+                    lastError = e;
+                    console.warn(`Attempt ${i + 1}/${retries}:`, e.message);
+                    if (i < retries - 1) await sleep(600 * (i + 1));
+                }
             }
-            return [];
+            throw lastError || new Error('Query failed');
         }
-        async function query(q, slug) {
+        async function query(q, slug, options = {}) {
             return safe(async () => {
-                const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ query: q, slug }) });
+                const r = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ query: q, slug }),
+                    signal: options.signal,
+                });
                 if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
                 const j = await r.json();
                 if (!j.success) throw new Error(j.data?.message || 'API error');
                 return j.data.records || [];
             });
         }
-        async function paginate(q, slug, batch = 5000) {
+        async function paginate(q, slug, batch = 5000, options = {}) {
             let all = [], off = 0, more = true;
             while (more) {
+                if (options.signal?.aborted) throw new DOMException('Aborted', 'AbortError');
                 const pq = q.replace('__LO__', `LIMIT ${batch} OFFSET ${off}`);
-                const b = await query(pq, slug);
+                const b = await query(pq, slug, options);
                 all = all.concat(b); more = b.length === batch; off += batch;
             }
             return all;
@@ -1540,47 +1738,47 @@
         // ═══════════════════════════════════════════════════════════════
         // TYPE-OF-LEADS RESOLVERS  -> Set of lead ids
         // ═══════════════════════════════════════════════════════════════
-        async function scholIds(extraWhere) {
+        async function scholIds(extraWhere, options = {}) {
             const where = and(extraWhere, leadScopeWhere('associated_lead'));
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM scholarship_object WHERE ${where} __LO__`, 'scholarship_object');
+            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM scholarship_object WHERE ${where} __LO__`, 'scholarship_object', 5000, options);
             return rows.map(r => r.lead_id).filter(Boolean);
         }
-        async function productIds(extraWhere) {
+        async function productIds(extraWhere, options = {}) {
             const where = and(extraWhere, leadScopeWhere('associated_lead'));
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM product_object WHERE ${where} __LO__`, 'product_object');
+            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM product_object WHERE ${where} __LO__`, 'product_object', 5000, options);
             return rows.map(r => r.lead_id).filter(Boolean);
         }
 
         const RESOLVERS = {
-            iacst_taken: () => scholIds(and(
+            iacst_taken: (options = {}) => scholIds(and(
                 `AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`,
-                `associated_result.AESL_Eligible_Scholarship__c IS NOT NULL`)),
-            iacst_nottaken: () => scholIds(and(
+                `associated_result.AESL_Eligible_Scholarship__c IS NOT NULL`), options),
+            iacst_nottaken: (options = {}) => scholIds(and(
                 `AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`,
-                `associated_result.AESL_Eligible_Scholarship__c IS NULL`)),
-            anthe_plus: () => scholIds(and(
+                `associated_result.AESL_Eligible_Scholarship__c IS NULL`), options),
+            anthe_plus: (options = {}) => scholIds(and(
                 `AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`,
                 `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`,
-                `associated_result.AESL_Eligible_Scholarship__c > 59`)),
-            anthe_minus: () => scholIds(and(
+                `associated_result.AESL_Eligible_Scholarship__c > 59`), options),
+            anthe_minus: (options = {}) => scholIds(and(
                 `AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`,
                 `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`,
-                `associated_result.AESL_Eligible_Scholarship__c < 60`)),
-            neet_bulk: () => productIds(and(
+                `associated_result.AESL_Eligible_Scholarship__c < 60`), options),
+            neet_bulk: (options = {}) => productIds(and(
                 `(AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c = '1512' OR AESL_Campaign_Id_c.AESL_Campaign_Unique_Number__c = '2020')`,
-                `created_at >= ${DATES.MAY1_2026}`)),
-            neet_rank: () => productIds(and(
+                `created_at >= ${DATES.MAY1_2026}`), options),
+            neet_rank: (options = {}) => productIds(and(
                 `AESL_Source__c ILIKE '%NEET Rank College Predictor LP%'`,
-                `created_at >= ${DATES.MAY1_2026}`)),
+                `created_at >= ${DATES.MAY1_2026}`), options),
             // AY26 - All Leads = (1..5) AND primary mobile not empty.
             // Union of resolvable parts; the "no product/scholarship" branch (part 5)
             // needs a backend anti-join not expressible here — see notes.
-            ay26_all: async () => {
+            ay26_all: async (options = {}) => {
                 const parts = await Promise.all([
-                    scholIds(and(`AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`)),
-                    scholIds(and(`AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`, `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`)),
-                    scholIds(and(`AESL_Lead_Type__c = 'IAT'`, `AESL_Level__c.id = '${TERMS.IAT_LEVEL_2526}'`, `${SCHOL_EXAM_DATE} >= ${DATES.JUL1_2025}`)),
-                    productIds(`${PRODUCT_TERM_FIELD} IN (${sq(TERMS.PRODUCT_TERMS_2627_2630)})`),
+                    scholIds(and(`AESL_Lead_Type__c = 'iACST'`, `AESL_Level__c.id = '${TERMS.IACST_LEVEL_2627}'`), options),
+                    scholIds(and(`AESL_Lead_Type__c = 'ANTHE'`, `AESL_Level__c.id = '${TERMS.ANTHE_LEVEL_2526}'`, `${SCHOL_EXAM_DATE} >= ${DATES.OCT1_2025}`), options),
+                    scholIds(and(`AESL_Lead_Type__c = 'IAT'`, `AESL_Level__c.id = '${TERMS.IAT_LEVEL_2526}'`, `${SCHOL_EXAM_DATE} >= ${DATES.JUL1_2025}`), options),
+                    productIds(`${PRODUCT_TERM_FIELD} IN (${sq(TERMS.PRODUCT_TERMS_2627_2630)})`, options),
                 ]);
                 return parts.flat();  // primary-mobile-not-empty enforced in detail fetch
             },
@@ -1590,29 +1788,29 @@
         // OPTIONAL call_disposition FILTERS  (Qualified / Visit Done)
         // return Set of lead ids or null (no filter)
         // ═══════════════════════════════════════════════════════════════
-        async function qualifiedLeadIds() {
+        async function qualifiedLeadIds(options = {}) {
             const r = dateRange(state.qualified); if (!r) return null;
             const where = and(
                 `created_at >= ${r[0]}`, `created_at <= ${r[1]}`,
                 `(conversation_status IN ('Visit Done','Counseling Done') OR follow_up_mode IN ('Branch Visit','Home Visit'))`
             );
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM call_disposition_object WHERE ${where} __LO__`, 'call_disposition_object');
+            const rows = await paginate(`SELECT DISTINCT leads_object as lead_id FROM leads_object_call_disposition WHERE ${where} __LO__`, 'leads_object_call_disposition', 5000, options);
             return new Set(rows.map(r => r.lead_id).filter(Boolean));
         }
-        async function visitDoneLeadIds() {
+        async function visitDoneLeadIds(options = {}) {
             const r = dateRange(state.visitDone); if (!r) return null;
             const where = and(
                 `created_at >= ${r[0]}`, `created_at <= ${r[1]}`,
                 `conversation_status = 'Visit Done'`
             );
-            const rows = await paginate(`SELECT DISTINCT associated_lead as lead_id FROM call_disposition_object WHERE ${where} __LO__`, 'call_disposition_object');
+            const rows = await paginate(`SELECT DISTINCT leads_object as lead_id FROM leads_object_call_disposition WHERE ${where} __LO__`, 'leads_object_call_disposition', 5000, options);
             return new Set(rows.map(r => r.lead_id).filter(Boolean));
         }
 
         // ═══════════════════════════════════════════════════════════════
         // FETCH LEAD DETAILS
         // ═══════════════════════════════════════════════════════════════
-        async function fetchLeadDetails(ids) {
+        async function fetchLeadDetails(ids, options = {}) {
             if (!ids.length) return [];
             const CHUNK = 500, chunks = [];
             for (let i = 0; i < ids.length; i += CHUNK) chunks.push(ids.slice(i, i + CHUNK));
@@ -1632,7 +1830,7 @@
                     owner.team_supervisor as supervisor,
                     owner.user_branch_name_user_management_ as owner_branch
                     FROM leads_object WHERE id IN (${inC})${dmWhere} LIMIT ${CHUNK} OFFSET 0`;
-                return query(q, 'leads_object');
+                return query(q, 'leads_object', options);
             });
             const res = await runPool(fns, 4);
             return res.flat();
@@ -1643,7 +1841,7 @@
         // ═══════════════════════════════════════════════════════════════
 
         // Lead-level detail for the clicked ids
-        async function fetchDrilldownLeadDetails(ids) {
+        async function fetchDrilldownLeadDetails(ids, options = {}) {
             const map = {}; if (!ids.length) return map;
             const CHUNK = 500, chunks = [];
             for (let i = 0; i < ids.length; i += CHUNK) chunks.push(ids.slice(i, i + CHUNK));
@@ -1659,14 +1857,14 @@
             owner.name as owner_name, owner.email as owner_email,
             owner.team_supervisor as supervisor, owner.team_sales_head as rsgh
             FROM leads_object WHERE id IN (${inC}) LIMIT ${CHUNK} OFFSET 0`;
-                return query(q, 'leads_object');
+                return query(q, 'leads_object', options);
             });
             (await runPool(fns, 4)).flat().forEach(r => { if (r.lead_id) map[r.lead_id] = r; });
             return map;
         }
 
         // Scholarship aggregates: iACST registered (roll not empty), highest iACST %, highest ANTHE %
-        async function fetchScholAggregates(ids) {
+        async function fetchScholAggregates(ids, options = {}) {
             const map = {}; if (!ids.length) return map;
             const CHUNK = 500, chunks = [];
             for (let i = 0; i < ids.length; i += CHUNK) chunks.push(ids.slice(i, i + CHUNK));
@@ -1674,9 +1872,10 @@
                 const inC = ch.map(id => `'${id}'`).join(',');
                 const q = `SELECT associated_lead as lead_id, AESL_Lead_Type__c as ltype,
             AESL_Level__c.id as level_id, ${SCHOL_EXAM_DATE} as exam_date,
+            ${SCHOL_ROLL_NUMBER} as roll,
             associated_result.AESL_Eligible_Scholarship__c as eligible
             FROM scholarship_object WHERE associated_lead IN (${inC}) LIMIT ${CHUNK} OFFSET 0`;
-                return query(q, 'scholarship_object');
+                return query(q, 'scholarship_object', options);
             });
             (await runPool(fns, 4)).flat().forEach(r => {
                 const id = r.lead_id; if (!id) return;
@@ -1696,27 +1895,50 @@
 
 
 
-        async function openLeadDrilldown(leads, label) {
-            const ids = [...new Set(leads.map(l => l.lead_id).filter(Boolean))];
-            document.getElementById('modal-title').textContent = `${label} — ${ids.length} leads`;
-            document.getElementById('modal-export').onclick = null;
-            document.getElementById('modal-body-content').innerHTML = '<div class="loader"></div>';
-            document.getElementById('modal').classList.add('active');
-            try {
-                const [detailMap, scholMap] = await Promise.all([
-                    fetchDrilldownLeadDetails(ids),
-                    fetchScholAggregates(ids),
-                ]);
-                const enriched = ids.map(id => ({ lead_id: id, ...(detailMap[id] || {}), ...(scholMap[id] || {}) }));
-                document.getElementById('modal-export').onclick = () => exportDrilldownXLSX(enriched, label);
-                document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(enriched);
-            } catch (e) {
-                console.error(e);
-                document.getElementById('modal-body-content').innerHTML = '<div style="padding:20px;color:#991b1b">Failed to load lead details.</div>';
-            }
+        const DRILL_PAGE_SIZE = 100;
+
+        function renderPager(page, total, onPage) {
+            const pages = Math.max(1, Math.ceil(total / DRILL_PAGE_SIZE));
+            const wrap = document.createElement('div');
+            wrap.className = 'pagination-controls';
+            wrap.innerHTML = `<span>${total.toLocaleString('en-IN')} records · Page ${page + 1} of ${pages}</span>
+                <button type="button" data-prev ${page === 0 ? 'disabled' : ''}>← Previous</button>
+                <button type="button" data-next ${page >= pages - 1 ? 'disabled' : ''}>Next →</button>`;
+            wrap.querySelector('[data-prev]').onclick = () => onPage(page - 1);
+            wrap.querySelector('[data-next]').onclick = () => onPage(page + 1);
+            return wrap;
         }
 
-
+        async function openLeadDrilldown(leads, label) {
+            const ids = [...new Set(leads.map(l => l.lead_id).filter(Boolean))];
+            const loadPage = async (page) => {
+                const { controller, id } = startRequest('drill');
+                const start = page * DRILL_PAGE_SIZE;
+                const pageIds = ids.slice(start, start + DRILL_PAGE_SIZE);
+                document.getElementById('modal-title').textContent = `${label} — ${ids.length} leads`;
+                document.getElementById('modal-export').onclick = null;
+                document.getElementById('modal-body-content').innerHTML = '<div class="loader"></div>';
+                document.getElementById('modal').classList.add('active');
+                try {
+                    const options = { signal: controller.signal };
+                    const [detailMap, scholMap] = await Promise.all([
+                        fetchDrilldownLeadDetails(pageIds, options),
+                        fetchScholAggregates(pageIds, options),
+                    ]);
+                    if (!isCurrentRequest('drill', id)) return;
+                    const enriched = pageIds.map(leadId => ({ lead_id: leadId, ...(detailMap[leadId] || {}), ...(scholMap[leadId] || {}) }));
+                    document.getElementById('modal-export').onclick = () => exportDrilldownXLSX(enriched, `${label}_page_${page + 1}`);
+                    const body = document.getElementById('modal-body-content');
+                    body.innerHTML = renderDrilldownTable(enriched);
+                    body.appendChild(renderPager(page, ids.length, loadPage));
+                } catch (e) {
+                    if (e?.name === 'AbortError') return;
+                    console.error(e);
+                    document.getElementById('modal-body-content').innerHTML = '<div style="padding:20px;color:#991b1b">Failed to load lead details.</div>';
+                }
+            };
+            await loadPage(0);
+        }
 
 
 
@@ -1725,7 +1947,7 @@
         // ═══════════════════════════════════════════════════════════════
         // ORCHESTRATOR
         // ═══════════════════════════════════════════════════════════════
-        async function fetchAll() {
+        async function fetchAll(options = {}) {
             const steps = [
                 { key: 'resolve', label: 'Resolve lead type' },
                 { key: 'cd', label: 'Qualified / Visit filters' },
@@ -1736,13 +1958,13 @@
 
             // 1) resolve type -> unique ids
             let ids = [];
-            try { ids = [...new Set(await RESOLVERS[state.type]())]; setStep('resolve', 'done'); }
+            try { ids = [...new Set(await RESOLVERS[state.type](options))]; setStep('resolve', 'done'); }
             catch (e) { setStep('resolve', 'error'); throw e; }
             setProgress(40);
 
             // 2) optional call_disposition intersections
             let qSet = null, vSet = null;
-            try { [qSet, vSet] = await Promise.all([qualifiedLeadIds(), visitDoneLeadIds()]); setStep('cd', 'done'); }
+            try { [qSet, vSet] = await Promise.all([qualifiedLeadIds(options), visitDoneLeadIds(options)]); setStep('cd', 'done'); }
             catch (e) { setStep('cd', 'error'); console.error(e); }
             if (qSet) ids = ids.filter(id => qSet.has(id));
             if (vSet) ids = ids.filter(id => vSet.has(id));
@@ -1751,7 +1973,7 @@
 
             // 3) details
             let rows = [];
-            try { rows = await fetchLeadDetails(ids); setStep('detail', 'done'); }
+            try { rows = await fetchLeadDetails(ids, options); setStep('detail', 'done'); }
             catch (e) { setStep('detail', 'error'); throw e; }
             setProgress(90);
 
@@ -1805,13 +2027,6 @@
         // ═══════════════════════════════════════════════════════════════
         // RENDER CARDS
         // ═══════════════════════════════════════════════════════════════
-        // function renderCardShells(skeleton) {
-        //     document.getElementById('cards').innerHTML = METRICS.map(m => `
-        //         <div class="card ${m.cls}">
-        //             <div class="card-top"><div class="card-title">${m.label}</div>${m.badge ? `<span class="card-badge ${m.bcls}">${m.badge}</span>` : ''}</div>
-        //             <div class="card-value ${skeleton ? 'skel' : ''}" id="cv-${m.key}">${skeleton ? '—' : '0'}</div>
-        //         </div>`).join('');
-        // }
         function renderCardShells(skeleton) {
             document.getElementById('cards').innerHTML = METRICS.map(m => `
         <div class="card ${m.cls}" data-cardmetric="${m.key}" style="cursor:pointer">
@@ -1912,25 +2127,35 @@
 
 
         async function openScholDrilldown(scholLeads, label) {
-            document.getElementById('modal-title').textContent = `${label} — ${scholLeads.length} leads`;
-            document.getElementById('modal-export').onclick = null;
-            document.getElementById('modal-body-content').innerHTML = '<div class="loader"></div>';
-            document.getElementById('modal').classList.add('active');
-            try {
-                // enrich with lead-only fields (FU mode + remarks) not present on scholarship rows
-                const ids = [...new Set(scholLeads.map(r => r.lead_id).filter(Boolean))];
-                const detailMap = await fetchDrilldownLeadDetails(ids);
-                const enriched = scholLeads.map(r => ({
-                    ...r,
-                    next_fu_mode: detailMap[r.lead_id]?.next_fu_mode,
-                    remarks: detailMap[r.lead_id]?.remarks,
-                }));
-                document.getElementById('modal-export').onclick = () => exportScholDrilldownXLSX(enriched, label);
-                document.getElementById('modal-body-content').innerHTML = renderScholDrilldownTable(enriched);
-            } catch (e) {
-                console.error(e);
-                document.getElementById('modal-body-content').innerHTML = '<div style="padding:20px;color:#991b1b">Failed to load lead details.</div>';
-            }
+            const unique = [...new Map(scholLeads.filter(r => r.lead_id).map(r => [r.lead_id, r])).values()];
+            const loadPage = async (page) => {
+                const { controller, id } = startRequest('drill');
+                const start = page * DRILL_PAGE_SIZE;
+                const pageRows = unique.slice(start, start + DRILL_PAGE_SIZE);
+                const ids = pageRows.map(r => r.lead_id);
+                document.getElementById('modal-title').textContent = `${label} — ${unique.length} leads`;
+                document.getElementById('modal-export').onclick = null;
+                document.getElementById('modal-body-content').innerHTML = '<div class="loader"></div>';
+                document.getElementById('modal').classList.add('active');
+                try {
+                    const detailMap = await fetchDrilldownLeadDetails(ids, { signal: controller.signal });
+                    if (!isCurrentRequest('drill', id)) return;
+                    const enriched = pageRows.map(r => ({
+                        ...r,
+                        next_fu_mode: detailMap[r.lead_id]?.next_fu_mode,
+                        remarks: detailMap[r.lead_id]?.remarks,
+                    }));
+                    document.getElementById('modal-export').onclick = () => exportScholDrilldownXLSX(enriched, `${label}_page_${page + 1}`);
+                    const body = document.getElementById('modal-body-content');
+                    body.innerHTML = renderScholDrilldownTable(enriched);
+                    body.appendChild(renderPager(page, unique.length, loadPage));
+                } catch (e) {
+                    if (e?.name === 'AbortError') return;
+                    console.error(e);
+                    document.getElementById('modal-body-content').innerHTML = '<div style="padding:20px;color:#991b1b">Failed to load lead details.</div>';
+                }
+            };
+            await loadPage(0);
         }
 
 
@@ -1999,7 +2224,7 @@
         <td>${r.roll || '—'}</td><td>${r.origin || '—'}</td><td>${r.mode || '—'}</td>
         <td>${fmtDate(r.schol_created)}</td><td>${r.exam_type || '—'}</td>
         <td>${r.schol_branch || '—'}</td><td>${r.class_studying || '—'}</td><td>${r.school_name || '—'}</td>
-        <td>${r.term || '—'}</td><td>${fmtDate(r.appear_date)}</td>
+        <td>${r.term || '—'}</td><td>${r.appear_date || '—'}</td>
         <td>${eligNum(r) == null ? '—' : eligNum(r) + '%'}</td>
         <td>${r.remarks
                     ? `<div class="remarks" title="Click to view" onclick="openRemarks(${idx})">${escapeHtml(r.remarks).replace(/&lt;br\s*\/?&gt;/gi, ' ')}</div>`
@@ -2070,7 +2295,7 @@
         const DEFAULTS = {
             'fi-rd': 'All RDs', 'fi-rsgh': 'Select RSGH', 'fi-branch': 'All Branches', 'fi-tl': 'All TL/Managers',
             'fi-owner': 'All Owners', 'fi-datemod': 'All Time', 'fi-school': 'All Schools', 'fi-class': 'All Classes',
-            'fi-qualified': 'All Time', 'fi-visitdone': 'All Time', 'fi-type': 'Select lead type', 'fi-schrange': 'All Scholarship', 'fi-appeared': 'All Time', 'fi-origin': 'All Origins',
+            'fi-qualified': 'All Time', 'fi-visitdone': 'All Time', 'fi-type': 'Select lead type', 'fi-schrange': 'All Scholarship', 'fi-appeared': 'All Time', 'fi-origin': 'All Origins', 'fi-s2class': 'All Classes',
         };
         function setupDropdown(id) {
             const el = document.getElementById(id); if (!el) return;
@@ -2144,17 +2369,33 @@
             fillCheckboxDd('fi-branch', distinct(users, 'user_branch_name_user_management_').map(v => ({ value: v, name: v })));
             fillCheckboxDd('fi-tl', distinct(users, 'team_supervisor').map(v => ({ value: v, name: v })));
             fillCheckboxDd('fi-owner', users.slice().sort((a, b) => (a.name || '').localeCompare(b.name || '')).map(u => ({ value: u.id, name: `${u.name} (${u.email})` })));
-
-            const [schools, classes] = await Promise.all([
-                query(`SELECT id, name FROM aesl_school__c ORDER BY name ASC LIMIT 5000 OFFSET 0`, 'aesl_school__c'),
-                query(`SELECT AESL_Class_Studying_In__c as v FROM leads_object WHERE AESL_Class_Studying_In__c IS NOT NULL GROUP BY AESL_Class_Studying_In__c ORDER BY AESL_Class_Studying_In__c ASC LIMIT 500 OFFSET 0`, 'leads_object'),
-            ]);
-            fillCheckboxDd('fi-school', schools.map(s => ({ value: s.name, name: s.name })));  // matches AESL_School_Name__c.name
-            // fillCheckboxDd('fi-class', classes.map(c => ({ value: c.v, name: c.v })));
+            const schools = await query(`SELECT id, name, AESL_School_Code__c as code FROM aesl_school__c ORDER BY name ASC LIMIT 5000 OFFSET 0`, 'aesl_school__c');
+            const classes = await query(`SELECT AESL_Class_Studying_In__c as v FROM leads_object WHERE AESL_Class_Studying_In__c IS NOT NULL GROUP BY AESL_Class_Studying_In__c ORDER BY AESL_Class_Studying_In__c ASC LIMIT 500 OFFSET 0`, 'leads_object');
+            fillCheckboxDd('fi-school', schools.map(s => ({ value: s.name, name: s.code ? `${s.name} (${s.code})` : s.name })));
+            schools.forEach(s => _loadedSchoolNames.add(s.name));
             fillCheckboxDd('fi-class', classes
                 .map(c => c.v)
                 .sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }))
                 .map(v => ({ value: v, name: v })));
+            fillCheckboxDd('fi-s2class', classes
+                .map(c => c.v)
+                .sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' }))
+                .map(v => ({ value: v, name: v })));
+        }
+
+        // School Search Function
+        async function searchSchools(term) {
+            const t = term.replace(/'/g, "''");
+            const q = `SELECT id, name, AESL_School_Code__c as code FROM aesl_school__c
+        WHERE name ILIKE '%${t}%' OR AESL_School_Code__c ILIKE '%${t}%'
+        ORDER BY name ASC LIMIT 500 OFFSET 0`;
+            const rows = await query(q, 'aesl_school__c');
+            const fresh = rows.filter(s => s.name && !_loadedSchoolNames.has(s.name));
+            if (fresh.length) {
+                fillCheckboxDd('fi-school', fresh.map(s => ({ value: s.name, name: s.code ? `${s.name} (${s.code})` : s.name })));
+                fresh.forEach(s => _loadedSchoolNames.add(s.name));
+            }
+            return fresh.length;
         }
 
 
@@ -2177,14 +2418,15 @@
         }
 
         // ── fetch one exam cohort (unique lead counting happens at compute time) ──
-        async function fetchScholCohort(leadType, levelId) {
+        async function fetchScholCohort(leadType, levelId, options = {}) {
             const where = and(
                 `AESL_Lead_Type__c = '${leadType}'`,
                 `AESL_Level__c.id = '${levelId}'`,
                 leadScopeWhere('associated_lead'),
                 schRangeWhere(),
                 appearedWhere(),
-                state.origin.length ? `superleap_origin IN (${sq(state.origin)})` : ''
+                state.origin.length ? `superleap_origin IN (${sq(state.origin)})` : '',
+                state.s2class.length ? `AESL_Class_Studying_In__c IN (${sq(state.s2class)})` : ''
             );
             const q = `SELECT associated_lead as lead_id, associated_lead.name as lead_name,
         associated_lead.AESL_PS_ID__c as psid, associated_lead.stage as lead_stage,
@@ -2192,6 +2434,7 @@
         associated_lead.AESL_School_Name__c.name as school_name,
         associated_lead.owner.name as owner_name, associated_lead.owner.email as owner_email,
         associated_lead.owner.team_sales_head as rsgh,
+        associated_lead.owner.team_supervisor as supervisor,
         associated_lead.owner.user_branch_name_user_management_ as owner_branch,
         ${SCHOL_ROLL_NUMBER} as roll, superleap_origin as origin, AESL_Exam_Mode__c as mode,
         created_at as schol_created, AESL_Lead_Type__c as exam_type,
@@ -2202,7 +2445,7 @@
         associated_result.AESL_Date_of_Exam__c as appear_date,
         ${SCHOL_EXAM_DATE} as exam_date
         FROM scholarship_object WHERE ${where} __LO__`;
-            let rows = await paginate(q, 'scholarship_object');
+            let rows = await paginate(q, 'scholarship_object', 5000, options);
             if (_qSet) rows = rows.filter(r => _qSet.has(r.lead_id));   // Qualified Status filter
             if (_vSet) rows = rows.filter(r => _vSet.has(r.lead_id));   // Visit Done filter
             return rows;
@@ -2211,13 +2454,7 @@
         // ── helpers ──────────────────────────────────────────────────
         function eligNum(r) { return (r.eligible === '' || r.eligible == null) ? null : Number(r.eligible); }
         function stageNorm(r) { return (r.lead_stage || '').toLowerCase().replace(/-/g, ' ').trim(); }
-        // const S2_EXCLUDE = ['admission done', 'not interested', 'not eligible'];  // NOTE: untouched NOT excluded here
-        // function isDueRow(r) {
-        //     const nf = istDayFloor(r.next_followup);
-        //     if (nf === null || nf > DATES.TODAY_S) return false;   // today or before today
-        //     const st = stageNorm(r);
-        //     return !S2_EXCLUDE.some(x => st === x || st.includes(x));
-        // }
+
         const S2_EXCLUDE = ['admission done', 'not interested', 'not eligible', 'untouched lead'];
         function notExcluded(r) {
             const st = stageNorm(r);
@@ -2246,19 +2483,8 @@
 
             // iACST
             const iAll = uniqLeads(iacstRows, taken);
-            // const i = {
-            //     digital: B('i_digital', 'iACST · Digital (API)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'API')),
-            //     self: B('i_self', 'iACST · Self (Form)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'Forms')),
-            //     bulk: B('i_bulk', 'iACST · Bulk (Upload)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'Upload')),
-            //     all: B('i_all', 'iACST · All Taken', iAll),
-            //     unt: B('i_unt', 'iACST · Untouched', uniqLeads(iacstRows, r => taken(r) && untouched(r))),
-            //     due: B('i_due', 'iACST · Follow Up Due', uniqLeads(iacstRows, r => taken(r) && isDueRow(r))),
-            //     today: B('i_today', 'iACST · Taken Today', uniqLeads(iacstRows, r => taken(r) && istDayFloor(r.result_created) === today)),
-            //     sched: B('i_sched', 'iACST · Scheduled Today Not Taken', uniqLeads(iacstRows, r => eligNum(r) === null && istDayFloor(r.exam_date) === today)),
-            // };
 
             // ANTHE
-
             const i = {
                 digital: B('i_digital', 'iACST · Digital (API)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'API')),
                 self: B('i_self', 'iACST · Self (Form)', uniqLeads(iacstRows, r => taken(r) && r.origin === 'Forms')),
@@ -2278,18 +2504,6 @@
 
             const a60 = r => eligNum(r) !== null && eligNum(r) >= 60;
             const aB60 = r => eligNum(r) !== null && eligNum(r) < 60;
-            // const a = {
-            //     digital: B('a_digital', 'ANTHE · Digital (API)', uniqLeads(antheRows, r => taken(r) && r.origin === 'API')),
-            //     self: B('a_self', 'ANTHE · Self (Form)', uniqLeads(antheRows, r => taken(r) && r.origin === 'Forms')),
-            //     bulk: B('a_bulk', 'ANTHE · Bulk (Upload)', uniqLeads(antheRows, r => taken(r) && r.origin === 'Upload')),
-            //     all: B('a_all', 'ANTHE · All Taken', uniqLeads(antheRows, taken)),
-            //     s60: B('a_60', 'ANTHE · All 60%+', uniqLeads(antheRows, a60)),
-            //     sb60: B('a_b60', 'ANTHE · All <60%', uniqLeads(antheRows, aB60)),
-            //     unt60: B('a_unt60', 'ANTHE 60%+ · Untouched', uniqLeads(antheRows, r => a60(r) && untouched(r))),
-            //     untb60: B('a_untb60', 'ANTHE <60% · Untouched', uniqLeads(antheRows, r => aB60(r) && untouched(r))),
-            //     due60: B('a_due60', 'ANTHE 60%+ · Follow Up Due', uniqLeads(antheRows, r => a60(r) && isDueRow(r))),
-            //     dueb60: B('a_dueb60', 'ANTHE <60% · Follow Up Due', uniqLeads(antheRows, r => aB60(r) && isDueRow(r))),
-            // };
 
             const a = {
                 digital: B('a_digital', 'ANTHE · Digital (API)', uniqLeads(antheRows, r => taken(r) && r.origin === 'API')),
@@ -2314,16 +2528,6 @@
             const oCell = (k, key, v) => `<div class="s2-ocell" data-s2="${key}"><div class="k">${k}</div><div class="v">${v}</div></div>`;
             const blk = (cls, k, key, v) => `<div class="s2-block ${cls}" data-s2="${key}"><div class="k">${k}</div><div class="v">${v}</div></div>`;
 
-            //     document.getElementById('panel-iacst').innerHTML = `
-            // <div class="s2-ph"><span class="s2-badge iacst">iACST Test Takers</span><span class="s2-term">· Term 2627</span><span class="s2-live">LIVE</span></div>
-            // <div class="s2-orow">${oCell('Digital · API', 'i_digital', i.digital)}${oCell('Self · Form', 'i_self', i.self)}${oCell('Bulk · Upload', 'i_bulk', i.bulk)}${oCell('All Taken', 'i_all', i.all)}</div>
-            // <div class="s2-blocks" style="margin-top:14px">
-            //     ${blk('s2-red', 'Untouched', 'i_unt', i.unt)}
-            //     ${blk('s2-orange', 'Follow Up Due', 'i_due', i.due)}
-            //     ${blk('s2-green', 'Taken Today', 'i_today', i.today)}
-            //     ${blk('s2-purple', 'Scheduled Today · Not Taken', 'i_sched', i.sched)}
-            // </div>`;
-
             document.getElementById('panel-iacst').innerHTML = `
         <div class="s2-ph"><span class="s2-badge iacst">iACST Test Takers</span><span class="s2-term">· Term 2627</span><span class="s2-live">LIVE</span></div>
         <div class="s2-orow">${oCell('Digital · API', 'i_digital', i.digital)}${oCell('Self · Form', 'i_self', i.self)}${oCell('Bulk · Upload', 'i_bulk', i.bulk)}${oCell('All Taken', 'i_all', i.all)}</div>
@@ -2337,25 +2541,6 @@
             ${blk('s2-green', 'Taken Today', 'i_today', i.today)}
             ${blk('s2-purple', 'Scheduled Today · Not Taken', 'i_sched', i.sched)}
         </div>`;
-
-
-
-
-            //     document.getElementById('panel-anthe').innerHTML = `
-            // <div class="s2-ph"><span class="s2-badge anthe">ANTHE Test Takers</span><span class="s2-term">· Term 2627</span><span class="s2-live">LIVE</span></div>
-            // <div class="s2-orow">${oCell('Digital · API', 'a_digital', a.digital)}${oCell('Self · Form', 'a_self', a.self)}${oCell('Bulk · Upload', 'a_bulk', a.bulk)}${oCell('All', 'a_all', a.all)}</div>
-            // <div class="s2-grouplbl">Scored 60%+ · Hot</div>
-            // <div class="s2-blocks">
-            //     ${blk('s2-plain', 'All 60%+', 'a_60', a.s60)}
-            //     ${blk('s2-red', 'Untouched', 'a_unt60', a.unt60)}
-            //     ${blk('s2-orange', 'Follow Up Due', 'a_due60', a.due60)}
-            // </div>
-            // <div class="s2-grouplbl">Below 60%</div>
-            // <div class="s2-blocks">
-            //     ${blk('s2-plain', 'All <60%', 'a_b60', a.sb60)}
-            //     ${blk('s2-red', 'Untouched', 'a_untb60', a.untb60)}
-            //     ${blk('s2-orange', 'Follow Up Due', 'a_dueb60', a.dueb60)}
-            // </div>`;
 
             document.getElementById('panel-anthe').innerHTML = `
         <div class="s2-ph"><span class="s2-badge anthe">ANTHE Test Takers</span><span class="s2-term">· Term 2526</span><span class="s2-live">LIVE</span></div>
@@ -2383,10 +2568,6 @@
             document.getElementById('s2-wrap').onclick = e => {
                 const el = e.target.closest('[data-s2]'); if (!el) return;
                 const b = s2Blocks[el.dataset.s2]; if (!b) return;
-                // document.getElementById('modal-title').textContent = `${b.label} — ${b.leads.length} leads`;
-                // document.getElementById('modal-export').onclick = () => exportLeadsXLSX(b.leads, b.label);
-                // document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(b.leads);
-                // document.getElementById('modal').classList.add('active');
                 openScholDrilldown(b.leads, b.label);
             };
         }
@@ -2394,21 +2575,60 @@
 
 
         // Section 2 Specific Render
-        async function reloadSection2() {
-            // only if section 1 has already run (RSGH + type resolved)
+        function section2Signature() {
+            return JSON.stringify({
+                rsgh: getChecked('fi-rsgh').slice().sort(),
+                rd: getChecked('fi-rd').slice().sort(),
+                branch: getChecked('fi-branch').slice().sort(),
+                tl: getChecked('fi-tl').slice().sort(),
+                owner: getChecked('fi-owner').slice().sort(),
+                school: getChecked('fi-school').slice().sort(),
+                class: getChecked('fi-class').slice().sort(),
+                schRange: getRadio('fi-schrange'), appeared: getRadio('fi-appeared'),
+                origin: getChecked('fi-origin').slice().sort(), s2class: getChecked('fi-s2class').slice().sort(),
+            });
+        }
+
+        function markSection2Dirty() {
+            const button = document.getElementById('s2-apply-btn');
+            if (!button || document.getElementById('s2-wrap').style.display === 'none') return;
+            button.disabled = false;
+            document.getElementById('s2-filter-status').textContent = 'Changes not applied';
+        }
+
+        async function reloadSection2(force = false) {
             if (!allRows.length && !s2Data.iacst.length && !s2Data.anthe.length) return;
-            readState();  // refresh schRange / appeared / origin (and everything else)
+            const signature = section2Signature();
+            if (!force && signature === _lastSection2Signature) {
+                document.getElementById('s2-apply-btn').disabled = true;
+                document.getElementById('s2-filter-status').textContent = 'Already up to date';
+                return;
+            }
+            const { controller, id } = startRequest('section2');
+            readState();
+            document.getElementById('s2-apply-btn').disabled = true;
+            document.getElementById('s2-filter-status').textContent = 'Loading…';
             document.getElementById('s2-loader').style.display = 'block';
-            document.getElementById('panel-iacst').innerHTML = '';
-            document.getElementById('panel-anthe').innerHTML = '';
             try {
-                [s2Data.iacst, s2Data.anthe] = await Promise.all([
-                    fetchScholCohort('iACST', TERMS.IACST_LEVEL_2627),
-                    fetchScholCohort('ANTHE', TERMS.ANTHE_LEVEL_2526),
+                const options = { signal: controller.signal };
+                const [iacst, anthe] = await Promise.all([
+                    fetchScholCohort('iACST', TERMS.IACST_LEVEL_2627, options),
+                    fetchScholCohort('ANTHE', TERMS.ANTHE_LEVEL_2526, options),
                 ]);
-                renderSection2(s2Data.iacst, s2Data.anthe);
-            } catch (e) { console.error('Section 2 reload failed', e); }
-            finally { document.getElementById('s2-loader').style.display = 'none'; }
+                if (!isCurrentRequest('section2', id)) return;
+                s2Data.iacst = iacst; s2Data.anthe = anthe;
+                _lastSection2Signature = signature;
+                renderSection2(iacst, anthe);
+                document.getElementById('s2-filter-status').textContent = 'Filters applied';
+            } catch (e) {
+                if (e?.name !== 'AbortError') {
+                    console.error('Section 2 reload failed', e);
+                    document.getElementById('s2-filter-status').textContent = 'Refresh failed';
+                    document.getElementById('s2-apply-btn').disabled = false;
+                }
+            } finally {
+                if (isCurrentRequest('section2', id)) document.getElementById('s2-loader').style.display = 'none';
+            }
         }
 
 
@@ -2433,6 +2653,7 @@
             state.schRange = getRadio('fi-schrange');
             state.appeared = getRadio('fi-appeared');
             state.origin = getChecked('fi-origin');
+            state.s2class = getChecked('fi-s2class')
         }
 
         function updateS1Tag() {
@@ -2465,6 +2686,8 @@
         }
 
         async function onApply() {
+            const { controller, id: requestId } = startRequest('main');
+            _controllers.section2?.abort();
             readState();
             if (!state.rsgh.length || !state.type) return;
             document.getElementById('info-banner').style.display = 'none';
@@ -2472,6 +2695,8 @@
             document.getElementById('apply-btn').disabled = true;
             document.getElementById('run-pill').className = 'run-pill'; document.getElementById('run-pill').textContent = 'Running…';
             document.getElementById('breakdown-head').style.display = 'block';
+            document.getElementById('breakdown-body').style.display = 'none';   // collapsed by default
+            document.getElementById('breakdown-chevron').style.transform = 'rotate(0deg)';
             document.getElementById('branch-card').style.display = 'flex';
             document.getElementById('user-card').style.display = 'flex';
             document.getElementById('branch-loader').style.display = 'block';
@@ -2480,7 +2705,7 @@
             document.getElementById('user-table').style.display = 'none';
             renderCardShells(true);
             try {
-                await fetchAll();
+                await fetchAll({ signal: controller.signal });
                 // renderCards(computeSets(allRows));
                 window._globalSets = computeSets(allRows);
                 renderCards(window._globalSets);
@@ -2491,16 +2716,22 @@
                 document.getElementById('s2-head').style.display = 'block';
                 document.getElementById('s2-wrap').style.display = 'grid';
                 document.getElementById('s2-loader').style.display = 'block';
+                const options = { signal: controller.signal };
                 [s2Data.iacst, s2Data.anthe] = await Promise.all([
-                    fetchScholCohort('iACST', TERMS.IACST_LEVEL_2627),
-                    fetchScholCohort('ANTHE', TERMS.ANTHE_LEVEL_2526),
+                    fetchScholCohort('iACST', TERMS.IACST_LEVEL_2627, options),
+                    fetchScholCohort('ANTHE', TERMS.ANTHE_LEVEL_2526, options),
                 ]);
+                if (!isCurrentRequest('main', requestId)) return;
+                _lastSection2Signature = section2Signature();
+                document.getElementById('s2-apply-btn').disabled = true;
+                document.getElementById('s2-filter-status').textContent = 'Filters applied';
                 document.getElementById('s2-loader').style.display = 'none';
                 renderSection2(s2Data.iacst, s2Data.anthe);
                 document.getElementById('progress-wrap').style.display = 'none';
                 ['branch', 'user'].forEach(t => { document.getElementById(t + '-loader').style.display = 'none'; document.getElementById(t + '-table').style.display = ''; });
                 const rp = document.getElementById('run-pill'); rp.className = 'run-pill ran'; rp.textContent = `${allRows.length.toLocaleString('en-IN')} leads`;
             } catch (e) {
+                if (e?.name === 'AbortError') return;
                 console.error(e);
                 document.getElementById('error-banner').style.display = 'block';
                 document.getElementById('error-banner').textContent = 'Error loading data: ' + e.message;
@@ -2510,6 +2741,7 @@
         }
 
         function onReset() {
+            Object.values(_controllers).forEach(c => c?.abort());
             document.querySelectorAll('.topbar input[type=checkbox], #fi-type input[type=radio]').forEach(c => c.checked = false);
             document.querySelectorAll('input[type=radio]').forEach(r => { if (r.value === 'all') r.checked = true; });
             document.querySelector('input[name=type][value="ay26_all"]').checked = true;
@@ -2520,6 +2752,7 @@
             document.getElementById('breakdown-head').style.display = 'none';
             document.getElementById('branch-card').style.display = 'none';
             document.getElementById('user-card').style.display = 'none';
+            document.getElementById('breakdown-body').style.display = 'none';
             document.getElementById('run-pill').className = 'run-pill'; document.getElementById('run-pill').textContent = 'Not yet run';
             document.getElementById('s2-head').style.display = 'none';
             document.getElementById('s2-wrap').style.display = 'none';
@@ -2536,16 +2769,16 @@
         // ═══════════════════════════════════════════════════════════════
         document.addEventListener('DOMContentLoaded', async () => {
             renderCardShells(true);
-            // ['fi-rd', 'fi-rsgh', 'fi-branch', 'fi-tl', 'fi-owner', 'fi-datemod', 'fi-school', 'fi-class', 'fi-qualified', 'fi-visitdone', 'fi-type'].forEach(setupDropdown);
-            ['fi-rd', 'fi-rsgh', 'fi-branch', 'fi-tl', 'fi-owner', 'fi-datemod', 'fi-school', 'fi-class', 'fi-qualified', 'fi-visitdone', 'fi-type', 'fi-schrange', 'fi-appeared', 'fi-origin'].forEach(setupDropdown);
-            ['fi-schrange', 'fi-appeared', 'fi-origin'].forEach(id => {
+            ['fi-rd', 'fi-rsgh', 'fi-branch', 'fi-tl', 'fi-owner', 'fi-datemod', 'fi-school', 'fi-class', 'fi-qualified', 'fi-visitdone', 'fi-type', 'fi-schrange', 'fi-appeared', 'fi-origin', 'fi-s2class'].forEach(setupDropdown);
+            ['fi-schrange', 'fi-appeared', 'fi-origin', 'fi-s2class'].forEach(id => {
                 document.getElementById(id).querySelector('.dd')
-                    .addEventListener('change', () => reloadSection2());
+                    .addEventListener('change', markSection2Dirty);
             });
+            document.getElementById('s2-apply-btn').addEventListener('click', () => reloadSection2());
             document.getElementById('apply-btn').addEventListener('click', onApply);
             document.getElementById('reset-btn').addEventListener('click', onReset);
-            document.getElementById('modal-close').addEventListener('click', () => document.getElementById('modal').classList.remove('active'));
-            document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') document.getElementById('modal').classList.remove('active'); });
+            document.getElementById('modal-close').addEventListener('click', () => { _controllers.drill?.abort(); document.getElementById('modal').classList.remove('active'); });
+            document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') { _controllers.drill?.abort(); document.getElementById('modal').classList.remove('active'); } });
             document.getElementById('export-branch').addEventListener('click', () => exportTable('branch-table', 'By_Branch'));
             document.getElementById('export-user').addEventListener('click', () => exportTable('user-table', 'By_User'));
             // for drill downs
@@ -2556,10 +2789,6 @@
                 const idSet = window._globalSets[metricKey];
                 const leads = allRows.filter(r => idSet.has(r.lead_id));
                 const label = METRICS.find(m => m.key === metricKey).label;
-                // document.getElementById('modal-title').textContent = `${label} — ${leads.length} leads`;
-                // document.getElementById('modal-export').onclick = () => exportLeadsXLSX(leads, label);
-                // document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(leads);
-                // document.getElementById('modal').classList.add('active');
                 openLeadDrilldown(leads, METRICS.find(m => m.key === metricKey).label);
             });
             // For funnel at right 
@@ -2567,11 +2796,7 @@
                 const seg = e.target.closest('[data-fkey]'); if (!seg) return;
                 const leads = funnelGroups[seg.dataset.fkey] || [];
                 const label = 'Stage · ' + FUNNEL_STAGES.find(s => s.key === seg.dataset.fkey).label;
-                document.getElementById('modal-title').textContent = `${label} — ${leads.length} leads`;
-                document.getElementById('modal-export').onclick = () => exportLeadsXLSX(leads, label);
-                document.getElementById('modal-body-content').innerHTML = renderDrilldownTable(leads);
-                document.getElementById('modal').classList.add('active');
-                openLeadDrilldown(leads, 'Stage · ' + FUNNEL_STAGES.find(s => s.key === seg.dataset.fkey).label);
+                openLeadDrilldown(leads, label);
             });
             // For Remarks modal
             document.getElementById('remarks-close').addEventListener('click', () => document.getElementById('remarks-modal').classList.remove('active'));
@@ -2579,8 +2804,43 @@
             updateFbt('fi-type');
             checkApply();
             try { await loadFilters(); } catch (e) { console.error('Filter load failed', e); }
+
+            // School: query the full table on search (debounced), then re-filter labels
+            (() => {
+                const dd = document.getElementById('fi-school').querySelector('.dd');
+                const srch = dd.querySelector('input[type=search]');
+                if (!srch) return;
+                let timer = null;
+                srch.addEventListener('input', () => {
+                    const term = srch.value.trim();
+                    clearTimeout(timer);
+                    if (term.length < 2) return;               // too short — client filter already handled it
+                    timer = setTimeout(async () => {
+                        try {
+                            await searchSchools(term);
+                            // re-run the existing client-side show/hide so new labels obey the current query
+                            const q = srch.value.toLowerCase();
+                            dd.querySelectorAll('label').forEach(l => {
+                                if (l.querySelector('.select-all')) return;
+                                l.style.display = l.textContent.toLowerCase().includes(q) ? '' : 'none';
+                            });
+                        } catch (e) { console.error('School search failed', e); }
+                    }, 350);
+                });
+            })();
+            // For Collapsible Tables
+            document.getElementById('breakdown-toggle').addEventListener('click', () => {
+                const body = document.getElementById('breakdown-body');
+                const chev = document.getElementById('breakdown-chevron');
+                const open = body.style.display !== 'none';
+                body.style.display = open ? 'none' : 'flex';
+                chev.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+            });
+
         });
     </script>
+
+
 </body>
 
 </html>
